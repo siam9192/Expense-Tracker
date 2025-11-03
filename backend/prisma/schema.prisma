@@ -1,0 +1,239 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+// ✅ ENUMS
+enum UserStatus {
+  ACTIVE
+  BLOCKED
+}
+
+enum SessionStatus {
+  ACTIVE
+  EXPIRED
+  REVOKED
+}
+
+enum OTPVerificationStatus {
+  PENDING
+  VERIFIED
+  EXPIRED
+}
+
+
+enum ProfessionStatus {
+  ACTIVE
+  INACTIVE
+}
+
+
+
+
+// ✅ MODELS
+
+model User {
+  id                Int            @id @default(autoincrement())
+  profile           UserProfile?
+  auth_info         AuthInfo?
+  sessions          Session[]
+  status            UserStatus     @default(ACTIVE)
+  isSetupComplete   Boolean        @default(false)
+  isDeleted         Boolean        @default(false)
+  created_at         DateTime       @default(now())
+  updated_at         DateTime       @updatedAt
+
+  @@map("users")
+}
+
+
+model AuthInfo {
+  user_id              Int          @id
+  email                String       @unique
+  password             String
+  password_changed_at  DateTime?
+  user                 User         @relation(fields: [user_id], references: [id])
+
+  @@map("auth_info")
+}
+
+
+model UserProfile {
+  user_id          Int           @id
+  name             String        @db.VarChar(20)
+  avatar_id        Int
+  profile_picture  String?        @db.VarChar(255)
+  profession_id    Int
+  country_id       Int
+  wallet           Wallet?
+
+
+  settings         UserSetting?
+  avatar Avatar  @relation(fields: [avatar_id], references: [id])
+  profession       Profession     @relation(fields: [profession_id], references: [id])
+  country          Country        @relation(fields: [country_id], references: [id])
+  user             User           @relation(fields: [user_id], references: [id])
+
+  @@map("user_profiles")
+}
+
+
+model Session {
+  id          String            @id @default(cuid())
+  user_id     Int
+  device_name String          @db.VarChar(30)
+  address     String
+  ip          String
+  token       String
+  expires_at  DateTime
+  status      SessionStatus   @default(ACTIVE)
+  created_at   DateTime        @default(now())
+  updated_at   DateTime        @updatedAt
+
+  user        User            @relation(fields: [user_id], references: [id])
+  @@map("sessions")
+}
+
+
+model Wallet {
+  id                 Int           @id @default(autoincrement())
+  user_id            Int @unique
+  total_balance      Float           @default(0)
+  spendable_balance  Float          @default(0)
+  saving_balance     Float          @default(0)
+  
+  
+
+  created_at          DateTime      @default(now())
+  updated_at          DateTime      @updatedAt
+
+  user               UserProfile   @relation(fields: [user_id], references: [user_id])
+  @@map("wallets")
+}
+
+
+model UserSetting {
+  id                           Int      @id @default(autoincrement())
+  user_id                      Int      @unique
+
+  auto_saving                  Boolean  @default(false)
+  balance_expense_income_alert Boolean  @default(true)
+  email_alerts                 Boolean  @default(true)
+  sms_alerts                   Boolean  @default(false)
+  transaction_updates          Boolean  @default(true)
+  two_factor_auth Boolean @default(false)
+
+  monthly_budget     Float      @default(0)
+
+  currency_id        Int
+  currency           Currency      @relation(fields: [currency_id], references: [id])
+
+  created_at                    DateTime @default(now())
+  updated_at                    DateTime @updatedAt
+
+  user                         UserProfile     @relation(fields: [user_id], references: [user_id])
+  
+  @@map("user_settings")
+}
+
+
+model UserInit {
+  id               String             @id @default(cuid())
+  email            String             @unique
+  password         String
+  device_name String
+  address String
+  ip String
+  isVerified       Boolean            @default(false)
+  verification_id  String
+  created_at        DateTime           @default(now())
+  updated_at        DateTime           @updatedAt
+
+
+  @@map("user_inits")
+
+  
+}
+
+
+model OtpVerification {
+  id          String                  @id @default(cuid())
+  codes       OtpCodes[]
+  expires_at   DateTime
+  status      OTPVerificationStatus   @default(PENDING)
+  created_at   DateTime                @default(now())
+  updated_at   DateTime                @updatedAt
+  @@map("otp_verifications")
+}
+
+
+model OtpCodes {
+  id               Int              @id @default(autoincrement())
+  verification_id  String
+  code             String           @db.Char(4)
+  created_at        DateTime         @default(now())
+
+  verification     OtpVerification  @relation(fields: [verification_id], references: [id])
+
+  @@map("otp_codes")
+}
+
+
+
+model Profession {
+  id        Int      @id @default(autoincrement())
+  name      String   @db.VarChar(50) @unique
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  users UserProfile[]
+  @@map("professions")
+}
+
+
+
+model Country {
+  id        Int     @id @default(autoincrement())
+  name      String  @db.VarChar(100) @unique
+  code String
+  flag_code String?
+  flag_png String
+  flag_svg String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  users UserProfile[]
+  @@map("countries")
+}
+
+
+model  Currency {
+  id  Int     @id @default(autoincrement())
+  code String @unique
+  name String
+  symbol String @db.VarChar(1)
+  user_settings UserSetting[]
+  @@map("currencies")
+}
+
+
+
+model Avatar {
+  id  Int     @id @default(autoincrement())
+  name String
+  src String
+  isDefault Boolean 
+  users UserProfile[]
+  @@map("avatars")
+}

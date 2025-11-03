@@ -1,0 +1,42 @@
+{
+  "dependencies": {
+    "@prisma/client": "^6.18.0",
+    "axios": "^1.13.1",
+    "bcrypt": "^5.1.1",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "date-fns": "^4.1.0",
+    "dotenv": "^16.6.1",
+    "express": "^5.1.0",
+    "http-status-codes": "^2.3.0",
+    "jsonwebtoken": "^9.0.2",
+    "node-cron": "^4.2.1",
+    "ts-node-dev": "^2.0.0",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
+    "@types/cookie-parser": "^1.4.8",
+    "@types/cors": "^2.8.17",
+    "@types/jsonwebtoken": "^9.0.9",
+    "@types/node": "^22.13.8",
+    "i": "^0.3.7",
+    "install": "^0.13.0",
+    "npm": "^11.1.0",
+    "prettier": "^3.5.3",
+    "prisma": "^6.18.0",
+    "typescript": "^5.8.2"
+  },
+  "name": "backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "ts-node-dev --respawn --transpile-only ./src/app/server.ts",
+    "prettier": "prettier --ignore-path .gitignore --write \"./src/app/**/*.+(ts|json)\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}

@@ -1,6 +1,5 @@
-import React from "react";
+
 import { MonitorSmartphone, MapPin, Clock, LogOut } from "lucide-react";
-import ArriveAnimationContainer from "../../ui/ArriveAnimationContainer";
 
 // Example session data (you’d fetch from your backend in real use)
 const sessions = [
@@ -32,9 +31,9 @@ const sessions = [
 
 function UserSessions() {
   return (
-    <div className="p-6 md:p-10 bg-base-200 rounded-2xl shadow-xl min-h-[85vh]">
+    <div className=" mt-10 p-6 md:p-10 bg-base-300 rounded-2xl shadow-xl min-h-[50vh]">
       {/* Header */}
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex flex-col md:flex-row gap-3 lg:gap-0 lg:items-center justify-between mb-8">
         <div>
           <h2 className="text-2xl font-semibold">Active Sessions</h2>
           <p className="text-sm text-neutral-content">
@@ -56,9 +55,9 @@ function UserSessions() {
             }`}
           >
             {/* Left */}
-            <div className="flex items-center gap-4">
+            <div className="flex flex-col md:flex-row md:items-center gap-4">
               <div
-                className={`p-3 rounded-xl ${
+                className={`p-3 rounded-xl size-fit ${
                   session.current
                     ? "bg-primary/10 text-primary"
                     : "bg-base-200 text-neutral-content"

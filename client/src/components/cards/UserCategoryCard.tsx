@@ -14,7 +14,7 @@ function TransactionInfoCard() {
       {/* Title + Description */}
       <div className="mt-5 space-y-2">
         <p className="text-xl font-semibold text-neutral-content tracking-wide">Internet Bill</p>
-        <p className="text-sm text-gray-500 leading-relaxed">
+        <p className="text-sm text-gray-500 leading-relaxed font-secondary">
           Payment for monthly home Wi-Fi service, due on the 5th of each month.
         </p>
       </div>
