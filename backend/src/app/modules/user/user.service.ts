@@ -1,4 +1,9 @@
-import { SessionStatus } from "@prisma/client";
+import {
+  BalanceUpdateResource,
+  BalanceUpdateType,
+  CategoryType,
+  SessionStatus,
+} from "@prisma/client";
 import AppError from "../../errors/AppError";
 import prisma from "../../prisma-client";
 import httpStatus from "../../shared/http-status";
@@ -6,8 +11,10 @@ import { AuthUser } from "../auth/auth.interface";
 import {
   SetupUserProfilePayload,
   UpdateCurrentUserSettingsPayload,
+  UpdateCurrentUserSpendableBalance,
   UpdateUserProfilePayload,
 } from "./user.interface";
+import { DEFAULT_CATEGORIES } from "../../utils/constant";
 
 class UserService {
   async setupUserProfileIntoDB(
@@ -51,6 +58,19 @@ class UserService {
                   monthly_budget: payload.monthly_budget,
                 },
               },
+              categories: {
+                createMany: {
+                  data: DEFAULT_CATEGORIES.map((category) => ({
+                    ...category,
+                    type:
+                      category.type === "SAVING"
+                        ? CategoryType.SAVING
+                        : category.type === "EXPENSE"
+                          ? CategoryType.EXPENSE
+                          : CategoryType.INCOME,
+                  })),
+                },
+              },
             },
           },
         },
@@ -61,6 +81,7 @@ class UserService {
       setupCompleted: true,
     };
   }
+
   async updateCurrentUserProfileIntoDB(
     authUser: AuthUser,
     payload: UpdateUserProfilePayload,
@@ -96,11 +117,11 @@ class UserService {
             country: true,
             profession: true,
             wallet: true,
-            settings:{
-              include:{
-                currency:true
-              }
-            }
+            settings: {
+              include: {
+                currency: true,
+              },
+            },
           },
         },
       },
@@ -117,7 +138,7 @@ class UserService {
       avatar: profile?.avatar,
       profession: profile?.profession,
       country: profile?.country,
-      currency:profile?.settings?.currency,
+      currency: profile?.settings?.currency,
       wallet: profile?.wallet,
       joined_at: user.created_at,
     };
@@ -134,6 +155,18 @@ class UserService {
     });
 
     return sessions;
+  }
+
+  async getCurrentUserLatestBalanceUpdatesFromDB(authUser: AuthUser) {
+    return await prisma.balanceUpdate.findMany({
+      where: {
+        user_id: authUser.user_id,
+      },
+      take: 5,
+      orderBy: {
+        created_at: "desc",
+      },
+    });
   }
 
   async revokeUserSessionIntoDB(authUser: AuthUser, sessionId: string) {
@@ -159,13 +192,64 @@ class UserService {
     return updatedSession;
   }
 
-  async updateCurrentUserSettingsIntoDB (authUser:AuthUser,payload:UpdateCurrentUserSettingsPayload) {
-   return  await prisma.userSetting.update({
-      where:{
-        user_id:authUser.user_id
+  async updateCurrentUserSettingsIntoDB(
+    authUser: AuthUser,
+    payload: UpdateCurrentUserSettingsPayload,
+  ) {
+    return await prisma.userSetting.update({
+      where: {
+        user_id: authUser.user_id,
       },
-      data:payload
-    })
+      data: payload,
+    });
+  }
+
+  async updateCurrentUserSpendableBalanceIntoDB(
+    authUser: AuthUser,
+    payload: UpdateCurrentUserSpendableBalance,
+  ) {
+    const { new_balance, reason } = payload;
+
+    if (new_balance === 0) {
+      throw new AppError(400, "Amount cannot be zero");
+    }
+
+    // 1️⃣ Fetch user's wallet
+    const wallet = await prisma.wallet.findUnique({
+      where: { user_id: authUser.user_id },
+    });
+    if (!wallet) {
+      throw new AppError(404, "Wallet not found");
+    }
+
+    const change_amount = payload.new_balance - wallet.spendable_balance;
+
+    // 3️⃣ Perform atomic update and log BalanceUpdate
+    return await prisma.$transaction(async (tx) => {
+      // Update wallet
+      const updateWallet = await tx.wallet.update({
+        where: { id: wallet.id },
+        data: {
+          spendable_balance: payload.new_balance,
+          total_balance: wallet.spendable_balance + change_amount,
+        },
+      });
+
+      // Log balance update
+      const balanceUpdate = await tx.balanceUpdate.create({
+        data: {
+          user_id: authUser.user_id,
+          prev_balance: wallet.spendable_balance,
+          new_balance: payload.new_balance,
+          change_amount,
+          balance_type: BalanceUpdateType.SPENDABLE,
+          reason,
+          resource: BalanceUpdateResource.USER_ADJUSTMENT,
+        },
+      });
+
+      return updateWallet;
+    });
   }
 }
 

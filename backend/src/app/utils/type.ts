@@ -19,11 +19,8 @@ export interface Meta {
   total: number;
 }
 
-export type ExchangeRateUSD = {
-  base: string;
-  amount: number;
-  result: {
-    USD: number;
-    rate: number;
-  };
-};
+export interface CurrencyConversionResponse {
+  currency: string;
+  rate: number;
+  convertedAmount: number;
+}

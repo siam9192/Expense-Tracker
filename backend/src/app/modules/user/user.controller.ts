@@ -24,6 +24,7 @@ class UserController {
       data: result,
     });
   });
+
   getCurrentUser = catchAsync(async (req, res) => {
     const result = await userService.getCurrentUserFromDB(req.user);
     sendSuccessResponse(res, {
@@ -32,6 +33,7 @@ class UserController {
       data: result,
     });
   });
+
   getCurrentUserSettings = catchAsync(async (req, res) => {
     const result = await userService.getCurrentUserSettingsFromDB(req.user);
     sendSuccessResponse(res, {
@@ -45,6 +47,17 @@ class UserController {
     const result = await userService.getCurrentUserSessionsFromDB(req.user);
     sendSuccessResponse(res, {
       message: "Current user sessions retrieved successfully",
+      status_code: httpStatus.OK,
+      data: result,
+    });
+  });
+
+  getCurrentUserLatestBalanceUpdates = catchAsync(async (req, res) => {
+    const result = await userService.getCurrentUserLatestBalanceUpdatesFromDB(
+      req.user,
+    );
+    sendSuccessResponse(res, {
+      message: "Latest balance retrieved successfully",
       status_code: httpStatus.OK,
       data: result,
     });
@@ -69,6 +82,18 @@ class UserController {
     );
     sendSuccessResponse(res, {
       message: "Current user settings updated successfully",
+      status_code: httpStatus.OK,
+      data: result,
+    });
+  });
+
+  updateCurrentUserSpendableBalance = catchAsync(async (req, res) => {
+    const result = await userService.updateCurrentUserSpendableBalanceIntoDB(
+      req.user,
+      req.body,
+    );
+    sendSuccessResponse(res, {
+      message: "Balance updated successfully",
       status_code: httpStatus.OK,
       data: result,
     });

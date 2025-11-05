@@ -8,9 +8,10 @@ const envConfig = {
   url: {
     database: process.env.DATABASE_URL,
   },
-  fastForex: {
-    api_key: process.env.FAST_FOREX_API_KEY,
+  exchange_rate: {
+    api_key: process.env.EXCHANGE_RATE_API_KEY,
   },
+
   app: {
     user_name: process.env.APP_USER_NAME,
     pass_key: process.env.APP_PASS_KEY,

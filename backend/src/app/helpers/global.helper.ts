@@ -1,6 +1,9 @@
 import httpStatus from "../shared/http-status";
 import AppError from "../errors/AppError";
 import { GLOBAL_ERROR_MESSAGE } from "../utils/constant";
+import axios from "axios";
+import envConfig from "../config/env.config";
+import { CurrencyConversionResponse } from "../utils/type";
 
 export function generateSlug(name: string) {
   return name
@@ -108,4 +111,64 @@ export function generateOTP(length = 6) {
 
 export function throwInternalError() {
   throw new AppError(httpStatus.INTERNAL_SERVER_ERROR, GLOBAL_ERROR_MESSAGE);
+}
+
+export interface ConversionResponse {
+  base: string;
+  date: string;
+  rates: { [currencyCode: string]: number };
+}
+
+export async function getCurrencyConversionRate(
+  from: string,
+  to: string,
+  amount: number,
+): Promise<CurrencyConversionResponse | null> {
+  if (!from || !to) {
+    return null;
+  }
+
+  if (!amount || amount <= 0) {
+    return null;
+  }
+
+  try {
+    const res = await axios.get<ConversionResponse>(
+      `https://api.exchangerate-api.com/v4/latest/${from}`,
+      {
+        params: {
+          api_key: envConfig.exchange_rate.api_key,
+        },
+      },
+    );
+
+    const rate = res.data.rates[to];
+    if (rate == null) {
+      return null;
+    }
+
+    return {
+      currency: to,
+      rate,
+      convertedAmount: amount * rate,
+    };
+  } catch (err: any) {
+    return null;
+  }
+}
+
+
+export function sumTransactions(transactions: any[]) {
+  let income = 0, expense = 0;
+  transactions.forEach(item => {
+    const value = item._sum.conversion_amount ?? item._sum.amount ?? 0;
+    if (item.type === 'INCOME') income += value;
+    if (item.type === 'EXPENSE') expense += value;
+  });
+  return { income, expense };
+}
+
+export function calculateGrowth(current: number, previous: number) {
+  if (previous === 0) return current === 0 ? 0 : 100;
+  return ((current - previous) / previous) * 100;
 }

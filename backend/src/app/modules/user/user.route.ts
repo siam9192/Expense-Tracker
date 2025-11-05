@@ -5,7 +5,6 @@ import { UserRole } from "./user.interface";
 
 const router = Router();
 
-
 router.get("/me", auth([UserRole.USER]), userController.getCurrentUser);
 
 router.post(
@@ -23,19 +22,33 @@ router.get(
   auth([UserRole.USER]),
   userController.getCurrentUserSessions,
 );
-
-router.put("/me/profile", auth([UserRole.USER]), userController.updateCurrentUserProfile)
+router.get(
+  "/me/balance-updates",
+  auth([UserRole.USER]),
+  userController.getCurrentUserLatestBalanceUpdates,
+);
+router.put(
+  "/me/profile",
+  auth([UserRole.USER]),
+  userController.updateCurrentUserProfile,
+);
 router.put(
   "/me/settings",
   auth([UserRole.USER]),
   userController.updateCurrentUserSettings,
 );
+
 router.patch(
   "/me/sessions/:sessionId/revoke",
   auth([UserRole.USER]),
   userController.revokeCurrentUserSession,
 );
 
+router.patch(
+  "/me/wallet/spendable-balance",
+  auth([UserRole.USER]),
+  userController.updateCurrentUserSpendableBalance,
+);
 
 const userRouter = router;
 

@@ -39,7 +39,44 @@ enum ProfessionStatus {
 }
 
 
+enum CategoryType {
+  INCOME
+  EXPENSE
+  SAVING
+}
 
+enum GoalStatus {
+  ACTIVE
+  COMPLETED
+  FAILED
+}
+
+
+enum TransactionType {
+  INCOME
+  EXPENSE
+  GOAL_DEPOSIT
+  GOAL_WITHDRAW
+}
+
+enum NotificationType {
+  ALERT          // Urgent or critical notifications
+  INFO           // Informational messages (e.g., "New feature available")
+  SUCCESS        // Positive confirmations (e.g., "Goal completed successfully")
+  WARNING        // Potential issues (e.g., "Balance low")
+}
+
+enum BalanceUpdateType {
+  SPENDABLE
+  SAVING
+}
+
+enum BalanceUpdateResource {
+  USER_ADJUSTMENT 
+  TRANSACTION
+  GOAL_DEPOSIT
+  GOAL_WITHDRAW
+}
 
 // ✅ MODELS
 
@@ -72,17 +109,25 @@ model AuthInfo {
 model UserProfile {
   user_id          Int           @id
   name             String        @db.VarChar(20)
-  avatar_id        Int
-  profile_picture  String?        @db.VarChar(255)
-  profession_id    Int
-  country_id       Int
-  wallet           Wallet?
-
-
-  settings         UserSetting?
   avatar Avatar  @relation(fields: [avatar_id], references: [id])
   profession       Profession     @relation(fields: [profession_id], references: [id])
   country          Country        @relation(fields: [country_id], references: [id])
+  
+  profile_picture  String?        @db.VarChar(255)
+  
+  wallet           Wallet?
+  settings         UserSetting?
+
+  //  Foreign Keys
+  avatar_id        Int
+  profession_id    Int
+  country_id       Int
+  
+  
+  // Other relations
+  categories Category[]
+  goals Goal[]
+  transactions Transaction[]
   user             User           @relation(fields: [user_id], references: [id])
 
   @@map("user_profiles")
@@ -217,13 +262,17 @@ model Country {
   @@map("countries")
 }
 
+model Currency {
+  id              Int             @id @default(autoincrement())
+  code            String          @unique             // e.g. "USD", "EUR"
+  name            String                              // e.g. "US Dollar"
+  symbol          String          @db.VarChar(5)      // e.g. "$", "৳", "₱"
 
-model  Currency {
-  id  Int     @id @default(autoincrement())
-  code String @unique
-  name String
-  symbol String @db.VarChar(1)
-  user_settings UserSetting[]
+  // 🔗 Relations
+  user_settings        UserSetting[]                 // user-specific preferences
+  main_currencies_tx       Transaction[] @relation("MainCurrency")       // transactions using this as main/base currency
+  base_currencies_tx  Transaction[] @relation("BaseCurrency")  // transactions using this as converted currency
+
   @@map("currencies")
 }
 
@@ -233,7 +282,109 @@ model Avatar {
   id  Int     @id @default(autoincrement())
   name String
   src String
-  isDefault Boolean 
+  is_default Boolean 
   users UserProfile[]
   @@map("avatars")
+}
+
+
+model Category {
+  id          Int            @id @default(autoincrement())
+  user_id     Int
+  name        String
+  type        CategoryType
+  icon        String?
+  color       String?
+  description String @db.VarChar(500)
+
+  is_default  Boolean        @default(false)
+  is_deleted  Boolean        @default(false)
+  is_hidden Boolean @default(false)
+  created_at  DateTime       @default(now())
+  updated_at  DateTime       @updatedAt
+  
+  user        UserProfile    @relation(fields: [user_id], references: [user_id])
+  transactions Transaction[]
+  @@unique([user_id,name,type])
+  @@map("categories")
+}
+
+
+
+model Goal {
+  id          Int            @id @default(autoincrement())
+  user_id     Int
+  title String @db.VarChar(100)
+  target_amount Float
+  current_amount Float
+  initial_amount Float @default(0)
+  deadline DateTime
+  complete_percentage Float @default(0)
+  status GoalStatus @default(ACTIVE)
+  is_withdrawn  Boolean @default(false)
+  created_at   DateTime                @default(now())
+  updated_at   DateTime                @updatedAt
+
+  user   UserProfile    @relation(fields: [user_id], references: [user_id])
+  @@map("goals")
+}
+model Transaction {
+  id   String @id @default(cuid())
+
+  // 🔗 Relations
+  user               UserProfile   @relation(fields: [user_id], references: [user_id])
+  category           Category      @relation(fields: [category_id], references: [id])
+  currency           Currency      @relation("MainCurrency", fields: [currency_id], references: [id])
+  base_currency      Currency?     @relation("BaseCurrency", fields: [base_currency_id], references: [id])
+
+  // 💰 Financial Fields
+  amount             Float
+  conversion_rate    Float?
+  conversion_amount  Float?
+
+  // ⚙️ Metadata
+  type               TransactionType
+  note               String?
+  date               DateTime
+  created_at         DateTime       @default(now())
+  updated_at         DateTime       @updatedAt
+
+  // 🔑 Foreign Keys
+  user_id            Int
+  category_id        Int
+  currency_id        Int
+  base_currency_id   Int?
+
+  @@map("transactions")
+}
+
+
+model Notification {
+  id                 Int           @id @default(autoincrement())
+  user_id Int
+
+  message String @db.VarChar(100)
+  type NotificationType
+  is_read Boolean @default(false)
+
+  created_at   DateTime                @default(now())
+  updated_at   DateTime                @updatedAt
+  @@map("notifications")
+}
+
+model BalanceUpdate {
+  id   String @id @default(cuid())
+  user_id          Int
+  reason           String    @db.VarChar(150) // increased length for longer reasons
+  prev_balance     Float
+  new_balance      Float     // clearer naming: "new" instead of "update"
+  change_amount    Float     // optional: makes it easy to see delta (new - prev)
+  balance_type BalanceUpdateType
+  resource BalanceUpdateResource
+  
+  created_at       DateTime  @default(now())
+  updated_at       DateTime  @updatedAt
+
+  
+  @@map("balance_updates")
 }

@@ -22,15 +22,18 @@ export interface UpdateUserProfilePayload
     country_id: number;
   }> {}
 
-  export interface UpdateCurrentUserSettingsPayload extends Partial <{
-    auto_saving:boolean
-  balance_expense_income_alert:boolean
-  email_alerts:boolean
-  sms_alerts:boolean
-  transaction_updates:boolean
-  two_factor_auth:boolean
-  monthly_budget:number
+export interface UpdateCurrentUserSettingsPayload
+  extends Partial<{
+    auto_saving: boolean;
+    balance_expense_income_alert: boolean;
+    email_alerts: boolean;
+    sms_alerts: boolean;
+    transaction_updates: boolean;
+    two_factor_auth: boolean;
+    monthly_budget: number;
+  }> {}
 
-  }> {
-    
-  }
+export interface UpdateCurrentUserSpendableBalance {
+  new_balance: number;
+  reason: string;
+}

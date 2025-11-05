@@ -8,7 +8,7 @@ import { FilterAvatarsQuery } from "./avatar.interface";
 class AvatarService {
   async autoCreateAvatarsIntoDB() {
     const existingCount = await prisma.avatar.count({
-      where: { isDefault: true },
+      where: { is_default: true },
     });
     if (existingCount > 0) {
       return {
@@ -21,7 +21,7 @@ class AvatarService {
     await prisma.avatar.createMany({
       data: DEFAULT_AVATARS.map((_) => ({
         ..._,
-        isDefault: true,
+        is_default: true,
       })),
       skipDuplicates: true,
     });
