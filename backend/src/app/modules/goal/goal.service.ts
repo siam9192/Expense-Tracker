@@ -12,6 +12,7 @@ import {
   CreateCurrentUserGoalPayload,
   DepositCurrentUserGoalPayload,
   FilterGoalsQuery,
+  WithdrawCurrentUserGoalPayload,
 } from "./goal.interface";
 import AppError from "../../errors/AppError";
 import httpStatus from "../../shared/http-status";
@@ -176,27 +177,16 @@ class GoalService {
     };
   }
 
-  async createGoalWithdrawIntoDB(
-    authUser: AuthUser,
-    payload: { goal_id: number; amount: number },
-  ) {
+  async createGoalWithdrawIntoDB(authUser: AuthUser, goalId: string) {
     // 1️⃣ Fetch goal
     const goal = await prisma.goal.findUnique({
       where: {
-        id: payload.goal_id,
+        id: Number(goalId),
         user_id: authUser.user_id,
       },
     });
     if (!goal) {
       throw new AppError(httpStatus.NOT_FOUND, "Goal not found");
-    }
-
-    // 2️⃣ Validate amount
-    if (goal.current_amount < payload.amount) {
-      throw new AppError(
-        httpStatus.BAD_REQUEST,
-        "You cannot withdraw more than the saved amount in this goal",
-      );
     }
 
     // 3️⃣ Fetch wallet
@@ -221,6 +211,7 @@ class GoalService {
           name: "Goal Withdraw",
           type: CategoryType.SAVING,
         },
+        is_default: true,
       },
     });
     if (!category)
@@ -233,7 +224,7 @@ class GoalService {
         prisma.goal.update({
           where: { id: goal.id },
           data: {
-            current_amount: { decrement: payload.amount },
+            is_withdrawn: true,
           },
         }),
 
@@ -241,8 +232,8 @@ class GoalService {
         prisma.wallet.update({
           where: { id: wallet.id },
           data: {
-            spendable_balance: { increment: payload.amount },
-            saving_balance: { decrement: payload.amount },
+            spendable_balance: { increment: goal.current_amount },
+            saving_balance: { decrement: goal.current_amount },
           },
         }),
 
@@ -252,7 +243,7 @@ class GoalService {
             user_id: authUser.user_id,
             category_id: category.id,
             type: TransactionType.GOAL_WITHDRAW,
-            amount: payload.amount,
+            amount: goal.current_amount,
             currency_id: userSettings.currency.id,
             date: new Date(),
           },
@@ -262,7 +253,7 @@ class GoalService {
         prisma.notification.create({
           data: {
             user_id: authUser.user_id,
-            message: `You have withdrawn ${payload.amount} from your goal "${goal.title}" to your spendable balance.`,
+            message: `You have withdrawn ${goal.current_amount} from your goal "${goal.title}" to your spendable balance.`,
             type: NotificationType.SUCCESS,
           },
         }),

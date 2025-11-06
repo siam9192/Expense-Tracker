@@ -40,7 +40,7 @@ class GoalController {
   createGoalWithdraw = catchAsync(async (req, res) => {
     const result = await goalService.createGoalWithdrawIntoDB(
       req.user,
-      req.body,
+      req.params.id,
     );
     sendSuccessResponse(res, {
       message: "Goal withdraw created successfully",

@@ -6,7 +6,7 @@ import { DEFAULT_AVATARS } from "../../utils/constant";
 import { FilterAvatarsQuery } from "./avatar.interface";
 
 class AvatarService {
-  async autoCreateAvatarsIntoDB() {
+  async seedAvatarsIntoDB() {
     const existingCount = await prisma.avatar.count({
       where: { is_default: true },
     });

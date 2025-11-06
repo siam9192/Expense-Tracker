@@ -1,20 +1,28 @@
 import { z } from "zod";
 
-const customerSignupValidation = z.object({
-  name: z.object({
-    first: z.string().nonempty().max(25),
-    last: z.string().nonempty().max(25),
+const initUserPayloadValidation = z.object({
+  email: z.string().email().max(100),
+  password: z.string().min(6).max(50),
+  device_info: z.object({
+    device_name: z.string().nonempty("device name is required"),
+    ip: z.string().nonempty("Ip address is required"),
   }),
-  email: z.string().email().max(100),
-  password: z.string().min(6).max(50),
 });
 
-const customerSignInValidation = z.object({
+const verifyInitUserPayloadValidation = z.object({
+  token: z.string().nonempty("Token is required"),
+  otp: z.string().nonempty("OTP is required"),
+});
+const userSigninPayloadValidation = z.object({
   email: z.string().email().max(100),
   password: z.string().min(6).max(50),
+  device_info: z.object({
+    device_name: z.string().nonempty("device name is required"),
+    ip: z.string().nonempty("Ip address is required"),
+  }),
 });
 
-const changePasswordValidation = z.object({
+const changePasswordPayloadValidation = z.object({
   oldPassword: z.string().nonempty("Old password is required"),
   newPassword: z
     .string()
@@ -25,10 +33,16 @@ const changePasswordValidation = z.object({
     }),
 });
 
+const resendVerificationOTPPayloadValidation = z.object({
+  token: z.string().nonempty("Token is required"),
+});
+
 const authValidations = {
-  customerSignInValidation,
-  customerSignupValidation,
-  changePasswordValidation,
+  initUserPayloadValidation,
+  userSigninPayloadValidation,
+  resendVerificationOTPPayloadValidation,
+  verifyInitUserPayloadValidation,
+  changePasswordPayloadValidation,
 };
 
 export default authValidations;

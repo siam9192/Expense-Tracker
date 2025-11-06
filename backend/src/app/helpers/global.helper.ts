@@ -157,13 +157,38 @@ export async function getCurrencyConversionRate(
   }
 }
 
+export async function getLocationDetailsByIp(ip: string) {
+  try {
+    const { data } = await axios.get(`https://ipapi.co/${ip}/json/`);
+
+    if (!data || data.error) {
+      return null;
+    }
+    const addressParts = [
+      data.city,
+      data.region,
+      data.country_name,
+      data.postal,
+    ].filter(Boolean);
+
+    const addressString = addressParts.join(", ");
+    return {
+      ip,
+      address_str: addressString,
+      location: data,
+    };
+  } catch (error) {
+    return null;
+  }
+}
 
 export function sumTransactions(transactions: any[]) {
-  let income = 0, expense = 0;
-  transactions.forEach(item => {
+  let income = 0,
+    expense = 0;
+  transactions.forEach((item) => {
     const value = item._sum.conversion_amount ?? item._sum.amount ?? 0;
-    if (item.type === 'INCOME') income += value;
-    if (item.type === 'EXPENSE') expense += value;
+    if (item.type === "INCOME") income += value;
+    if (item.type === "EXPENSE") expense += value;
   });
   return { income, expense };
 }

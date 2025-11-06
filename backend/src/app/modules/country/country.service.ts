@@ -6,7 +6,7 @@ import { calculatePagination } from "../../helpers/pagination.helper";
 import { FilterCountriesQuery } from "./country.interface";
 
 class CountryService {
-  async autoCreateCountriesIntoDB() {
+  async seedCountriesIntoDB() {
     // 1️⃣ Check if countries already exist
     const existingCount = await prisma.country.count();
     if (existingCount > 0) {

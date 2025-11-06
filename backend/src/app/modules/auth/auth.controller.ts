@@ -40,7 +40,7 @@ class AuthController {
   });
 
   userSignout = catchAsync(async (req, res) => {
-    const result = await authService.useSignout(req.body);
+    const result = await authService.useSignout(req.user);
     sendSuccessResponse(res, {
       message: "Signout successful",
       status_code: httpStatus.OK,

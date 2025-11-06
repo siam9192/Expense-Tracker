@@ -4,7 +4,10 @@ import envConfig from "../../config/env.config";
 import AppError from "../../errors/AppError";
 
 import { encrypt } from "../../helpers/bycrypt.helper";
-import { generateOTP } from "../../helpers/global.helper";
+import {
+  generateOTP,
+  getLocationDetailsByIp,
+} from "../../helpers/global.helper";
 import { generateJwtToken, verifyJwtToken } from "../../helpers/jwt.helper";
 import prisma from "../../prisma-client";
 import httpStatus from "../../shared/http-status";
@@ -33,6 +36,12 @@ class AuthService {
     if (user) {
       throw new AppError(httpStatus.FORBIDDEN, "User is already exist!");
     }
+    const locationDetails = await getLocationDetailsByIp(
+      payload.session_info.ip,
+    );
+    if (!locationDetails) {
+      throw new Error();
+    }
     return await prisma.$transaction(async (tx) => {
       const generatedOTP = generateOTP(4);
 
@@ -58,6 +67,7 @@ class AuthService {
           email: payload.email,
           password: encryptedPassword,
           ...payload.session_info,
+          address: locationDetails.address_str,
           verification_id: createdVerification.id,
         },
       });
@@ -272,6 +282,14 @@ class AuthService {
     if (!isMatched) {
       throw new AppError(httpStatus.NOT_ACCEPTABLE, "Wrong password");
     }
+
+    const locationDetails = await getLocationDetailsByIp(
+      payload.session_info.ip,
+    );
+    if (!locationDetails) {
+      throw new Error();
+    }
+
     const sessionExpiresAt = new Date();
     sessionExpiresAt.setDate(
       sessionExpiresAt.getDate() + appConfig.refresh_token_expire_days,
@@ -281,6 +299,7 @@ class AuthService {
       data: {
         user_id: user.id,
         ...payload.session_info,
+        address: locationDetails.address_str,
         token: "",
         expires_at: sessionExpiresAt,
       },

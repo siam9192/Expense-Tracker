@@ -17,3 +17,8 @@ export interface DepositCurrentUserGoalPayload {
   goal_id: number;
   amount: number;
 }
+
+export interface WithdrawCurrentUserGoalPayload {
+  goal_id: number;
+  amount: number;
+}

@@ -6,7 +6,7 @@ import { DEFAULT_PROFESSIONS } from "../../utils/constant";
 import { FilterProfessionsQuery } from "./profession.interface";
 
 class ProfessionService {
-  async autoCreateProfessionsIntoDB() {
+  async seedProfessionsIntoDB() {
     const existingCount = await prisma.profession.count();
     if (existingCount > 0) {
       return {

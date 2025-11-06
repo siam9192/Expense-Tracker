@@ -2,6 +2,8 @@ import { Router } from "express";
 import userController from "./user.controller";
 import auth from "../../middlewares/auth";
 import { UserRole } from "./user.interface";
+import validateRequest from "../../middlewares/validateRequest";
+import userValidation from "./user.validation";
 
 const router = Router();
 
@@ -10,6 +12,7 @@ router.get("/me", auth([UserRole.USER]), userController.getCurrentUser);
 router.post(
   "/me/setup-profile",
   auth([UserRole.USER]),
+  validateRequest(userValidation.setupUserProfilePayloadValidation),
   userController.setupUserProfile,
 );
 router.get(
@@ -30,17 +33,20 @@ router.get(
 router.put(
   "/me/profile",
   auth([UserRole.USER]),
+  validateRequest(userValidation.setupUserProfilePayloadValidation),
   userController.updateCurrentUserProfile,
 );
 router.put(
   "/me/settings",
   auth([UserRole.USER]),
+  validateRequest(userValidation.updateCurrentUserSettingsPayloadValidation),
   userController.updateCurrentUserSettings,
 );
 
 router.patch(
   "/me/sessions/:sessionId/revoke",
   auth([UserRole.USER]),
+  validateRequest(userValidation.setupUserProfilePayloadValidation),
   userController.revokeCurrentUserSession,
 );
 

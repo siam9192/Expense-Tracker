@@ -32,16 +32,6 @@ export interface ChangePasswordPayload {
   signout_others: boolean;
 }
 
-export interface CallbackPayload {
-  provider: "google" | "facebook";
-  type: string;
-  access_token: string;
-  expires_at: number;
-  scope: string;
-  token_type: string;
-  id_token: string;
-}
-
 export interface InitUserPayload {
   email: string;
   password: string;
