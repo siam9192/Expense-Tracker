@@ -1,40 +1,41 @@
 import { useState } from "react";
-import { X, Globe } from "lucide-react";
-import { div } from "motion/react-client";
+import { Globe } from "lucide-react";
 
-// Optional: You can expand this list or load from a JSON later
-const countryList = [
-  { code: "US", name: "United States", flag: "🇺🇸" },
-  { code: "GB", name: "United Kingdom", flag: "🇬🇧" },
-  { code: "BD", name: "Bangladesh", flag: "🇧🇩" },
-  { code: "IN", name: "India", flag: "🇮🇳" },
-  { code: "CA", name: "Canada", flag: "🇨🇦" },
-  { code: "AU", name: "Australia", flag: "🇦🇺" },
-  { code: "JP", name: "Japan", flag: "🇯🇵" },
-  { code: "DE", name: "Germany", flag: "🇩🇪" },
-  { code: "FR", name: "France", flag: "🇫🇷" },
-  { code: "IT", name: "Italy", flag: "🇮🇹" },
-  { code: "BR", name: "Brazil", flag: "🇧🇷" },
-  { code: "CN", name: "China", flag: "🇨🇳" },
-  { code: "SA", name: "Saudi Arabia", flag: "🇸🇦" },
-  { code: "ZA", name: "South Africa", flag: "🇿🇦" },
-];
+import { useGetPublicCountriesQuery } from "../../../redux/api/country.api";
+import { useUserProfileSetupFormContext } from "./UserProfileSetupDialog";
+
 interface Props {
-  onNext: (countryCode: string) => void;
+  onNext: (countryCode:number) => void;
   onBack: () => void;
 }
 
 function UserProfileSetupChooseCountry({ onNext, onBack }: Props) {
-  const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
-  const [searchTerm, setSearchTerm] = useState("");
+   const {data:formData,setData:setFormData} =  useUserProfileSetupFormContext()
 
-  const filteredCountries = countryList.filter((c) =>
+  const [selectedCountry, setSelectedCountry] = useState<number | null>(formData.country_id);
+  const [searchTerm, setSearchTerm] = useState("");
+   
+  const {data} = useGetPublicCountriesQuery({
+    limit:250,
+    sortBy:'name',
+    sortOrder:"asc"
+  })
+  const countries =  data?.data||[]
+ 
+  const filteredCountries = countries.filter((c) =>
     c.name.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
+
   const handleContinue = () => {
-    if (selectedCountry) onNext(selectedCountry);
+    if (selectedCountry)
+     {
+       setFormData(p=>({...p,country_id:selectedCountry}))
+      onNext(selectedCountry);
+     }
   };
+  
+ 
 
   return (
     <div className="flex flex-col h-full">
@@ -64,15 +65,18 @@ function UserProfileSetupChooseCountry({ onNext, onBack }: Props) {
           {filteredCountries.map((country) => (
             <div
               key={country.code}
-              onClick={() => setSelectedCountry(country.code)}
+              onClick={() => setSelectedCountry(country.id)}
               className={`cursor-pointer border rounded-xl p-4 flex flex-col items-center justify-center transition-all duration-300 ${
-                selectedCountry === country.code
+                selectedCountry === country.id
                   ? "border-primary bg-primary/10 "
                   : "border-base-300 hover:border-primary/50"
               }`}
-            >
-              <span className="text-3xl">{country.flag}</span>
+            > 
+            <img src={country.flag_png} alt="" className="w-32  h-20 object-cover" />
+             <div className="mt-2 text-center">
+               <span className="text-3xl">{country.code}</span>
               <p className="font-semibold mt-2">{country.name}</p>
+             </div>
             </div>
           ))}
         </div>

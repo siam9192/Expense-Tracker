@@ -1,5 +1,6 @@
 import { Target } from "lucide-react";
 import { useState } from "react";
+import { useUserProfileSetupFormContext } from "./UserProfileSetupDialog";
 
 interface Props {
   onNext: () => void;
@@ -12,16 +13,20 @@ export default function UserProfileSetupMonthlyBudget({
   onBack,
   defaultCurrency = "$",
 }: Props) {
-  const [budget, setBudget] = useState<number | string>("");
+   const {data:formData,setData:setFormData} =  useUserProfileSetupFormContext()
+  const [budget, setBudget] = useState<number>(formData.monthly_budget||0);
+  
 
-  const handleNext = () => {
+  const handleContinue = () => {
     const value = Number(budget);
     if (isNaN(value) || value <= 0) {
       alert("Please enter a valid monthly budget amount.");
       return;
     }
 
-    console.log("User Monthly Budget:", value);
+    if(budget) {
+      setFormData(_=>({..._,monthly_budget:budget}))
+    }
     onNext();
   };
 
@@ -49,7 +54,7 @@ export default function UserProfileSetupMonthlyBudget({
           <input
             type="number"
             value={budget}
-            onChange={(e) => setBudget(e.target.value)}
+            onChange={(e) => setBudget(Number(e.target.value))}
             className="input input-bordered w-full pl-10 text-center text-lg font-semibold"
             placeholder="Enter amount"
             min={0}
@@ -65,7 +70,7 @@ export default function UserProfileSetupMonthlyBudget({
         <button onClick={onBack} className="btn btn-ghost">
           Back
         </button>
-        <button onClick={handleNext} className="btn btn-primary">
+        <button disabled={!budget} onClick={handleContinue} className="btn btn-primary">
           Continue
         </button>
       </div>

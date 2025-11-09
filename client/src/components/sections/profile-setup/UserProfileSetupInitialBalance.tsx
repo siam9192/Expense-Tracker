@@ -31,7 +31,7 @@ export default function UserProfileSetupInitialBalance({ onNext, onBack }: Props
         <label className="block text-sm font-medium text-gray-600 mb-2">Current Balance</label>
         <input
           type="number"
-          value={balance}
+          defaultValue={balance}
           onChange={(e) => setBalance(Number(e.target.value))}
           className="input input-bordered w-full text-center text-lg font-semibold"
           placeholder="Enter amount"

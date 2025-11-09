@@ -1,31 +1,31 @@
 import { Check } from "lucide-react";
 import { useState } from "react";
+import { useGetPublicAvatarsQuery } from "../../../redux/api/avatar.type";
+import { useUserProfileSetupFormContext } from "./UserProfileSetupDialog";
 interface Props {
-  onNext: (avatar: string) => void;
+  onNext: (avatar: number) => void;
+  onBack: () => void;
 }
-function UserProfileSetupChooseAvatar({ onNext }: Props) {
-  const [selectedAvatar, setSelectedAvatar] = useState<string | null>(null);
+function UserProfileSetupChooseAvatar({ onNext,onBack }: Props) {
+  const {data:formData,setData:setFormData} =  useUserProfileSetupFormContext()
+  const [selectedAvatar, setSelectedAvatar] = useState<number | null>(formData.avatar_id);
+  const {data} =  useGetPublicAvatarsQuery({
+    limit:200
+  })
+  const avatars = data?.data||[]
 
-  const avatars = [
-    "https://img.freepik.com/premium-vector/man-avatar-profile-picture-isolated-background-avatar-profile-picture-man_1293239-4866.jpg?semt=ais_hybrid&w=740&q=80",
-    "https://img.freepik.com/premium-vector/woman-avatar-profile-picture-isolated-background-avatar-profile-picture-woman_1293239-4867.jpg?w=740",
-    "https://img.freepik.com/premium-vector/businessman-avatar-profile-picture_1293239-4845.jpg?w=740",
-    "https://img.freepik.com/premium-vector/girl-avatar-profile-picture_1293239-4846.jpg?w=740",
-    "https://img.freepik.com/premium-vector/young-man-avatar-profile-picture_1293239-4859.jpg?w=740",
-    "https://img.freepik.com/premium-vector/female-avatar-profile-picture_1293239-4860.jpg?w=740",
-    "https://img.freepik.com/premium-vector/teen-boy-avatar-profile-picture_1293239-4861.jpg?w=740",
-    "https://img.freepik.com/premium-vector/teen-girl-avatar-profile-picture_1293239-4862.jpg?w=740",
-    "https://img.freepik.com/premium-vector/old-man-avatar-profile-picture_1293239-4863.jpg?w=740",
-    "https://img.freepik.com/premium-vector/old-woman-avatar-profile-picture_1293239-4864.jpg?w=740",
-  ];
-
-  const handleSelect = (url: string) => {
-    setSelectedAvatar(url);
+  const handleSelect = (id: number) => {
+    setSelectedAvatar(id);
   };
 
   const handleContinue = () => {
-    onNext(selectedAvatar as string);
+   if(selectedAvatar) {
+     onNext(selectedAvatar);
+     setFormData(_=>({..._,avatar_id:selectedAvatar}))
+   }
   };
+
+  
   return (
     <div className="flex flex-col h-full">
       {/* Header */}
@@ -33,24 +33,24 @@ function UserProfileSetupChooseAvatar({ onNext }: Props) {
       <p className="text-gray-500 text-center">Choose your avatar to get started</p>
 
       {/* Avatar Grid */}
-      <div className="mt-10  grow">
-        <div className="flex flex-wrap justify-center gap-6">
-          {avatars.map((url, i) => (
+      <div className="grow mt-10 ">
+        <div className="flex flex-wrap justify-center gap-6 overflow-y-auto min-h-[40vh] max-h-[50vh] ">
+          {avatars.map((avatar, i) => (
             <div
               key={i}
-              onClick={() => handleSelect(url)}
-              className={`relative cursor-pointer rounded-full border-4 transition-all duration-300 ${
-                selectedAvatar === url
+              onClick={() => handleSelect(avatar.id)}
+              className={`relative h-fit cursor-pointer rounded-full border-4 transition-all duration-300 ${
+                selectedAvatar === avatar.id
                   ? "border-primary scale-105"
                   : "border-transparent hover:border-base-300"
               }`}
             >
               <img
                 className="size-32 rounded-full object-cover"
-                src={url}
+                src={avatar.src}
                 alt={`Avatar ${i + 1}`}
               />
-              {selectedAvatar === url && (
+              {selectedAvatar === avatar.id && (
                 <div className="absolute inset-0 bg-black/30 flex items-center justify-center rounded-full">
                   <Check className="text-white w-8 h-8" />
                 </div>
@@ -61,7 +61,10 @@ function UserProfileSetupChooseAvatar({ onNext }: Props) {
       </div>
 
       {/* Action Buttons */}
-      <div className="mt-10 flex justify-end gap-4">
+     <div className="mt-8 flex justify-between">
+        <button onClick={onBack} className="btn btn-ghost px-6">
+          Back
+        </button>
         <button
           onClick={handleContinue}
           disabled={!selectedAvatar}

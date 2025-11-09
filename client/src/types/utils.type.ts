@@ -15,3 +15,7 @@ export interface MetaData {
   isCurrency?: boolean;
   isPercentage: boolean;
 }
+
+export interface  Params {
+  [key:string]:string|number
+}

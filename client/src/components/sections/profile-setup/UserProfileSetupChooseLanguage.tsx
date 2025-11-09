@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { X, Globe } from "lucide-react";
+import {  Globe } from "lucide-react";
+import { AppLanguage } from "../../../types/settings.type";
 
 const languages = [
-  { code: "en", name: "English", flag: "🇺🇸" },
-  { code: "bn", name: "Bangla", flag: "🇧🇩" },
+  { code: "en", name: "English", value:AppLanguage.English },
+  { code: "bn", name: "Bangla", value:AppLanguage.Bangla},
 ];
 
 interface Props {
@@ -34,14 +35,16 @@ function UserProfileSetupChooseLanguage({ onNext, onBack }: Props) {
         {languages.map((lang) => (
           <div
             key={lang.code}
-            onClick={() => setSelectedLanguage(lang.code)}
-            className={`cursor-pointer border rounded-xl p-4 flex flex-col items-center justify-center transition-all duration-300 h-fit ${
+            onClick={() => setSelectedLanguage(lang.value)}
+            className={`cursor-pointer border rounded-xl p-4 flex flex-col items-center justify-center transition-all duration-300 h-40 ${
               selectedLanguage === lang.code
                 ? "border-primary bg-primary/10 scale-105"
                 : "border-base-300 hover:border-primary/50"
             }`}
+          
+          
           >
-            <span className="text-3xl">{lang.flag}</span>
+            <span className="text-3xl">{lang.code}</span>
             <p className="font-semibold mt-2">{lang.name}</p>
           </div>
         ))}
