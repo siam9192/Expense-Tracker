@@ -37,7 +37,6 @@ export interface InitUserPayload {
   password: string;
   session_info: {
     device_name: string;
-    address: string;
     ip: string;
   };
 }

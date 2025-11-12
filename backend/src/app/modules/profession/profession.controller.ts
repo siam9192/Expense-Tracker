@@ -14,7 +14,7 @@ class ProfessionController {
     sendSuccessResponse(res, {
       message: "Professions retrieved successfully",
       status_code: httpStatus.OK,
-      data: result,
+      ...result,
     });
   });
 }

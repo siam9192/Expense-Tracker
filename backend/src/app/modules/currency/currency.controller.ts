@@ -14,7 +14,7 @@ class CurrencyController {
     sendSuccessResponse(res, {
       message: "Currencies retrieved successfully",
       status_code: httpStatus.OK,
-      data: result,
+      ...result,
     });
   });
 }

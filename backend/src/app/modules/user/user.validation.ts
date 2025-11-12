@@ -1,3 +1,4 @@
+import { Gender } from "@prisma/client";
 import z from "zod";
 
 const updateUserProfilePayloadValidation = 
@@ -50,7 +51,7 @@ z.object({
     .trim()
     .nonempty("Name cannot be empty")
     .max(100, "Name must be at most 100 characters long"),
-
+   gender:z.nativeEnum(Gender,{message:"Invalid gender",required_error:"Gender is required"}),
   avatar_id: z
     .number({
       required_error: "Avatar ID is required",

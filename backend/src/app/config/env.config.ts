@@ -21,6 +21,7 @@ const envConfig = {
     refresh_token_secret: process.env.JWT_REFRESH_TOKEN_SECRET,
     otp_verification_token_secret: process.env.OTP_VERIFICATION_TOKEN_SECRET,
   },
+  
 };
 
 export default envConfig;

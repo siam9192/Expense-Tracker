@@ -20,6 +20,12 @@ enum UserStatus {
   BLOCKED
 }
 
+enum Gender {
+   MALE
+   FEMALE
+   OTHER
+}
+
 enum SessionStatus {
   ACTIVE
   EXPIRED
@@ -109,6 +115,7 @@ model AuthInfo {
 model UserProfile {
   user_id          Int           @id
   name             String        @db.VarChar(20)
+  gender Gender
   avatar Avatar  @relation(fields: [avatar_id], references: [id])
   profession       Profession     @relation(fields: [profession_id], references: [id])
   country          Country        @relation(fields: [country_id], references: [id])
@@ -195,7 +202,7 @@ model UserSetting {
 
 model UserInit {
   id               String             @id @default(cuid())
-  email            String             @unique
+  email            String            
   password         String
   device_name String
   address String
@@ -266,7 +273,7 @@ model Currency {
   id              Int             @id @default(autoincrement())
   code            String          @unique             // e.g. "USD", "EUR"
   name            String                              // e.g. "US Dollar"
-  symbol          String          @db.VarChar(5)      // e.g. "$", "৳", "₱"
+  symbol          String          @db.VarChar(10)      // e.g. "$", "৳", "₱"
 
   // 🔗 Relations
   user_settings        UserSetting[]                 // user-specific preferences

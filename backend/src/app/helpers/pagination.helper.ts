@@ -8,18 +8,18 @@ export enum ESortOrder {
 }
 
 interface IOptionsResult {
-  page: number | undefined | any;
-  limit: number | undefined | any;
-  skip: number | undefined | any;
-  sortOrder: ESortOrder | undefined | any;
-  sortBy: string | undefined | any;
+  page: number;
+  limit: number;
+  skip: number;
+  sortOrder: ESortOrder;
+  sortBy: string;
 }
 
 interface IDefaultOptions {
-  defaultSortBy?: boolean;
-  defaultSortOrder?: boolean;
-  defaultPage?: boolean;
-  defaultLimit?: boolean;
+  defaultSortBy?: string;
+  defaultSortOrder?: ESortOrder;
+  defaultPage?: number;
+  defaultLimit?: number;
   limitOverride?: number;
 }
 
@@ -28,36 +28,19 @@ export const calculatePagination = (
   options?: IDefaultOptions,
 ): IOptionsResult => {
   // Parse pagination values with fallbacks
-  let page: number | undefined = Number(paginationOptions.page) || 1;
-  let limit: number | undefined =
-    options?.limitOverride || Number(paginationOptions.limit) || 16;
+  let page: number = Number(paginationOptions.page) || options?.defaultPage || 1;
+  let limit: number = Number(paginationOptions.limit) || options?.limitOverride || options?.defaultLimit || 16;
 
   const isValidSortOrder = Object.values(ESortOrder).includes(
-    paginationOptions.sortOrder as ESortOrder,
+    paginationOptions.sortOrder as ESortOrder
   );
-  let sortOrder: ESortOrder | undefined = isValidSortOrder
+  let sortOrder: ESortOrder = isValidSortOrder
     ? (paginationOptions.sortOrder as ESortOrder)
-    : ESortOrder.DESC;
+    : options?.defaultSortOrder || ESortOrder.DESC;
 
-  let sortBy: string | undefined = paginationOptions.sortBy || "created_at";
+  let sortBy: string = paginationOptions.sortBy || options?.defaultSortBy || "created_at";
 
-  let skip = (page - 1) * limit;
-
-  // Override default behaviors if options are explicitly disabled
-  if (options) {
-    if (options.defaultSortBy === false && !paginationOptions.sortBy) {
-      sortBy = undefined;
-    }
-    if (options.defaultSortOrder === false && !paginationOptions.sortOrder) {
-      sortOrder = undefined;
-    }
-    if (options.defaultPage === false && !paginationOptions.page) {
-      page = undefined;
-    }
-    if (options.defaultLimit === false && !paginationOptions.limit) {
-      limit = undefined;
-    }
-  }
+  const skip = (page - 1) * limit;
 
   return {
     page,
@@ -68,6 +51,6 @@ export const calculatePagination = (
   };
 };
 
-// Utility to pick pagination options from a query
-export const paginationOptionPicker = (query: any) =>
-  pick(query, PAGINATION_OPTION_KEYS);
+// Strongly typed pick for pagination
+export const paginationOptionPicker = (query: Record<string, any>): PaginationOptions =>
+  pick(query, PAGINATION_OPTION_KEYS) as PaginationOptions;

@@ -9,6 +9,7 @@ import categoryRouter from "../modules/category/category.route";
 import goalRouter from "../modules/goal/goal.route";
 import transitionRouter from "../modules/transaction/transaction.route";
 import notificationRouter from "../modules/notification/notification.route";
+import metadataRouter from "../modules/metadata/metadata.route";
 
 type TModuleRoutes = { path: string; router: IRouter }[];
 const router = Router();
@@ -54,6 +55,10 @@ const moduleRoutes: TModuleRoutes = [
     path: "/notifications",
     router: notificationRouter,
   },
+  {
+    path:"/metadata",
+    router:metadataRouter
+  }
 ];
 
 const routes = moduleRoutes.map((route) =>

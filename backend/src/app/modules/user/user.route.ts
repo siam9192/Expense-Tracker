@@ -7,11 +7,15 @@ import userValidation from "./user.validation";
 
 const router = Router();
 
-router.get("/me", auth([UserRole.USER]), userController.getCurrentUser);
+router.get("/me", auth([UserRole.USER],{
+  require_profile_complete:false
+}), userController.getCurrentUser);
 
 router.post(
   "/me/setup-profile",
-  auth([UserRole.USER]),
+  auth([UserRole.USER],{
+    require_profile_complete:false
+  }),
   validateRequest(userValidation.setupUserProfilePayloadValidation),
   userController.setupUserProfile,
 );

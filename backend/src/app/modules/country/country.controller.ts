@@ -15,7 +15,7 @@ class CountryController {
     sendSuccessResponse(res, {
       message: "Countries retrieved successfully",
       status_code: httpStatus.OK,
-      data: result,
+      ...result,
     });
   });
 }

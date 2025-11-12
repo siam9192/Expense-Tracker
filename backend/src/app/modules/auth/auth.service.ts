@@ -244,7 +244,7 @@ class AuthService {
       throw new AppError(httpStatus.FORBIDDEN, "OTP has expired!");
     }
 
-    const generatedOTP = generateOTP();
+    const generatedOTP = generateOTP(4);
 
     await prisma.otpCodes.create({
       data: {

@@ -38,7 +38,7 @@ class AvatarService {
   ) {
     const { search_term } = filterQuery;
     const { page, skip, limit, sortBy, sortOrder } =
-      calculatePagination(paginationOptions);
+      calculatePagination(paginationOptions,{defaultSortBy:"name"});
     const whereConditions: Prisma.AvatarWhereInput = {};
     if (search_term) {
       whereConditions.name = {

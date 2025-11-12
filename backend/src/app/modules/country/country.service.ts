@@ -66,6 +66,8 @@ class CountryService {
       ];
     }
 
+    console.log(paginationOptions)
+
     const countries = await prisma.country.findMany({
       where: whereConditions,
       skip,

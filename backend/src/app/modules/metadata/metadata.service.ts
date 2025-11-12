@@ -1,4 +1,4 @@
-import { GoalStatus, TransactionType } from "@prisma/client";
+import { CategoryType, GoalStatus, TransactionType } from "@prisma/client";
 import prisma from "../../prisma-client";
 import { AuthUser } from "../auth/auth.interface";
 import { sumTransactions } from "../../helpers/global.helper";
@@ -198,6 +198,7 @@ class MetadataService {
       total_income,
       total_expense,
       budget_usage,
+      budget:userSettings.monthly_budget
     };
   }
 
@@ -633,7 +634,7 @@ class MetadataService {
       by: ["category_id"],
       where: {
         user_id: authUser.user_id,
-        type: TransactionType.EXPENSE,
+        type:CategoryType.EXPENSE,
         date: { gte: startDate, lte: endDate },
       },
       _sum: { amount: true },
@@ -661,7 +662,10 @@ class MetadataService {
       };
     });
 
-    return breakdown;
+    return {
+      sequence,
+      breakdown
+    };
   }
 
   async getCurrentUserNotificationsSummary(authUser: AuthUser) {

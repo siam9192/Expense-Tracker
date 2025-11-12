@@ -3,7 +3,7 @@ import { z } from "zod";
 const initUserPayloadValidation = z.object({
   email: z.string().email().max(100),
   password: z.string().min(6).max(50),
-  device_info: z.object({
+  session_info: z.object({
     device_name: z.string().nonempty("device name is required"),
     ip: z.string().nonempty("Ip address is required"),
   }),
@@ -16,7 +16,7 @@ const verifyInitUserPayloadValidation = z.object({
 const userSigninPayloadValidation = z.object({
   email: z.string().email().max(100),
   password: z.string().min(6).max(50),
-  device_info: z.object({
+  session_info: z.object({
     device_name: z.string().nonempty("device name is required"),
     ip: z.string().nonempty("Ip address is required"),
   }),

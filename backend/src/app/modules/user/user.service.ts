@@ -29,13 +29,14 @@ class UserService {
         auth_info: true,
       },
     });
+  
 
     if (user!.isSetupComplete) {
       throw new AppError(httpStatus.FORBIDDEN, "Setup already completed");
     }
 
     await prisma.$transaction(async (tx) => {
-      tx.user.update({
+     await  tx.user.update({
         where: {
           id: authUser.user_id,
         },
@@ -44,9 +45,10 @@ class UserService {
           profile: {
             create: {
               name: payload.name,
+              gender:payload.gender,
               avatar_id: payload.avatar_id,
               profession_id: payload.profession_id,
-              country_id: payload.currency_id,
+              country_id: payload.country_id,
               wallet: {
                 create: {
                   spendable_balance: payload.spendable_balance,
@@ -78,7 +80,7 @@ class UserService {
     });
 
     return {
-      setupCompleted: true,
+      setupComplete: true,
     };
   }
 
@@ -128,12 +130,12 @@ class UserService {
     });
 
     if (!user) throw new Error();
-
-    const { profile, auth_info } = user;
+    if(user.isSetupComplete) {
+       const { profile, auth_info } = user;
     const data = {
       name: profile?.name,
       email: auth_info?.email,
-      gender: null,
+      gender: profile?.gender,
       profile_picture: profile?.profile_picture,
       avatar: profile?.avatar,
       profession: profile?.profession,
@@ -144,6 +146,14 @@ class UserService {
     };
 
     return data;
+    }
+
+    else {
+      return {
+        email:user.auth_info?.email,
+        isSetupComplete:false
+      }
+    }
   }
 
   async getCurrentUserSessionsFromDB(authUser: AuthUser) {
@@ -200,7 +210,7 @@ class UserService {
       where: {
         user_id: authUser.user_id,
       },
-      data: payload,
+      data: payload
     });
   }
 

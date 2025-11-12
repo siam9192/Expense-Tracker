@@ -14,7 +14,7 @@ router.post(
 );
 
 router.post(
-  "/signup/otp-resend",
+  "/signup/resend-otp",
   validateRequest(authValidations.resendVerificationOTPPayloadValidation),
   authController.resendVerificationOTP,
 );

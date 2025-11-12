@@ -6,8 +6,9 @@ import { calculatePagination } from "../../helpers/pagination.helper";
 import { Prisma } from "@prisma/client";
 
 class CurrencyService {
-  async autoCreateCurrenciesIntoDB() {
+  async seedCurrenciesIntoDB() {
     // 1️⃣ Check if currencies already exist
+   
     const existingCount = await prisma.currency.count();
     if (existingCount > 0) {
       return {
@@ -41,8 +42,7 @@ class CurrencyService {
       }))
       .filter((_) => _.symbol !== undefined);
 
-    console.log(currencies);
-
+   
     // 4️⃣ Bulk insert
     await prisma.currency.createMany({
       data: currencies,
@@ -60,7 +60,9 @@ class CurrencyService {
   ) {
     const { search_term } = filterQuery;
     const { page, skip, limit, sortBy, sortOrder } =
-      calculatePagination(paginationOptions);
+      calculatePagination(paginationOptions,{
+        defaultSortBy:"name"
+      });
     const whereConditions: Prisma.CurrencyWhereInput = {};
     if (search_term) {
       whereConditions.OR = [
@@ -78,6 +80,7 @@ class CurrencyService {
         },
       ];
     }
+  
 
     const currencies = await prisma.currency.findMany({
       where: whereConditions,
