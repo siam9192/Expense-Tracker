@@ -1,11 +1,8 @@
 interface Props {
-    heading:string
+  heading: string;
 }
-function DashboardSectionHeading({heading}:Props) {
-    return (
-    <h1 className="text-xl md:text-2xl font-semibold text-primary ">{heading}</h1>
-  )
-  
+function DashboardSectionHeading({ heading }: Props) {
+  return <h1 className="text-xl md:text-2xl font-semibold text-primary ">{heading}</h1>;
 }
 
-export default DashboardSectionHeading
+export default DashboardSectionHeading;

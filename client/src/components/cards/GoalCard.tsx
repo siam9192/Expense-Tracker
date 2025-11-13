@@ -29,7 +29,7 @@ function GoalCard() {
       </div>
 
       <div className="flex justify-center">
-        <DepositGoalModal/>
+        <DepositGoalModal />
       </div>
       {/* Percentage label */}
       <span className="absolute top-3 right-3 text-primary font-bold text-lg bg-base-100 px-2 py-1 rounded-full shadow">

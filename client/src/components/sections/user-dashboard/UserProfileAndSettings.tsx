@@ -10,16 +10,19 @@ import {
   Currency,
   Globe,
 } from "lucide-react";
+import { useCurrentUserProviderContext } from "../../../Provider/CurrentUserProvider";
 
 function UserProfileAndSettings() {
+  let { user: userData } = useCurrentUserProviderContext();
+  userData = userData!;
   const user = {
-    name: "Siam Hasan",
-    email: "siam@example.com",
-    phone: "+880 1234-567890",
-    avatar: "https://i.pravatar.cc/150?img=5",
-    county: "Bangladesh",
-    currency: "BDT",
-    joined: "March 2024",
+    name: userData.name,
+    email: userData.email,
+    phone: null,
+    avatar: userData.avatar.src,
+    county: userData.country.name,
+    currency: userData.currency.code,
+    joined: new Date(userData.joined_at).toDateString(),
     role: "Premium Member",
   };
 

@@ -1,5 +1,3 @@
-// ExpenseAreaChart.tsx
-import React from "react";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -11,19 +9,26 @@ import {
   Legend,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
-import ArriveAnimationContainer from "../../ui/ArriveAnimationContainer";
 import DashboardSectionHeading from "../../ui/DashboardSectionHeading";
+import { useHomePageProviderContext } from "../../../Provider/HomePageProvider";
+import { DEFAULT_ERROR_MESSAGE } from "../../../utils/constant";
 
 // Register components
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Filler, Tooltip, Legend);
 
 const ExpenseStatistics = () => {
+  const { expenseStatsQuery, setExpenseStatsQueryParams } = useHomePageProviderContext();
+  const { data: resData, isError } = expenseStatsQuery;
+  const stats = resData?.data!.stats;
+
+  if (isError) return <p>{DEFAULT_ERROR_MESSAGE}</p>;
+
   const data = {
-    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
+    labels: stats?.map((_) => _.label),
     datasets: [
       {
         label: "Expenses",
-        data: [1200, 900, 1500, 800, 1100, 1300, 950],
+        data: stats?.map((_) => _.total),
         fill: true,
         backgroundColor: "rgba(99, 102, 241, 0.1)", // Soft blue area
         borderColor: "rgba(99, 102, 241, .4)", // Blue line
@@ -67,24 +72,41 @@ const ExpenseStatistics = () => {
     },
   };
 
+  const durationOptions = [
+    {
+      label: "Last 30 Days",
+      value: "day",
+    },
+    {
+      label: "Last 12 Months",
+      value: "month",
+    },
+    {
+      label: "Last 6 years",
+      value: "year",
+    },
+  ];
+
   return (
-  
-      <div className="w-full  p-4    ">
-        <div className="flex  flex-col md:flex-row justify-between items-center">
-        <DashboardSectionHeading heading="Expense Statistics"/>
-          <select defaultValue="Pick a font" className="select select-ghost w-32">
-            <option>Day</option>
-            <option>Month</option>
-            <option>Year</option>
-          </select>
-        </div>
-        <div>
-          <div className=" mt-5 h-[300px] md:h-[400px]">
-            <Line data={data} options={options} />
-          </div>
+    <div className="w-full  p-4">
+      <div className="flex  flex-col md:flex-row justify-between items-center">
+        <DashboardSectionHeading heading="Expense Statistics" />
+        <select
+          defaultValue="Pick a font"
+          className="select select-ghost min-w-32 max-w-40"
+          onChange={(e) => setExpenseStatsQueryParams({ sequence: e.target.value })}
+        >
+          {durationOptions.map((du) => (
+            <option value={du.value}>{du.label}</option>
+          ))}
+        </select>
+      </div>
+      <div>
+        <div className=" mt-5 h-[300px] md:h-[400px]">
+          <Line data={data} options={options} />
         </div>
       </div>
-   
+    </div>
   );
 };
 

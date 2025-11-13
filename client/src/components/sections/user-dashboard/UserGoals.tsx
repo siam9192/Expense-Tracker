@@ -11,7 +11,7 @@ function UserGoals() {
           <CreateGoalModal />
         </div>
         <div className="flex flex-col md:flex-row justify-between items-center gap-4 md:gap-0 ">
-         <DashboardSectionHeading heading="My Categories"/>
+          <DashboardSectionHeading heading="My Categories" />
           <div role="tablist" className="tabs tabs-box">
             <a role="tab" className="tab tab-active">
               All

@@ -3,7 +3,6 @@ import { motion } from "framer-motion";
 import { LogIn, UserPlus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-
 function WelcomePage() {
   const router = useNavigate();
 
@@ -31,8 +30,8 @@ function WelcomePage() {
           transition={{ delay: 0.4 }}
           className="text-lg text-neutral-content mb-8 leading-relaxed"
         >
-          Simplify your financial life — track income, manage expenses,
-          visualize savings, and gain control over your budget all in one place.
+          Simplify your financial life — track income, manage expenses, visualize savings, and gain
+          control over your budget all in one place.
         </motion.p>
 
         {/* CTA Buttons */}
@@ -42,17 +41,11 @@ function WelcomePage() {
           transition={{ delay: 0.6 }}
           className="flex flex-col sm:flex-row items-center justify-center gap-4"
         >
-          <button
-            className="btn btn-primary btn-wide gap-2"
-            onClick={() => router("/signin")}
-          >
+          <button className="btn btn-primary btn-wide gap-2" onClick={() => router("/signin")}>
             <LogIn size={18} /> Signin
           </button>
 
-          <button
-            className="btn btn-outline btn-wide gap-2"
-            onClick={() => router("/signup")}
-          >
+          <button className="btn btn-outline btn-wide gap-2" onClick={() => router("/signup")}>
             <UserPlus size={18} /> Sign Up
           </button>
         </motion.div>

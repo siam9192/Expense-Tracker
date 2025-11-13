@@ -5,11 +5,13 @@ import UserWalletMetadata from "../../components/sections/user-dashboard/UserWal
 import UserWalletSettings from "./settings/UserWalletSettings";
 import ArriveAnimationContainer from "../../components/ui/ArriveAnimationContainer";
 import DashboardPageHeading from "../../components/ui/DashboardPageHeading";
+import WalletPageProvider from "../../Provider/WalletPageProvider";
 
 function WalletPage() {
   return (
-    <div>
-      <DashboardPageHeading heading="My Wallet"/>
+   <WalletPageProvider>
+     <div>
+      <DashboardPageHeading heading="My Wallet" />
       <div className="mt-10 grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-20 space-y-5">
         {/* Col-1 */}
         <div className="space-y-10">
@@ -35,6 +37,7 @@ function WalletPage() {
         </ArriveAnimationContainer>
       </div>
     </div>
+   </WalletPageProvider>
   );
 }
 

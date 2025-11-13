@@ -1,22 +1,28 @@
 import { useState } from "react";
-import {  Globe } from "lucide-react";
+import { Globe } from "lucide-react";
 import { AppLanguage } from "../../../types/settings.type";
+import { useUserProfileSetupFormContext } from "./UserProfileSetupDialog";
 
 const languages = [
-  { code: "en", name: "English", value:AppLanguage.English },
-  { code: "bn", name: "Bangla", value:AppLanguage.Bangla},
+  { code: "en", name: "English", value: AppLanguage.English },
+  { code: "bn", name: "Bangla", value: AppLanguage.Bangla },
 ];
 
 interface Props {
   onNext: (languageCode: string) => void;
   onBack: () => void;
+  isLoading?: boolean;
 }
 
-function UserProfileSetupChooseLanguage({ onNext, onBack }: Props) {
-  const [selectedLanguage, setSelectedLanguage] = useState<string | null>(null);
+function UserProfileSetupChooseLanguage({ onNext, onBack, isLoading = false }: Props) {
+  const { data, setData } = useUserProfileSetupFormContext();
+  const [selectedLanguage, setSelectedLanguage] = useState<AppLanguage | null>(data.language);
 
   const handleContinue = () => {
-    if (selectedLanguage) onNext(selectedLanguage);
+    if (selectedLanguage) {
+      setData((p) => ({ ...p, language: selectedLanguage }));
+      onNext(selectedLanguage);
+    }
   };
 
   return (
@@ -41,8 +47,6 @@ function UserProfileSetupChooseLanguage({ onNext, onBack }: Props) {
                 ? "border-primary bg-primary/10 scale-105"
                 : "border-base-300 hover:border-primary/50"
             }`}
-          
-          
           >
             <span className="text-3xl">{lang.code}</span>
             <p className="font-semibold mt-2">{lang.name}</p>
@@ -52,15 +56,15 @@ function UserProfileSetupChooseLanguage({ onNext, onBack }: Props) {
 
       {/* Action Buttons */}
       <div className="mt-8 flex justify-between">
-        <button onClick={onBack} className="btn btn-ghost px-6">
+        <button disabled={isLoading} onClick={onBack} className="btn btn-ghost px-6">
           Back
         </button>
         <button
           onClick={handleContinue}
-          disabled={!selectedLanguage}
+          disabled={!selectedLanguage || isLoading}
           className="btn btn-primary px-8 text-white disabled:opacity-50"
         >
-          Continue
+          Complete Setup
         </button>
       </div>
     </div>

@@ -1,6 +1,7 @@
 import React from "react";
 import CountUp from "react-countup";
 import type { LucideIcon } from "lucide-react";
+import { ArrowUp, ArrowDown } from "lucide-react";
 
 export interface MetaData {
   label: string;
@@ -8,7 +9,8 @@ export interface MetaData {
   value: string | number;
   isCurrency?: boolean;
   isPercentage?: boolean;
-  duration?: number; // optional: custom animation duration
+  isGrowth?: boolean;
+  duration?: number;
 }
 
 interface MetaCardProps {
@@ -22,10 +24,38 @@ const MetaCard: React.FC<MetaCardProps> = ({ data }) => {
     value,
     isCurrency,
     isPercentage,
+    isGrowth,
     duration = 1.8,
   } = data;
 
   const isNumeric = typeof value === "number";
+  const numValue = isNumeric ? Number(value) : 0;
+
+  // 🔼 Automatically determine direction
+  const growthDirection =
+    isGrowth && isNumeric
+      ? numValue > 0
+        ? "up"
+        : numValue < 0
+        ? "down"
+        : "neutral"
+      : null;
+
+  // 🎨 Determine text color
+  const textColor =
+    isGrowth && growthDirection === "up"
+      ? "text-success"
+      : isGrowth && growthDirection === "down"
+      ? "text-error"
+      : "text-neutral-content";
+
+  // 📈 Determine growth icon
+  const GrowthIcon =
+    growthDirection === "up"
+      ? ArrowUp
+      : growthDirection === "down"
+      ? ArrowDown
+      : null;
 
   return (
     <div className="p-3 md:p-5 bg-base-100 min-h-52 rounded-xl shadow-lg flex flex-col items-center justify-center text-center space-y-3 transition-transform hover:scale-105 hover:shadow-xl">
@@ -35,20 +65,31 @@ const MetaCard: React.FC<MetaCardProps> = ({ data }) => {
 
       <p className="md:text-lg font-medium text-neutral">{label}</p>
 
-      <p className="text-xl md:text-2xl font-semibold font-secondary text-neutral-content px-4 py-2 bg-base-300 rounded-xl">
+      <div
+        className={`text-xl md:text-2xl font-semibold font-secondary ${textColor} px-4 py-2 bg-base-300 rounded-xl flex items-center gap-2`}
+      >
         {isNumeric ? (
-          <CountUp
-            end={Number(value)}
-            duration={duration}
-            prefix={isCurrency ? "$" : ""}
-            suffix={isPercentage ? "%" : ""}
-            separator=","
-            decimals={isPercentage && value % 1 !== 0 ? 1 : 0}
-          />
+          <>
+            <CountUp
+              end={Math.abs(numValue)} // Show absolute value for growth percentages
+              duration={duration}
+              prefix={isCurrency ? "$" : ""}
+              suffix={isPercentage ? "%" : ""}
+              separator=","
+              decimals={isPercentage && numValue % 1 !== 0 ? 1 : 0}
+            />
+            {GrowthIcon && (
+              <GrowthIcon
+                className={`w-5 h-5 ${
+                  growthDirection === "up" ? "text-success" : "text-error"
+                }`}
+              />
+            )}
+          </>
         ) : (
           value
         )}
-      </p>
+      </div>
     </div>
   );
 };

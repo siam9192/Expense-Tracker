@@ -7,19 +7,16 @@ function UserTransactions() {
   return (
     <ArriveAnimationContainer delay={0.5}>
       <div className="mt-10">
-          <div className="text-center mb-5">
-          <Link to='create'>
-          <button
-       
-        className="text-primary hover:text-secondary font-semibold bg-base-100 btn md:btn-lg "
-      >
-        Create Transaction
-      </button>
+        <div className="text-center mb-5">
+          <Link to="create">
+            <button className="text-primary hover:text-secondary font-semibold bg-base-100 btn md:btn-lg ">
+              Create Transaction
+            </button>
           </Link>
         </div>
 
         <div className="flex flex-col md:flex-row justify-between items-center gap-4 md:gap-0 ">
-           <DashboardSectionHeading heading="Your Transactions"/>
+          <DashboardSectionHeading heading="Your Transactions" />
           <div role="tablist" className="tabs tabs-box">
             <a role="tab" className="tab tab-active">
               All

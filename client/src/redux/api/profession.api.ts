@@ -1,4 +1,3 @@
-
 import { baseApi } from "./base.api";
 import type { Response } from "../../types/response.type";
 import type { Params } from "../../types/utils.type";
@@ -7,10 +6,10 @@ import type Profession from "../../types/profession.type";
 const professionApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getPublicProfessions: builder.query({
-      query: (params:Params) => ({
-        url: '/professions/public',
+      query: (params: Params) => ({
+        url: "/professions/public",
         method: "GET",
-        params
+        params,
       }),
       transformResponse: (response: Response<Profession[]>) => {
         return response;
@@ -19,4 +18,4 @@ const professionApi = baseApi.injectEndpoints({
   }),
 });
 
-export const {useGetPublicProfessionsQuery} =  professionApi
+export const { useGetPublicProfessionsQuery } = professionApi;

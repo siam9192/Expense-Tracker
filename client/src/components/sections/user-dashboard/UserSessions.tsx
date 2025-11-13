@@ -1,4 +1,3 @@
-
 import { MonitorSmartphone, MapPin, Clock, LogOut } from "lucide-react";
 
 // Example session data (you’d fetch from your backend in real use)

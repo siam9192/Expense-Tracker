@@ -11,7 +11,8 @@ import UserProfileSetupMonthlyBudget from "./UserProfileSetupMonthlyBudget";
 import UserProfileSetupNameGender from "./UserProfileSetupNameGender";
 
 import { AppLanguage } from "../../../types/settings.type";
-import { Gender } from "../../../types/user.type";
+import { Gender, type UserProfileSetupProfilePayload } from "../../../types/user.type";
+import { useSetupUserProfileMutation } from "../../../redux/api/user.api";
 
 // ---------------------- //
 // Types
@@ -36,13 +37,11 @@ type UserProfileSetupFormProviderType = {
 // ---------------------- //
 // Context Setup
 // ---------------------- //
-const UserProfileSetupFormProvider =
-  createContext<UserProfileSetupFormProviderType | null>(null);
+const UserProfileSetupFormProvider = createContext<UserProfileSetupFormProviderType | null>(null);
 
 export function useUserProfileSetupFormContext() {
   const context = useContext(UserProfileSetupFormProvider);
-  if (!context)
-    throw new Error("useUserProfileSetupFormContext must be used within Provider");
+  if (!context) throw new Error("useUserProfileSetupFormContext must be used within Provider");
   return context as UserProfileSetupFormProviderType;
 }
 
@@ -70,121 +69,107 @@ function UserProfileSetupDialog() {
     setStep(nextStep);
   };
 
+  const [setupMutate, { isLoading: isSetupLoading }] = useSetupUserProfileMutation();
+  const handelSetupProfile = async () => {
+    try {
+      const { language, ...payload } = data;
+      const { error } = await setupMutate(payload as UserProfileSetupProfilePayload);
+      if (error) throw error;
+      localStorage.setItem("app-language", language);
+      setStep(9);
+    } catch (error: any) {}
+  };
+
   // ---------------------- //
   // Render Steps
   // ---------------------- //
-const renderStep = () => {
-  switch (step) {
-    case 1:
-      return (
-        <UserProfileSetupSectionArrivalAnimationContainer
-          step={step}
-          prevStep={prevStep}
-        >
-          <UserProfileSetupNameGender onNext={() => updateStep(2)} />
-        </UserProfileSetupSectionArrivalAnimationContainer>
-      );
+  const renderStep = () => {
+    switch (step) {
+      case 1:
+        return (
+          <UserProfileSetupSectionArrivalAnimationContainer step={step} prevStep={prevStep}>
+            <UserProfileSetupNameGender onNext={() => updateStep(2)} />
+          </UserProfileSetupSectionArrivalAnimationContainer>
+        );
 
-    case 2:
-      return (
-        <UserProfileSetupSectionArrivalAnimationContainer
-          step={step}
-          prevStep={prevStep}
-        >
-          <UserProfileSetupChooseAvatar
-            onNext={() => updateStep(3)}
-            onBack={() => updateStep(1)}
-          />
-        </UserProfileSetupSectionArrivalAnimationContainer>
-      );
+      case 2:
+        return (
+          <UserProfileSetupSectionArrivalAnimationContainer step={step} prevStep={prevStep}>
+            <UserProfileSetupChooseAvatar
+              onNext={() => updateStep(3)}
+              onBack={() => updateStep(1)}
+            />
+          </UserProfileSetupSectionArrivalAnimationContainer>
+        );
 
-    case 3:
-      return (
-        <UserProfileSetupSectionArrivalAnimationContainer
-          step={step}
-          prevStep={prevStep}
-        >
-          <UserProfileSetupChooseCountry
-            onNext={() => updateStep(4)}
-            onBack={() => updateStep(2)}
-          />
-        </UserProfileSetupSectionArrivalAnimationContainer>
-      );
+      case 3:
+        return (
+          <UserProfileSetupSectionArrivalAnimationContainer step={step} prevStep={prevStep}>
+            <UserProfileSetupChooseCountry
+              onNext={() => updateStep(4)}
+              onBack={() => updateStep(2)}
+            />
+          </UserProfileSetupSectionArrivalAnimationContainer>
+        );
 
-    case 4:
-      return (
-        <UserProfileSetupSectionArrivalAnimationContainer
-          step={step}
-          prevStep={prevStep}
-        >
-          <UserProfileSetupChooseCurrency
-            onNext={() => updateStep(5)}
-            onBack={() => updateStep(3)}
-          />
-        </UserProfileSetupSectionArrivalAnimationContainer>
-      );
+      case 4:
+        return (
+          <UserProfileSetupSectionArrivalAnimationContainer step={step} prevStep={prevStep}>
+            <UserProfileSetupChooseCurrency
+              onNext={() => updateStep(5)}
+              onBack={() => updateStep(3)}
+            />
+          </UserProfileSetupSectionArrivalAnimationContainer>
+        );
 
-    case 5:
-      return (
-        <UserProfileSetupSectionArrivalAnimationContainer
-          step={step}
-          prevStep={prevStep}
-        >
-          <UserProfileSetupChooseProfession
-            onNext={() => updateStep(6)}
-            onBack={() => updateStep(4)}
-          />
-        </UserProfileSetupSectionArrivalAnimationContainer>
-      );
+      case 5:
+        return (
+          <UserProfileSetupSectionArrivalAnimationContainer step={step} prevStep={prevStep}>
+            <UserProfileSetupChooseProfession
+              onNext={() => updateStep(6)}
+              onBack={() => updateStep(4)}
+            />
+          </UserProfileSetupSectionArrivalAnimationContainer>
+        );
 
-    case 6:
-      return (
-        <UserProfileSetupSectionArrivalAnimationContainer
-          step={step}
-          prevStep={prevStep}
-        >
-          <UserProfileSetupInitialBalance
-            onNext={() => updateStep(7)}
-            onBack={() => updateStep(5)}
-          />
-        </UserProfileSetupSectionArrivalAnimationContainer>
-      );
+      case 6:
+        return (
+          <UserProfileSetupSectionArrivalAnimationContainer step={step} prevStep={prevStep}>
+            <UserProfileSetupInitialBalance
+              onNext={() => updateStep(7)}
+              onBack={() => updateStep(5)}
+            />
+          </UserProfileSetupSectionArrivalAnimationContainer>
+        );
 
-    case 7:
-      return (
-        <UserProfileSetupSectionArrivalAnimationContainer
-          step={step}
-          prevStep={prevStep}
-        >
-          <UserProfileSetupMonthlyBudget
-            onNext={() => updateStep(8)}
-            onBack={() => updateStep(6)}
-          />
-        </UserProfileSetupSectionArrivalAnimationContainer>
-      );
+      case 7:
+        return (
+          <UserProfileSetupSectionArrivalAnimationContainer step={step} prevStep={prevStep}>
+            <UserProfileSetupMonthlyBudget
+              onNext={() => updateStep(8)}
+              onBack={() => updateStep(6)}
+            />
+          </UserProfileSetupSectionArrivalAnimationContainer>
+        );
 
-    case 8:
-      return (
-        <UserProfileSetupSectionArrivalAnimationContainer
-          step={step}
-          prevStep={prevStep}
-        >
-          <UserProfileSetupChooseLanguage
-            onNext={() => updateStep(9)}
-            onBack={() => updateStep(7)}
-          />
-        </UserProfileSetupSectionArrivalAnimationContainer>
-      );
+      case 8:
+        return (
+          <UserProfileSetupSectionArrivalAnimationContainer step={step} prevStep={prevStep}>
+            <UserProfileSetupChooseLanguage
+              onNext={handelSetupProfile}
+              onBack={() => updateStep(7)}
+              isLoading={isSetupLoading}
+            />
+          </UserProfileSetupSectionArrivalAnimationContainer>
+        );
 
-    case 9:
-      return <UserProfileSetupSuccessMessage />;
+      case 9:
+        return <UserProfileSetupSuccessMessage />;
 
-    default:
-      return null;
-  }
-};
-
-
+      default:
+        return null;
+    }
+  };
 
   // ---------------------- //
   // JSX

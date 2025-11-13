@@ -11,11 +11,10 @@ function ResponsiveDashboardSideBar() {
     document.body.style.overflow = open ? "hidden" : "";
   }, [open]);
 
-  const {pathname} = useLocation()
-  useEffect(()=>{
-    if(open) setOpen(false)
-  },[pathname])
-
+  const { pathname } = useLocation();
+  useEffect(() => {
+    if (open) setOpen(false);
+  }, [pathname]);
 
   // Motion variants for sidebar
   const sidebarVariants = {
@@ -23,8 +22,7 @@ function ResponsiveDashboardSideBar() {
     visible: { opacity: 1, x: 0 },
     exit: { opacity: 0, x: "-100%" },
   };
-  
-  
+
   return (
     <Fragment>
       <button

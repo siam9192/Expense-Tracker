@@ -11,12 +11,11 @@ const NAME_MIN_LENGTH = 1;
 const NAME_MAX_LENGTH = 20;
 
 export default function UserProfileSetupNameGender({ onNext }: Props) {
-    const {data,setData} =  useUserProfileSetupFormContext()
-  const [name, setName] = useState(data.name||'');
-  const [gender, setGender] = useState<Gender|null>(data.gender);
+  const { data, setData } = useUserProfileSetupFormContext();
+  const [name, setName] = useState(data.name || "");
+  const [gender, setGender] = useState<Gender | null>(data.gender);
   const [error, setError] = useState("");
-  
-  
+
   const handleNext = () => {
     if (!name?.trim()) {
       setError("Please enter your full name.");
@@ -27,7 +26,7 @@ export default function UserProfileSetupNameGender({ onNext }: Props) {
       return;
     }
     setError("");
-    setData(_=>({..._,name,gender}))
+    setData((_) => ({ ..._, name, gender }));
     onNext();
   };
 
@@ -38,9 +37,7 @@ export default function UserProfileSetupNameGender({ onNext }: Props) {
   ];
 
   const isFormValid =
-    name.trim().length >= NAME_MIN_LENGTH &&
-    name.trim().length <= NAME_MAX_LENGTH &&
-    !!gender;
+    name.trim().length >= NAME_MIN_LENGTH && name.trim().length <= NAME_MAX_LENGTH && !!gender;
 
   return (
     <div className="h-full flex flex-col items-center justify-center text-center p-6">
@@ -59,9 +56,7 @@ export default function UserProfileSetupNameGender({ onNext }: Props) {
       <div className="grow w-full max-w-sm space-y-6">
         {/* Name Field */}
         <div>
-          <label className="block text-sm font-medium text-gray-600 mb-2">
-            Full Name
-          </label>
+          <label className="block text-sm font-medium text-gray-600 mb-2">Full Name</label>
           <p className="text-end text-xs mb-1 text-gray-400">
             <span>{name.length}</span>/<span>{NAME_MAX_LENGTH}</span>
           </p>
@@ -76,9 +71,7 @@ export default function UserProfileSetupNameGender({ onNext }: Props) {
 
         {/* Gender Field */}
         <div>
-          <label className="block text-sm font-medium text-gray-600 mb-3">
-            Gender
-          </label>
+          <label className="block text-sm font-medium text-gray-600 mb-3">Gender</label>
           <div className="grid grid-cols-3 gap-4">
             {genderOptions.map((option) => {
               const Icon = option.icon;
@@ -95,11 +88,7 @@ export default function UserProfileSetupNameGender({ onNext }: Props) {
                         : "border-base-300 hover:border-primary/40 hover:bg-base-200"
                     }`}
                 >
-                  <Icon
-                    className={`w-8 h-8 mb-2 ${
-                      isActive ? "text-primary" : "text-gray-500"
-                    }`}
-                  />
+                  <Icon className={`w-8 h-8 mb-2 ${isActive ? "text-primary" : "text-gray-500"}`} />
                   <span className="font-medium">{option.label}</span>
                 </button>
               );
@@ -116,9 +105,7 @@ export default function UserProfileSetupNameGender({ onNext }: Props) {
           onClick={handleNext}
           disabled={!isFormValid}
           className={`btn btn-primary w-full transition-transform duration-200 ${
-            isFormValid
-              ? "hover:scale-105"
-              : "opacity-50 cursor-not-allowed"
+            isFormValid ? "hover:scale-105" : "opacity-50 cursor-not-allowed"
           }`}
         >
           Continue

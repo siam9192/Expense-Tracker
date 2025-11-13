@@ -5,37 +5,33 @@ import { useGetPublicCountriesQuery } from "../../../redux/api/country.api";
 import { useUserProfileSetupFormContext } from "./UserProfileSetupDialog";
 
 interface Props {
-  onNext: (countryCode:number) => void;
+  onNext: (countryCode: number) => void;
   onBack: () => void;
 }
 
 function UserProfileSetupChooseCountry({ onNext, onBack }: Props) {
-   const {data:formData,setData:setFormData} =  useUserProfileSetupFormContext()
+  const { data: formData, setData: setFormData } = useUserProfileSetupFormContext();
 
   const [selectedCountry, setSelectedCountry] = useState<number | null>(formData.country_id);
   const [searchTerm, setSearchTerm] = useState("");
-   
-  const {data} = useGetPublicCountriesQuery({
-    limit:250,
-    sortBy:'name',
-    sortOrder:"asc"
-  })
-  const countries =  data?.data||[]
- 
+
+  const { data } = useGetPublicCountriesQuery({
+    limit: 250,
+    sortBy: "name",
+    sortOrder: "asc",
+  });
+  const countries = data?.data || [];
+
   const filteredCountries = countries.filter((c) =>
     c.name.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
-
   const handleContinue = () => {
-    if (selectedCountry)
-     {
-       setFormData(p=>({...p,country_id:selectedCountry}))
+    if (selectedCountry) {
+      setFormData((p) => ({ ...p, country_id: selectedCountry }));
       onNext(selectedCountry);
-     }
+    }
   };
-  
- 
 
   return (
     <div className="flex flex-col h-full">
@@ -71,12 +67,12 @@ function UserProfileSetupChooseCountry({ onNext, onBack }: Props) {
                   ? "border-primary bg-primary/10 "
                   : "border-base-300 hover:border-primary/50"
               }`}
-            > 
-            <img src={country.flag_png} alt="" className="w-32  h-20 object-cover" />
-             <div className="mt-2 text-center">
-               <span className="text-3xl">{country.code}</span>
-              <p className="font-semibold mt-2">{country.name}</p>
-             </div>
+            >
+              <img src={country.flag_png} alt="" className="w-32  h-20 object-cover" />
+              <div className="mt-2 text-center">
+                <span className="text-3xl">{country.code}</span>
+                <p className="font-semibold mt-2">{country.name}</p>
+              </div>
             </div>
           ))}
         </div>

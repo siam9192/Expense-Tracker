@@ -13,9 +13,8 @@ export default function UserProfileSetupMonthlyBudget({
   onBack,
   defaultCurrency = "$",
 }: Props) {
-   const {data:formData,setData:setFormData} =  useUserProfileSetupFormContext()
-  const [budget, setBudget] = useState<number>(formData.monthly_budget||0);
-  
+  const { data: formData, setData: setFormData } = useUserProfileSetupFormContext();
+  const [budget, setBudget] = useState<number>(formData.monthly_budget || 0);
 
   const handleContinue = () => {
     const value = Number(budget);
@@ -24,8 +23,8 @@ export default function UserProfileSetupMonthlyBudget({
       return;
     }
 
-    if(budget) {
-      setFormData(_=>({..._,monthly_budget:budget}))
+    if (budget) {
+      setFormData((_) => ({ ..._, monthly_budget: budget }));
     }
     onNext();
   };
@@ -53,7 +52,7 @@ export default function UserProfileSetupMonthlyBudget({
           </span>
           <input
             type="number"
-            value={budget}
+            defaultValue={budget}
             onChange={(e) => setBudget(Number(e.target.value))}
             className="input input-bordered w-full pl-10 text-center text-lg font-semibold"
             placeholder="Enter amount"

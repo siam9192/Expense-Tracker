@@ -1,5 +1,6 @@
 import { Wallet2 } from "lucide-react";
 import { useState } from "react";
+import { useUserProfileSetupFormContext } from "./UserProfileSetupDialog";
 
 interface Props {
   onNext: () => void;
@@ -7,11 +8,17 @@ interface Props {
 }
 
 export default function UserProfileSetupInitialBalance({ onNext, onBack }: Props) {
-  const [balance, setBalance] = useState(0);
+  const { data: formData, setData: setFormData } = useUserProfileSetupFormContext();
+  const [balance, setBalance] = useState(formData.spendable_balance || 0);
+  const handleContinue = () => {
+    const value = Number(balance);
+    if (isNaN(value) || value <= 0) {
+      return;
+    }
 
-  const handleNext = () => {
-    // save balance to backend or local state
-    console.log("Initial Balance:", balance);
+    if (balance) {
+      setFormData((_) => ({ ..._, spendable_balance: balance }));
+    }
     onNext();
   };
 
@@ -46,7 +53,7 @@ export default function UserProfileSetupInitialBalance({ onNext, onBack }: Props
         <button onClick={onBack} className="btn btn-ghost">
           Back
         </button>
-        <button onClick={handleNext} className="btn btn-primary">
+        <button onClick={handleContinue} className="btn btn-primary">
           Continue
         </button>
       </div>

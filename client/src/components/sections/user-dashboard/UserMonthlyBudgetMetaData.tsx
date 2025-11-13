@@ -1,11 +1,18 @@
 import { TrendingUp, TrendingDown, Target } from "lucide-react";
 import ArriveAnimationContainer from "../../ui/ArriveAnimationContainer";
 import CountUp from "react-countup";
+import { useHomePageProviderContext } from "../../../Provider/HomePageProvider";
 function UserMonthlyBudgetMetaData() {
-  const income = 20022;
-  const budgetLimit = 76576;
-  const spent = 38288;
-  const spentPercent = Math.round((spent / budgetLimit) * 100);
+  const { monthlyBudgetSummaryQuery } = useHomePageProviderContext();
+  const { data: resData, isError } = monthlyBudgetSummaryQuery;
+  const data = resData?.data!;
+
+  if (isError) return <p>Something went wrong</p>;
+
+  const income = data.total_income;
+  const budgetLimit = data.budget;
+  const spent = data.total_income;
+  const spentPercent = data.budget_usage;
 
   return (
     <ArriveAnimationContainer>

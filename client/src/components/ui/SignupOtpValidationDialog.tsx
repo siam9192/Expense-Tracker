@@ -1,19 +1,31 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { X, MailCheck } from "lucide-react";
-
+import type { SignupResponseData } from "../../types/auth.type";
+import { useResendOTPMutation, useSignupVerifyMutation } from "../../redux/api/auth.api";
+import Cookies from "js-cookie";
+import { storeAuthToken } from "../../utils/helper";
 interface Props {
   onClose: () => void;
-  onVerify: (otp: string) => void;
+  onVerify: () => void;
+  response: SignupResponseData;
 }
 
-function SignupOtpValidationDialog({ onClose, onVerify }: Props) {
-  const [otp, setOtp] = useState(["", "", "", ""]);
+function SignupOtpValidationDialog({ onClose, onVerify, response }: Props) {
+  const [otp, setOtp] = useState<string[]>(["", "", "", ""]);
+  const [otpInfo, setOtpInfo] = useState(response);
+  const [errorMessage, setErrorMessage] = useState("");
+  const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
+  const [resendMutate, { isLoading: isResendLoading }] = useResendOTPMutation();
+  const [verifyMutate, { isLoading: isVerifyLoading }] = useSignupVerifyMutation();
+
+  // ✅ Handle OTP input (auto-focus + numeric restriction)
   const handleChange = (value: string, index: number) => {
     if (/^[0-9]?$/.test(value)) {
       const newOtp = [...otp];
       newOtp[index] = value;
       setOtp(newOtp);
+
       // move focus to next input automatically
       if (value && index < otp.length - 1) {
         const next = document.getElementById(`otp-${index + 1}`);
@@ -22,11 +34,59 @@ function SignupOtpValidationDialog({ onClose, onVerify }: Props) {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const finalOtp = otp.join("");
-    onVerify(finalOtp);
+  // ✅ Handle Backspace navigation
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, index: number) => {
+    if (e.key === "Backspace" && !otp[index] && index > 0) {
+      inputRefs.current[index - 1]?.focus();
+    }
   };
+
+  // 🔁 Resend OTP handler
+  const handleResendOTP = async () => {
+    try {
+      setErrorMessage("");
+      const { data, error } = await resendMutate({ token: otpInfo.token });
+
+      if (error) throw error;
+
+      setOtp(["", "", "", ""]); // clear old OTP
+      setOtpInfo((p) => ({
+        ...p,
+        otp: data.data.otp,
+      }));
+    } catch (error: any) {
+      setErrorMessage(error.data.message);
+    }
+  };
+
+  // ✅ Submit OTP for verification
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setErrorMessage("");
+    const finalOtp = otp.join("");
+    if (finalOtp.length !== 4) {
+      alert("Please enter the complete 4-digit OTP");
+      return;
+    }
+
+    try {
+      const { data, error } = await verifyMutate({
+        token: otpInfo.token,
+        otp: finalOtp,
+      });
+
+      if (error) throw error;
+
+      const authData = data.data;
+
+      storeAuthToken(authData);
+
+      onVerify(); // move to next screen
+    } catch (error: any) {
+      setErrorMessage(error.data.message);
+    }
+  };
+  const isLoading = isResendLoading || isVerifyLoading;
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black/40 z-50 backdrop-blur-sm">
@@ -49,6 +109,9 @@ function SignupOtpValidationDialog({ onClose, onVerify }: Props) {
             We’ve sent a 4-digit verification code to your email. Please enter it below to verify
             your account.
           </p>
+          <p className="mt-2 font-medium">
+            Demo OTP is : <span className="text-info">{otpInfo.otp}</span>
+          </p>
         </div>
 
         {/* OTP Inputs */}
@@ -61,6 +124,7 @@ function SignupOtpValidationDialog({ onClose, onVerify }: Props) {
                 type="text"
                 value={digit}
                 onChange={(e) => handleChange(e.target.value, index)}
+                onKeyDown={(e) => handleKeyDown(e, index)}
                 maxLength={1}
                 className="w-12 h-12 text-center text-lg font-semibold border border-gray-300 rounded-lg focus:outline-none focus:border-primary bg-base-200"
               />
@@ -71,7 +135,7 @@ function SignupOtpValidationDialog({ onClose, onVerify }: Props) {
           <button
             type="submit"
             className="btn btn-primary w-full font-medium text-white"
-            disabled={otp.join("").length !== 4}
+            disabled={otp.join("").length !== 4 || isLoading}
           >
             Verify OTP
           </button>
@@ -81,13 +145,15 @@ function SignupOtpValidationDialog({ onClose, onVerify }: Props) {
         <p className="text-center text-sm text-gray-500 mt-4">
           Didn’t receive code?{" "}
           <button
+            disabled={isLoading}
             type="button"
             className="text-primary font-medium hover:underline"
-            onClick={() => alert("OTP resent!")}
+            onClick={handleResendOTP}
           >
             Resend
           </button>
         </p>
+        {errorMessage && <p className=" text-error mt-2">{errorMessage}</p>}
       </div>
     </div>
   );

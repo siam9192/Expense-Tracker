@@ -55,13 +55,14 @@ function UserGoalsMetadata() {
   return (
     <ArriveAnimationContainer>
       <div>
-         <DashboardSectionHeading heading="Goals Overview"/>
+        <DashboardSectionHeading heading="Goals Overview" />
         <div className="mt-5 p-4 md:p-8 bg-base-300 rounded-2xl shadow-lg space-y-6">
-  <div className="grid  grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 ">
-          {userGoalsMetadata.map((data, index) =><MetaCard data={data} key={index}/>)}
+          <div className="grid  grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 ">
+            {userGoalsMetadata.map((data, index) => (
+              <MetaCard data={data} key={index} />
+            ))}
+          </div>
         </div>
-        </div>
-      
       </div>
     </ArriveAnimationContainer>
   );

@@ -1,6 +1,5 @@
-
 import Cookies from "js-cookie";
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import envConfig from "../../config/env.config";
 export const baseApi = createApi({
   reducerPath: "baseApi",
@@ -15,7 +14,6 @@ export const baseApi = createApi({
       return headers;
     },
   }),
-
+  tagTypes: ["getCurrentUser","userCategories"],
   endpoints: (builder) => ({}),
- 
 });

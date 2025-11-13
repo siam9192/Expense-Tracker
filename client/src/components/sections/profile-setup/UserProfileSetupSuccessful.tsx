@@ -1,10 +1,22 @@
 import { CheckCircle2 } from "lucide-react";
 import { motion } from "framer-motion";
+import { useProfileSetupProviderContext } from "../../../Provider/ProfileSetupProvider";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   onFinish?: () => void;
 }
 function UserProfileSetupSuccessMessage({ onFinish }: Props) {
+  const { setIsOpen, setIsComplete } = useProfileSetupProviderContext();
+  const navigate = useNavigate();
+
+  const handelFinish = () => {
+    onFinish && onFinish();
+    setIsOpen(false);
+    setIsComplete(true);
+    navigate("/");
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.9 }}
@@ -36,7 +48,7 @@ function UserProfileSetupSuccessMessage({ onFinish }: Props) {
       <motion.button
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
-        onClick={onFinish}
+        onClick={handelFinish}
         className="btn btn-primary px-6 mt-4"
       >
         Continue to Dashboard

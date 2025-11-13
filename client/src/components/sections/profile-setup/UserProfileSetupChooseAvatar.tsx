@@ -6,26 +6,25 @@ interface Props {
   onNext: (avatar: number) => void;
   onBack: () => void;
 }
-function UserProfileSetupChooseAvatar({ onNext,onBack }: Props) {
-  const {data:formData,setData:setFormData} =  useUserProfileSetupFormContext()
+function UserProfileSetupChooseAvatar({ onNext, onBack }: Props) {
+  const { data: formData, setData: setFormData } = useUserProfileSetupFormContext();
   const [selectedAvatar, setSelectedAvatar] = useState<number | null>(formData.avatar_id);
-  const {data} =  useGetPublicAvatarsQuery({
-    limit:200
-  })
-  const avatars = data?.data||[]
+  const { data } = useGetPublicAvatarsQuery({
+    limit: 200,
+  });
+  const avatars = data?.data || [];
 
   const handleSelect = (id: number) => {
     setSelectedAvatar(id);
   };
 
   const handleContinue = () => {
-   if(selectedAvatar) {
-     onNext(selectedAvatar);
-     setFormData(_=>({..._,avatar_id:selectedAvatar}))
-   }
+    if (selectedAvatar) {
+      onNext(selectedAvatar);
+      setFormData((_) => ({ ..._, avatar_id: selectedAvatar }));
+    }
   };
 
-  
   return (
     <div className="flex flex-col h-full">
       {/* Header */}
@@ -61,7 +60,7 @@ function UserProfileSetupChooseAvatar({ onNext,onBack }: Props) {
       </div>
 
       {/* Action Buttons */}
-     <div className="mt-8 flex justify-between">
+      <div className="mt-8 flex justify-between">
         <button onClick={onBack} className="btn btn-ghost px-6">
           Back
         </button>

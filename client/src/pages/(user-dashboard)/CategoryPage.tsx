@@ -1,12 +1,15 @@
 import UserCategories from "../../components/sections/user-dashboard/UserCategories";
-import UserTransactionsMetadata from "../../components/sections/user-dashboard/UserTransactionsMetadata";
+import UserCategoriesMetadata from "../../components/sections/user-dashboard/UserCategoriesMetadata";
+import CategoriesPageProvider from "../../Provider/CategoriesPageProvider";
 
 function CategoryPage() {
   return (
-    <div>
-      <UserTransactionsMetadata />
+    <CategoriesPageProvider>
+      <div>
+      <UserCategoriesMetadata />
       <UserCategories />
     </div>
+    </CategoriesPageProvider>
   );
 }
 

@@ -6,10 +6,10 @@ import type { Avatar } from "../../types/avatar.type";
 const avatarApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getPublicAvatars: builder.query({
-      query: (params:Params) => ({
-        url: '/avatars/public',
+      query: (params: Params) => ({
+        url: "/avatars/public",
         method: "GET",
-        params
+        params,
       }),
       transformResponse: (response: Response<Avatar[]>) => {
         return response;
@@ -18,4 +18,4 @@ const avatarApi = baseApi.injectEndpoints({
   }),
 });
 
-export const {useGetPublicAvatarsQuery} =  avatarApi
+export const { useGetPublicAvatarsQuery } = avatarApi;

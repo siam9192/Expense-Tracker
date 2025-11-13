@@ -55,9 +55,11 @@ function UserTransactionsMetadata() {
   return (
     <ArriveAnimationContainer>
       <div>
-      <DashboardSectionHeading heading="Transactions Overview"/>
+        <DashboardSectionHeading heading="Transactions Overview" />
         <div className=" mt-5 grid  grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 p-5 lg:p-10 rounded-xl bg-base-300">
-          {userGoalsMetadata.map((data, index) =><MetaCard data={data} key={index}/>)}
+          {userGoalsMetadata.map((data, index) => (
+            <MetaCard data={data} key={index} />
+          ))}
         </div>
       </div>
     </ArriveAnimationContainer>

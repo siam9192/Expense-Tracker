@@ -5,6 +5,6 @@ import AppBrowserRouter from "./router/AppBrowserRouter.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <AppBrowserRouter/>
+    <AppBrowserRouter />
   </StrictMode>,
 );

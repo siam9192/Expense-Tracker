@@ -1,10 +1,19 @@
-import { ArrowLeftRight, Goal, Grid2x2Plus, Home, Languages, LogOut, Settings, Wallet } from "lucide-react";
+import {
+  ArrowLeftRight,
+  Goal,
+  Grid2x2Plus,
+  Home,
+  Languages,
+  LogOut,
+  Settings,
+  Wallet,
+} from "lucide-react";
 import type { Route } from "../../types/utils.type";
 import ThemeSwitchButton from "../ui/ThemeSwitchButton";
 import { Link, useLocation } from "react-router-dom";
 
 function UserDashboardSidebar() {
-  const {pathname} = useLocation();
+  const { pathname } = useLocation();
 
   const routes: Route[] = [
     { label: "Dashboard", path: "/", icon: Home },
@@ -40,20 +49,20 @@ function UserDashboardSidebar() {
           {routes.map(({ label, path, icon: Icon }) => {
             const isActive = pathname === path;
             return (
-            <Link to={path} className="w-full">
-              <button
-                key={label}
-                className={`flex items-center gap-3 px-3 py-2 rounded-lg font-medium transition-all duration-150 w-full
+              <Link to={path} className="w-full">
+                <button
+                  key={label}
+                  className={`flex items-center gap-3 px-3 py-2 rounded-lg font-medium transition-all duration-150 w-full
                 ${
                   isActive
                     ? "bg-primary text-white shadow-md"
                     : "text-neutral dark:text-neutral-content hover:text-secondary hover:bg-base-200"
                 }`}
-              >
-                <Icon className={isActive ? "text-white" : "text-primary"} />
-                <span>{label}</span>
-              </button>
-            </Link>
+                >
+                  <Icon className={isActive ? "text-white" : "text-primary"} />
+                  <span>{label}</span>
+                </button>
+              </Link>
             );
           })}
         </nav>
@@ -62,21 +71,25 @@ function UserDashboardSidebar() {
       {/* --- Footer --- */}
       <div className="space-y-5">
         <Link to="settings" className="block">
-         <button  className={`flex items-center gap-3 px-3 py-2 rounded-lg font-medium transition-all duration-150 w-full
+          <button
+            className={`flex items-center gap-3 px-3 py-2 rounded-lg font-medium transition-all duration-150 w-full
                 ${
                   pathname.includes("settings")
                     ? "bg-primary text-white shadow-md"
                     : "text-neutral dark:text-neutral-content hover:text-secondary hover:bg-base-200"
-                }`}>
-          <Settings size={20} />
-          <span>Settings</span>
-        </button>
+                }`}
+          >
+            <Settings size={20} />
+            <span>Settings</span>
+          </button>
         </Link>
-     <button  className={`flex items-center gap-3 px-3 py-2 rounded-lg text-neutral dark:text-neutral-content font-medium hover:text-error transition-all duration-150`}>
+        <button
+          className={`flex items-center gap-3 px-3 py-2 rounded-lg text-neutral dark:text-neutral-content font-medium hover:text-error transition-all duration-150`}
+        >
           <LogOut size={20} />
           <span>Sign Out</span>
         </button>
-     
+
         <div className="flex items-center gap-3">
           <Languages className="text-primary" size={24} />
           <select className="select select-sm select-bordered border-primary font-secondary">

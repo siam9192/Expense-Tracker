@@ -1,16 +1,14 @@
 export interface AppSettings {
-   theme:AppTheme,
-   language:AppLanguage
+  theme: AppTheme;
+  language: AppLanguage;
 }
 
-export  enum AppTheme  {
-   LIGHT = "light",
-   DARK = "dark"
-} 
+export enum AppTheme {
+  LIGHT = "light",
+  DARK = "dark",
+}
 
-
-
-export  enum AppLanguage  {
-   English = "en",
-   Bangla = "bn"
-} 
+export enum AppLanguage {
+  English = "en",
+  Bangla = "bn",
+}

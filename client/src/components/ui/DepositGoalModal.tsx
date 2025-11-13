@@ -9,10 +9,7 @@ function DepositGoalModal() {
   return (
     <Fragment>
       {/* You can open the modal using document.getElementById('ID').showModal() method */}
-      <button
-        onClick={open}
-        className="hover:text-secondary font-medium text-primary"
-      >
+      <button onClick={open} className="hover:text-secondary font-medium text-primary">
         Deposit
       </button>
       <dialog id="Deposit_goal_modal" className="modal">
