@@ -4,7 +4,7 @@ import ProfileSetupProvider from "./Provider/ProfileSetupProvider";
 import CurrentUserProvider from "./Provider/CurrentUserProvider";
 import WrapperProvider from "./Provider/WrapperProvider";
 import "./utils/i18n";
-import { Toaster} from 'sonner';
+import { Toaster } from "sonner";
 function App() {
   return (
     <WrapperProvider>
@@ -12,7 +12,7 @@ function App() {
         <ProfileSetupProvider>
           <CurrentUserProvider>
             <Outlet />
-            <Toaster/>
+            <Toaster />
           </CurrentUserProvider>
         </ProfileSetupProvider>
       </LocalSettingsProvider>

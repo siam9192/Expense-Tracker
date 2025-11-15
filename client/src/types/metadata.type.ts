@@ -11,12 +11,12 @@ export type UserGlobalSummaryMetadata = {
 };
 
 export type UserWalletSummaryMetadata = {
-  total_balance:number,
-      spendable_balance:number,
-      saving_balance:number,
-      monthly_budget:number,
-      last_month_spent:number
-}
+  total_balance: number;
+  spendable_balance: number;
+  saving_balance: number;
+  monthly_budget: number;
+  last_month_spent: number;
+};
 
 export type UserMonthlyBudgetMetadata = {
   total_income: number;
@@ -26,6 +26,14 @@ export type UserMonthlyBudgetMetadata = {
 };
 
 export type UserTransactionsSummaryMetadata = {
+  total_income:number,
+      total_expense:number,
+      transactions_count:number,
+      period_total:number,
+      period:string
+};
+
+export type UserGoalsSummaryMetadata = {
   current_savings: number;
   avg_progress: number;
   total_completed_goals: number;

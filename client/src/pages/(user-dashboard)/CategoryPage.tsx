@@ -6,9 +6,9 @@ function CategoryPage() {
   return (
     <CategoriesPageProvider>
       <div>
-      <UserCategoriesMetadata />
-      <UserCategories />
-    </div>
+        <UserCategoriesMetadata />
+        <UserCategories />
+      </div>
     </CategoriesPageProvider>
   );
 }

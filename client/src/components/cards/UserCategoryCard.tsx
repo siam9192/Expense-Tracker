@@ -2,9 +2,9 @@ import { StretchHorizontal } from "lucide-react";
 import type { Category } from "../../types/category.type";
 
 interface Props {
-  category:Category
+  category: Category;
 }
-function TransactionInfoCard({category}:Props) {
+function TransactionInfoCard({ category }: Props) {
   return (
     <div className="p-5 bg-base-200 rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 border border-base-300/40 relative">
       {/* Icon */}
@@ -15,18 +15,14 @@ function TransactionInfoCard({category}:Props) {
         {/* <span className="text-xs text-gray-500 font-medium">#TXN-90321</span> */}
       </div>
       <p className="px-2 py-1 rounded-lg bg-black absolute right-2 top-2">
-        {
-          category.type.toLowerCase()
-        }
+        {category.type.toLowerCase()}
       </p>
 
       {/* Title + Description */}
       <div className="mt-5 space-y-2">
         <p className="text-xl font-semibold text-neutral-content tracking-wide">{category.name}</p>
         <p className="text-sm text-gray-500 leading-relaxed font-secondary line-clamp-4">
-          {
-            category.description
-          }
+          {category.description}
         </p>
       </div>
 

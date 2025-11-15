@@ -2,56 +2,42 @@ import { Award, Activity, BarChart2, Clock, type LucideIcon } from "lucide-react
 import ArriveAnimationContainer from "../../ui/ArriveAnimationContainer";
 import DashboardSectionHeading from "../../ui/DashboardSectionHeading";
 import MetaCard from "../../cards/MetaCard";
+import { useGoalPageProviderContext } from "../../../Provider/GoalPageProvider";
 
-interface MetaData {
-  label: string;
-  icon: LucideIcon;
-  value: string | number;
-  isCurrency?: boolean;
-  isPercentage: boolean;
-}
-
-const userGoalsMetadata: MetaData[] = [
+function UserGoalsMetadata() {
+   const {goalsSummaryQuery } = useGoalPageProviderContext()
+  
+    const { data: resData } = goalsSummaryQuery;
+    const summary = resData?.data!;
+const userGoalsMetadata = [
   {
-    label: "Savings",
+    label: "Available Savings",
     icon: Award,
-    value: 1200,
+    value:summary.current_savings,
     isCurrency: true,
     isPercentage: false,
   },
   {
     label: "Achieved",
     icon: Activity,
-    value: 85,
+    value: summary.total_completed_goals,
     isPercentage: true,
   },
   {
     label: "Avg Progress",
     icon: BarChart2,
-    value: 60,
+    value: summary.avg_progress,
     isPercentage: true,
   },
   {
-    label: "In Pending",
+    label: "Ongoing",
     icon: Clock,
-    value: 40,
+    value: summary.total_active_goals,
     isPercentage: false,
   },
 ];
-const formatValue = (data: {
-  value: string | number;
-  isCurrency?: boolean;
-  isPercentage: boolean;
-}) => {
-  if (data.isCurrency && typeof data.value === "number") {
-    return `$${data.value.toLocaleString()}`;
-  }
-  if (data.isPercentage && typeof data.value === "number") {
-    return `${data.value}%`;
-  }
-  return data.value;
-};
-function UserGoalsMetadata() {
+
+
   return (
     <ArriveAnimationContainer>
       <div>

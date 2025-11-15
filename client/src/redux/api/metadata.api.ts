@@ -7,6 +7,7 @@ import type {
   UserExpenseStatsMetadata,
   UserFinanceStatsMetadata,
   UserGlobalSummaryMetadata,
+  UserGoalsSummaryMetadata,
   UserIncomeStatsMetadata,
   UserMonthlyBudgetMetadata,
   UserTransactionsSummaryMetadata,
@@ -24,7 +25,7 @@ const metadataApi = baseApi.injectEndpoints({
         return response;
       },
     }),
-     getUserWalletSummary: builder.query({
+    getUserWalletSummary: builder.query({
       query: () => ({
         url: "/metadata/me/wallet",
         method: "GET",
@@ -43,10 +44,10 @@ const metadataApi = baseApi.injectEndpoints({
       },
     }),
     getUserTransactionsSummary: builder.query({
-      query: (params: Params) => ({
+      query: () => ({
         url: "/metadata/me/transactions",
         method: "GET",
-        params,
+       
       }),
       transformResponse: (response: Response<UserTransactionsSummaryMetadata>) => {
         return response;
@@ -56,9 +57,18 @@ const metadataApi = baseApi.injectEndpoints({
       query: () => ({
         url: "/metadata/me/categories",
         method: "GET",
-      
       }),
       transformResponse: (response: Response<UserCategoriesSummaryMetadata>) => {
+        return response;
+      },
+    }),
+    getUserGoalsSummary: builder.query({
+      query: () => ({
+        url: "/metadata/me/goals",
+        method: "GET",
+       
+      }),
+      transformResponse: (response: Response<UserGoalsSummaryMetadata>) => {
         return response;
       },
     }),
@@ -111,6 +121,7 @@ export const {
   useGetUserMonthlyBudgetSummaryQuery,
   useGetUserTransactionsSummaryQuery,
   useGetUserCategoriesSummaryQuery,
+  useGetUserGoalsSummaryQuery,
   useGetUserExpenseStatsQuery,
   useGetUserIncomeStatsQuery,
   useGetUserFinanceStatsQuery,

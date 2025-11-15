@@ -1,71 +1,62 @@
 import { createContext, useContext, useMemo, useState, type ReactNode } from "react";
-import {
-    useGetUserCategoriesSummaryQuery,
-} from "../redux/api/metadata.api";
+import {useGetUserGoalsSummaryQuery } from "../redux/api/metadata.api";
 import type {
-  UserCategoriesSummaryMetadata,
-  
+  UserGoalsSummaryMetadata,
 } from "../types/metadata.type";
 import DashboardPageLoading from "../components/ui/DashboardPageLoading";
 import type { Params, UseQueryResult } from "../types/utils.type";
 import type { Response } from "../types/response.type";
-import type { Category } from "../types/category.type"
-import { useGetUserCategoriesQuery } from "../redux/api/category.api";
 
-export type CategoriesPageContextType = {
-  categoriesSummaryQuery: UseQueryResult<Response<UserCategoriesSummaryMetadata>>;
-  categoriesQuery: UseQueryResult<Response<Category[]>>;
-  
-  categoriesQueryParams: Params;
+import type { Goal } from "../types/goal.type";
+import { useGetUserGoalsQuery } from "../redux/api/goal.api";
 
-
-  setCategoriesQueryParams: React.Dispatch<React.SetStateAction<Params>>;
-
+export type GoalsPageContextType = {
+  goalsSummaryQuery: UseQueryResult<Response<UserGoalsSummaryMetadata>>;
+  goalsQuery: UseQueryResult<Response<Goal[]>>;
+  goalsQueryParams: Params;
+  setGoalsQueryParams: React.Dispatch<React.SetStateAction<Params>>;
 };
 
-export const CategoriesPageProviderContext = createContext<CategoriesPageContextType | null>(null);
+export const GoalsPageProviderContext = createContext<GoalsPageContextType | null>(null);
 
 interface Props {
   children: ReactNode;
 }
 
-function CategoriesPageProvider({ children }: Props) {
-  const [categoriesQueryParams, setCategoriesQueryParams] = useState<Params>({
-    limit:4
+function GoalPageProvider({ children }: Props) {
+  const [goalsQueryParams, setGoalsQueryParams] = useState<Params>({
+    limit: 4,
   });
- 
-  const categoriesSummaryQuery = useGetUserCategoriesSummaryQuery(undefined);
-  const categoriesQuery = useGetUserCategoriesQuery(categoriesQueryParams)
+  
+
+  const goalsSummaryQuery = useGetUserGoalsSummaryQuery(undefined);
+  const goalsQuery = useGetUserGoalsQuery(goalsQueryParams);
 
   // ✅ Derived loading state from all queries
-  const isLoading = categoriesQuery.isLoading || categoriesSummaryQuery.isLoading
-   
+  const isLoading = goalsSummaryQuery.isLoading || goalsQuery.isLoading
+
   // ✅ Memoize context value properly
   const contextValue = useMemo(
     () => ({
-        categoriesSummaryQuery,
-        categoriesQuery,
-      categoriesQueryParams,
-       setCategoriesQueryParams
+     goalsSummaryQuery,
+     goalsQuery,
+     goalsQueryParams,
+     setGoalsQueryParams
     }),
-    [
-     categoriesQueryParams,
-     categoriesQuery,
-     categoriesSummaryQuery
-    ],
+    [goalsSummaryQuery,goalsQuery,goalsQueryParams],
   );
 
   return (
-    <CategoriesPageProviderContext.Provider value={contextValue}>
+    <GoalsPageProviderContext.Provider value={contextValue}>
       {isLoading ? <DashboardPageLoading /> : children}
-    </CategoriesPageProviderContext.Provider>
+    </GoalsPageProviderContext.Provider>
   );
 }
 
-export default CategoriesPageProvider;
+export default GoalPageProvider;
 
-export function useCategoriesPageProviderContext() {
-  const context = useContext(CategoriesPageProviderContext);
+export function useGoalPageProviderContext() {
+  const context = useContext(GoalsPageProviderContext);
   if (!context) throw new Error("Must be under at home page provider");
   return context;
 }

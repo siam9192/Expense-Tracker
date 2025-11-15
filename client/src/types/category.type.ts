@@ -22,9 +22,8 @@ export interface Category {
   user: null;
 }
 
-
 export interface CreateUserCategoryPayload {
   name: string;
   description: string;
-  type: CategoryType.INCOME|CategoryType.EXPENSE;
+  type: CategoryType.INCOME | CategoryType.EXPENSE;
 }

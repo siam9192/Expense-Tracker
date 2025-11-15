@@ -2,16 +2,16 @@ import { Fragment } from "react";
 import { X } from "lucide-react";
 import CreateUserCategoryForm from "../forms/CreateUserCategoryForm";
 interface Props {
-  onSuccess?():void
+  onSuccess?(): void;
 }
-function CreateUserCategoryModal({onSuccess}:Props) {
+function CreateUserCategoryModal({ onSuccess }: Props) {
   const open = () => {
     (document?.getElementById("create_category_modal") as any)?.showModal();
   };
-  const close = ()=>{
-     (document?.getElementById("create_category_modal") as any)?.close();
-     onSuccess&& onSuccess()
-  }
+  const close = () => {
+    (document?.getElementById("create_category_modal") as any)?.close();
+    onSuccess && onSuccess();
+  };
   return (
     <Fragment>
       {/* You can open the modal using document.getElementById('ID').showModal() method */}

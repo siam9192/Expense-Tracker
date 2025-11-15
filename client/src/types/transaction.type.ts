@@ -31,3 +31,15 @@ export interface Transaction {
   currency_id: number;
   base_currency_id: number | null;
 }
+
+
+
+export interface CreateTransactionPayload {
+  title:string
+  category_id: number;
+  currency_id: number;
+  amount: number;
+  date: Date;
+  note?: string;
+}
+

@@ -1,65 +1,58 @@
-import { Award, Activity, BarChart2, Clock, type LucideIcon } from "lucide-react";
+import { 
+  ListChecks, 
+  TrendingUp, 
+  TrendingDown, 
+  Timer 
+} from "lucide-react";
+
 import ArriveAnimationContainer from "../../ui/ArriveAnimationContainer";
 import DashboardSectionHeading from "../../ui/DashboardSectionHeading";
 import MetaCard from "../../cards/MetaCard";
+import { useTransactionPageProviderContext } from "../../../Provider/TransactionPageProvider";
 
-interface MetaData {
-  label: string;
-  icon: LucideIcon;
-  value: string | number;
-  isCurrency?: boolean;
-  isPercentage: boolean;
-}
 
-const userGoalsMetadata: MetaData[] = [
+function UserTransactionsMetadata() {
+  const {transactionsSummaryQuery } = useTransactionPageProviderContext()
+    
+      const { data: resData } = transactionsSummaryQuery;
+      const summary = resData?.data!;
+const metadata = [
   {
     label: "Transactions",
-    icon: Award,
-    value: 1200,
-    isCurrency: true,
-    isPercentage: false,
+    icon: ListChecks,
+    value: summary.transactions_count,
+   
   },
   {
     label: "Income",
-    icon: Activity,
-    value: 85,
-    isPercentage: true,
+    icon: TrendingUp,
+    value: summary.total_income,
+    isCurrency: true,
   },
   {
     label: "Expense",
-    icon: BarChart2,
-    value: 60,
-    isPercentage: true,
+    icon: TrendingDown,
+    value: summary.total_expense,
+     isCurrency: true,
   },
   {
-    label: "Last 30 days",
-    icon: Clock,
-    value: 40,
-    isPercentage: false,
+    label: summary.period,
+    icon: Timer,
+    value: summary.period_total,
+    isCurrency: true,
   },
 ];
-const formatValue = (data: {
-  value: string | number;
-  isCurrency?: boolean;
-  isPercentage: boolean;
-}) => {
-  if (data.isCurrency && typeof data.value === "number") {
-    return `$${data.value.toLocaleString()}`;
-  }
-  if (data.isPercentage && typeof data.value === "number") {
-    return `${data.value}%`;
-  }
-  return data.value;
-};
-function UserTransactionsMetadata() {
+
   return (
-    <ArriveAnimationContainer>
+  <ArriveAnimationContainer>
       <div>
-        <DashboardSectionHeading heading="Transactions Overview" />
-        <div className=" mt-5 grid  grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 p-5 lg:p-10 rounded-xl bg-base-300">
-          {userGoalsMetadata.map((data, index) => (
-            <MetaCard data={data} key={index} />
-          ))}
+        <DashboardSectionHeading heading="Goals Overview" />
+        <div className="mt-5 p-4 md:p-8 bg-base-300 rounded-2xl shadow-lg space-y-6">
+          <div className="grid  grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 ">
+            {metadata.map((data, index) => (
+              <MetaCard data={data} key={index} />
+            ))}
+          </div>
         </div>
       </div>
     </ArriveAnimationContainer>

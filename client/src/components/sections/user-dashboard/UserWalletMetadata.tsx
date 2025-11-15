@@ -3,65 +3,64 @@ import CountUp from "react-countup";
 import { useWalletPageProviderContext } from "../../../Provider/WalletPageProvider";
 import { DEFAULT_ERROR_MESSAGE } from "../../../utils/constant";
 
-
 function UserWalletMetadata() {
-   const {walletSummaryQuery} = useWalletPageProviderContext();
+  const { walletSummaryQuery } = useWalletPageProviderContext();
   const { data: resData, isError } = walletSummaryQuery;
   const summary = resData?.data!;
 
   if (isError) return <p>{DEFAULT_ERROR_MESSAGE}</p>;
 
-  console.log(summary)
-const metadata = [
-  {
-    label: "Total Balance",
-    value: summary.total_balance,
-    icon: Wallet,
-    isCurrency: true,
-    isPercentage: false,
-    color: "bg-primary/10 text-primary",
-  },
-  {
-    label: "Spendable Balance",
-    value: summary.spendable_balance,
-    icon: CreditCard,
-    isCurrency: true,
-    isPercentage: false,
-    color: "bg-secondary/10 text-secondary",
-  },
-  {
-    label: "On Savings",
-    value: summary.saving_balance,
-    icon: PiggyBank,
-    isCurrency: true,
-    isPercentage: false,
-    color: "bg-accent/10 text-accent",
-  },
-  {
-    label: "Pending Bills",
-    value: 0,
-    icon: Receipt,
-    isCurrency: true,
-    isPercentage: false,
-    color: "bg-warning/10 text-warning",
-  },
-  {
-    label: "Monthly Budget",
-    value: summary.monthly_budget,
-    icon: DollarSign,
-    isCurrency: true,
-    isPercentage: false,
-    color: "bg-success/10 text-success",
-  },
-  {
-    label: "Last Month Spent",
-    value: summary.last_month_spent,
-    icon: DollarSign,
-    isCurrency: true,
-    isPercentage: false,
-    color: "bg-error/10 text-error",
-  },
-];
+  console.log(summary);
+  const metadata = [
+    {
+      label: "Total Balance",
+      value: summary.total_balance,
+      icon: Wallet,
+      isCurrency: true,
+      isPercentage: false,
+      color: "bg-primary/10 text-primary",
+    },
+    {
+      label: "Spendable Balance",
+      value: summary.spendable_balance,
+      icon: CreditCard,
+      isCurrency: true,
+      isPercentage: false,
+      color: "bg-secondary/10 text-secondary",
+    },
+    {
+      label: "On Savings",
+      value: summary.saving_balance,
+      icon: PiggyBank,
+      isCurrency: true,
+      isPercentage: false,
+      color: "bg-accent/10 text-accent",
+    },
+    {
+      label: "Pending Bills",
+      value: 0,
+      icon: Receipt,
+      isCurrency: true,
+      isPercentage: false,
+      color: "bg-warning/10 text-warning",
+    },
+    {
+      label: "Monthly Budget",
+      value: summary.monthly_budget,
+      icon: DollarSign,
+      isCurrency: true,
+      isPercentage: false,
+      color: "bg-success/10 text-success",
+    },
+    {
+      label: "Last Month Spent",
+      value: summary.last_month_spent,
+      icon: DollarSign,
+      isCurrency: true,
+      isPercentage: false,
+      color: "bg-error/10 text-error",
+    },
+  ];
 
   return (
     <div className="p-4 md:p-8 bg-base-300 rounded-2xl shadow-lg space-y-6">

@@ -8,18 +8,16 @@ import { DEFAULT_ERROR_MESSAGE } from "../../../utils/constant";
 ChartJS.register(ArcElement, Tooltip, Legend, Title);
 
 const UserFinancePieChart = () => {
-  const {financeStatsQuery,setFinanceStatsQueryParams} = useWalletPageProviderContext()
-  const {data:resData,isError} =  financeStatsQuery
-   const summary = resData?.data!
-  
+  const { financeStatsQuery, setFinanceStatsQueryParams } = useWalletPageProviderContext();
+  const { data: resData, isError } = financeStatsQuery;
+  const summary = resData?.data!;
 
-   if(isError) return <p className="text-shadow-base-100">{DEFAULT_ERROR_MESSAGE}</p>
+  if (isError) return <p className="text-shadow-base-100">{DEFAULT_ERROR_MESSAGE}</p>;
 
   const income = summary.income;
   const expense = summary.expense;
   const saving = summary.savings;
 
- 
   const data = {
     labels: ["Income", "Expense", "Savings"],
     datasets: [
@@ -109,26 +107,26 @@ const UserFinancePieChart = () => {
 
   const durationOptions = [
     {
-      label:"This Month",
-      value:"month"
+      label: "This Month",
+      value: "month",
     },
-     {
-      label:"This Year",
-      value:"year"
+    {
+      label: "This Year",
+      value: "year",
     },
-     
-  ]
+  ];
   return (
     <div className="p-4 md:p-8 bg-base-300 rounded-2xl  space-y-6 min-w-[500px]">
       <div className="flex  flex-col md:flex-row justify-between items-center">
         <h2 className="text-2xl text-primary font-semibold mb-4">User Finance Statistics</h2>
-        <select defaultValue="Pick a sequence" onChange={(e)=>setFinanceStatsQueryParams({sequence:e.target.value})} className="select select-ghost w-40">
-          
-        {
-          durationOptions.map(_=>(
+        <select
+          defaultValue="Pick a sequence"
+          onChange={(e) => setFinanceStatsQueryParams({ sequence: e.target.value })}
+          className="select select-ghost w-40"
+        >
+          {durationOptions.map((_) => (
             <option value={_.value}>{_.label}</option>
-          ))
-        }
+          ))}
         </select>
       </div>
       <div className="h-72 ">

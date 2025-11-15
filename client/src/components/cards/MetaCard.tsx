@@ -18,44 +18,26 @@ interface MetaCardProps {
 }
 
 const MetaCard: React.FC<MetaCardProps> = ({ data }) => {
-  const {
-    label,
-    icon: Icon,
-    value,
-    isCurrency,
-    isPercentage,
-    isGrowth,
-    duration = 1.8,
-  } = data;
+  const { label, icon: Icon, value, isCurrency, isPercentage, isGrowth, duration = 1.8 } = data;
 
   const isNumeric = typeof value === "number";
   const numValue = isNumeric ? Number(value) : 0;
 
   // 🔼 Automatically determine direction
   const growthDirection =
-    isGrowth && isNumeric
-      ? numValue > 0
-        ? "up"
-        : numValue < 0
-        ? "down"
-        : "neutral"
-      : null;
+    isGrowth && isNumeric ? (numValue > 0 ? "up" : numValue < 0 ? "down" : "neutral") : null;
 
   // 🎨 Determine text color
   const textColor =
     isGrowth && growthDirection === "up"
       ? "text-success"
       : isGrowth && growthDirection === "down"
-      ? "text-error"
-      : "text-neutral-content";
+        ? "text-error"
+        : "text-neutral-content";
 
   // 📈 Determine growth icon
   const GrowthIcon =
-    growthDirection === "up"
-      ? ArrowUp
-      : growthDirection === "down"
-      ? ArrowDown
-      : null;
+    growthDirection === "up" ? ArrowUp : growthDirection === "down" ? ArrowDown : null;
 
   return (
     <div className="p-3 md:p-5 bg-base-100 min-h-52 rounded-xl shadow-lg flex flex-col items-center justify-center text-center space-y-3 transition-transform hover:scale-105 hover:shadow-xl">
@@ -80,9 +62,7 @@ const MetaCard: React.FC<MetaCardProps> = ({ data }) => {
             />
             {GrowthIcon && (
               <GrowthIcon
-                className={`w-5 h-5 ${
-                  growthDirection === "up" ? "text-success" : "text-error"
-                }`}
+                className={`w-5 h-5 ${growthDirection === "up" ? "text-success" : "text-error"}`}
               />
             )}
           </>
