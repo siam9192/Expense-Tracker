@@ -51,3 +51,11 @@ export type SigninPayload = {
     ip: string;
   };
 };
+
+
+
+export interface ChangePasswordPayload {
+  oldPassword: string;
+  newPassword: string;
+  signout_others: boolean;
+}

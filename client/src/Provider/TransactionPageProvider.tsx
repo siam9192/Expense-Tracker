@@ -1,8 +1,6 @@
 import { createContext, useContext, useMemo, useState, type ReactNode } from "react";
 import { useGetUserTransactionsSummaryQuery } from "../redux/api/metadata.api";
-import type {
-  UserTransactionsSummaryMetadata,
-} from "../types/metadata.type";
+import type { UserTransactionsSummaryMetadata } from "../types/metadata.type";
 import DashboardPageLoading from "../components/ui/DashboardPageLoading";
 import type { Params, UseQueryResult } from "../types/utils.type";
 import type { Response } from "../types/response.type";
@@ -11,7 +9,7 @@ import { useGetUserTransactionsQuery } from "../redux/api/transaction.api";
 
 export type TransactionPageContextType = {
   transactionsSummaryQuery: UseQueryResult<Response<UserTransactionsSummaryMetadata>>;
-   transactionsQuery: UseQueryResult<Response<Transaction[]>>;
+  transactionsQuery: UseQueryResult<Response<Transaction[]>>;
   transactionsQueryParams: Params;
   setTransactionsQueryParams: React.Dispatch<React.SetStateAction<Params>>;
 };
@@ -26,13 +24,12 @@ function TransactionPageProvider({ children }: Props) {
   const [transactionsQueryParams, setTransactionsQueryParams] = useState<Params>({
     limit: 4,
   });
-  
 
   const transactionsSummaryQuery = useGetUserTransactionsSummaryQuery(undefined);
   const transactionsQuery = useGetUserTransactionsQuery(transactionsQueryParams);
 
   // ✅ Derived loading state from all queries
-  const isLoading = transactionsSummaryQuery.isLoading || transactionsQuery.isLoading
+  const isLoading = transactionsSummaryQuery.isLoading || transactionsQuery.isLoading;
 
   // ✅ Memoize context value properly
   const contextValue = useMemo(
@@ -40,11 +37,9 @@ function TransactionPageProvider({ children }: Props) {
       transactionsSummaryQuery,
       transactionsQuery,
       transactionsQueryParams,
-      setTransactionsQueryParams
+      setTransactionsQueryParams,
     }),
-    [ transactionsSummaryQuery,
-      transactionsQuery,
-      transactionsQueryParams]
+    [transactionsSummaryQuery, transactionsQuery, transactionsQueryParams],
   );
 
   return (

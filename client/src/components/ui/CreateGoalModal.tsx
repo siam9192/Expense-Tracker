@@ -2,15 +2,15 @@ import { Fragment } from "react";
 import CreateGoalForm from "../forms/CreateGoalForm";
 import { X } from "lucide-react";
 interface Props {
-  onSuccess?():void
+  onSuccess?(): void;
 }
-function CreateGoalModal({onSuccess}:Props) {
+function CreateGoalModal({ onSuccess }: Props) {
   const open = () => {
     (document?.getElementById("create_goal_modal") as any)?.showModal();
   };
-  const close = ()=>{
-     (document?.getElementById("create_goal_modal") as any)?.close();
-  }
+  const close = () => {
+    (document?.getElementById("create_goal_modal") as any)?.close();
+  };
   return (
     <Fragment>
       {/* You can open the modal using document.getElementById('ID').showModal() method */}
@@ -23,10 +23,12 @@ function CreateGoalModal({onSuccess}:Props) {
       <dialog id="create_goal_modal" className="modal">
         <div className="modal-box w-[90%] md:w-lg max-w-5xl text-start relative">
           <h1 className="text-2xl font-medium ">Create Your New Goal</h1>
-          <CreateGoalForm onSuccess={()=>{
-            close()
-            onSuccess&& onSuccess()
-          }}/>
+          <CreateGoalForm
+            onSuccess={() => {
+              close();
+              onSuccess && onSuccess();
+            }}
+          />
           <div className="modal-action">
             <form method="dialog">
               <button className=" bg-base-300 absolute top-2 right-2 p-3  rounded-xl ">

@@ -29,9 +29,9 @@ function CreateGoalForm({ onSuccess }: Props) {
     setValue,
   } = useForm({
     resolver: zodResolver(goalValidation.createUserGoalPayloadValidation),
-    defaultValues:{
-      initial_amount:0
-    }
+    defaultValues: {
+      initial_amount: 0,
+    },
   });
 
   const [errorMessage, setErrorMessage] = useState("");
@@ -45,7 +45,7 @@ function CreateGoalForm({ onSuccess }: Props) {
     d.setDate(d.getDate() + deadlineDays);
 
     const formatted = d.toISOString(); // YYYY-MM-DD
-    console.log(formatted)
+    console.log(formatted);
     setValue("deadline", formatted); // register to form
   }, [deadlineDays, setValue]);
 
@@ -75,9 +75,7 @@ function CreateGoalForm({ onSuccess }: Props) {
           className="input input-lg w-full"
           placeholder="Type here"
         />
-        {errors.title && (
-          <p className="text-sm text-error mt-1">{errors.title.message}</p>
-        )}
+        {errors.title && <p className="text-sm text-error mt-1">{errors.title.message}</p>}
       </fieldset>
 
       <fieldset className="fieldset">
@@ -88,7 +86,7 @@ function CreateGoalForm({ onSuccess }: Props) {
           className="input input-lg w-full"
           placeholder="Type here"
         />
-           {errors.target_amount && (
+        {errors.target_amount && (
           <p className="text-sm text-error mt-1">{errors.target_amount.message}</p>
         )}
       </fieldset>
@@ -103,7 +101,7 @@ function CreateGoalForm({ onSuccess }: Props) {
           placeholder="Type here"
         />
 
-           {errors.initial_amount && (
+        {errors.initial_amount && (
           <p className="text-sm text-error mt-1">{errors.initial_amount.message}</p>
         )}
       </fieldset>
@@ -125,9 +123,7 @@ function CreateGoalForm({ onSuccess }: Props) {
           ))}
         </select>
 
-        {errors.deadline && (
-          <p className="text-sm text-error mt-1">{errors.deadline.message}</p>
-        )}
+        {errors.deadline && <p className="text-sm text-error mt-1">{errors.deadline.message}</p>}
       </fieldset>
 
       <button disabled={isLoading} className="btn btn-primary w-full">

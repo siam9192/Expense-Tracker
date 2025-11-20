@@ -73,3 +73,34 @@ export interface UserSettings {
 export interface SetupUserProfileResponseData {
   isSetupComplete: boolean;
 }
+
+export interface UpdateUserSettingsPayload
+  extends Partial<{
+    auto_saving: boolean;
+    balance_expense_income_alert: boolean;
+    email_alerts: boolean;
+    sms_alerts: boolean;
+    transaction_updates: boolean;
+    two_factor_auth: boolean;
+    monthly_budget: number;
+  }> {}
+
+  
+
+export enum SessionStatus {
+  ACTIVE = "ACTIVE",
+  EXPIRED = "EXPIRED",
+  REVOKED = "REVOKED"
+}
+
+
+  export interface UserSession {
+     id:number
+  user_id:number
+  device_name:string
+  address:string
+  ip:string
+  status:SessionStatus
+  created_at:Date|string,
+  current:boolean
+  }

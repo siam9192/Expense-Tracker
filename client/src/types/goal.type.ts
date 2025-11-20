@@ -27,18 +27,18 @@ export interface WithdrawUserGoalPayload {
 }
 
 export interface Goal {
-     id:number
-  user_id:number
-  title:string
-  target_amount:number
-  current_amount:number
-  initial_amount:number
-  deadline:string
-  complete_percentage:number
-  status:GoalStatus
-  is_withdrawn:boolean
-  created_at:Date|string
-  updated_at:Date|string
+  id: number;
+  user_id: number;
+  title: string;
+  target_amount: number;
+  current_amount: number;
+  initial_amount: number;
+  deadline: string;
+  complete_percentage: number;
+  status: GoalStatus;
+  is_withdrawn: boolean;
+  created_at: Date | string;
+  updated_at: Date | string;
 
-  user:null
+  user: null;
 }

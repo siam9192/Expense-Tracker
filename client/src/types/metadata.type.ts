@@ -26,11 +26,11 @@ export type UserMonthlyBudgetMetadata = {
 };
 
 export type UserTransactionsSummaryMetadata = {
-  total_income:number,
-      total_expense:number,
-      transactions_count:number,
-      period_total:number,
-      period:string
+  total_income: number;
+  total_expense: number;
+  transactions_count: number;
+  period_total: number;
+  period: string;
 };
 
 export type UserGoalsSummaryMetadata = {

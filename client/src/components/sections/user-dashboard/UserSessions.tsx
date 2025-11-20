@@ -1,4 +1,7 @@
 import { MonitorSmartphone, MapPin, Clock, LogOut } from "lucide-react";
+import { useGetUserSessionsQuery } from "../../../redux/api/user.api";
+import RevokeSingleSessionModal from "../../ui/RevokeSingleSessionModal";
+import RevokeAllSessionModal from "../../ui/RevokeAllSessionModal";
 
 // Example session data (you’d fetch from your backend in real use)
 const sessions = [
@@ -29,6 +32,10 @@ const sessions = [
 ];
 
 function UserSessions() {
+  const {data} = useGetUserSessionsQuery(undefined)
+  const sessions =  data?.data||[]
+  
+ 
   return (
     <div className=" mt-10 p-6 md:p-10 bg-base-300 rounded-2xl shadow-xl min-h-[50vh]">
       {/* Header */}
@@ -39,9 +46,7 @@ function UserSessions() {
             Manage your logged-in devices and revoke access to inactive sessions.
           </p>
         </div>
-        <button className="btn btn-sm btn-outline btn-error gap-2">
-          <LogOut size={16} /> Log out of all devices
-        </button>
+      <RevokeAllSessionModal/>
       </div>
 
       {/* Sessions List */}
@@ -65,10 +70,10 @@ function UserSessions() {
                 <MonitorSmartphone size={22} />
               </div>
               <div>
-                <p className="font-semibold">{session.device}</p>
+                <p className="font-semibold">{session.device_name}</p>
                 <div className="flex flex-wrap items-center gap-2 text-sm text-neutral-content">
                   <span className="flex items-center gap-1">
-                    <MapPin size={14} /> {session.location}
+                    <MapPin size={14} /> {session.address}
                   </span>
                   <span>•</span>
                   <span>IP: {session.ip}</span>
@@ -79,14 +84,12 @@ function UserSessions() {
             {/* Right */}
             <div className="flex items-center gap-4 mt-3 md:mt-0">
               <div className="flex items-center gap-1 text-sm text-neutral-content">
-                <Clock size={14} /> {session.lastActive}
+                <Clock size={14} /> {new Date(session.created_at).toDateString()},{new Date(session.created_at).toLocaleTimeString()}
               </div>
               {session.current ? (
                 <span className="badge badge-primary badge-outline">Current</span>
               ) : (
-                <button className="btn btn-sm btn-outline btn-error gap-1">
-                  <LogOut size={14} /> Revoke
-                </button>
+               <RevokeSingleSessionModal sessionId={session.id}/>
               )}
             </div>
           </div>

@@ -5,38 +5,37 @@ import MetaCard from "../../cards/MetaCard";
 import { useGoalPageProviderContext } from "../../../Provider/GoalPageProvider";
 
 function UserGoalsMetadata() {
-   const {goalsSummaryQuery } = useGoalPageProviderContext()
-  
-    const { data: resData } = goalsSummaryQuery;
-    const summary = resData?.data!;
-const userGoalsMetadata = [
-  {
-    label: "Available Savings",
-    icon: Award,
-    value:summary.current_savings,
-    isCurrency: true,
-    isPercentage: false,
-  },
-  {
-    label: "Achieved",
-    icon: Activity,
-    value: summary.total_completed_goals,
-    isPercentage: true,
-  },
-  {
-    label: "Avg Progress",
-    icon: BarChart2,
-    value: summary.avg_progress,
-    isPercentage: true,
-  },
-  {
-    label: "Ongoing",
-    icon: Clock,
-    value: summary.total_active_goals,
-    isPercentage: false,
-  },
-];
+  const { goalsSummaryQuery } = useGoalPageProviderContext();
 
+  const { data: resData } = goalsSummaryQuery;
+  const summary = resData?.data!;
+  const userGoalsMetadata = [
+    {
+      label: "Available Savings",
+      icon: Award,
+      value: summary.current_savings,
+      isCurrency: true,
+      isPercentage: false,
+    },
+    {
+      label: "Achieved",
+      icon: Activity,
+      value: summary.total_completed_goals,
+      isPercentage: true,
+    },
+    {
+      label: "Avg Progress",
+      icon: BarChart2,
+      value: summary.avg_progress,
+      isPercentage: true,
+    },
+    {
+      label: "Ongoing",
+      icon: Clock,
+      value: summary.total_active_goals,
+      isPercentage: false,
+    },
+  ];
 
   return (
     <ArriveAnimationContainer>

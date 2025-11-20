@@ -1,11 +1,11 @@
 import React, { createContext, useContext, useEffect, useState, useCallback, useMemo } from "react";
-import type { CurrentUser, IncompleteUser } from "../types/user.type";
+import type { CurrentUser, UserSettings } from "../types/user.type";
 import { useGetCurrentUserQuery, useGetCurrentUserSettingsQuery } from "../redux/api/user.api";
 import { useProfileSetupProviderContext } from "./ProfileSetupProvider";
 
 export type CurrentUserProviderContextType = {
   user: CurrentUser | null;
-  settings: any | null;
+  settings: UserSettings | null;
   isLoading: boolean;
   setUser: React.Dispatch<React.SetStateAction<CurrentUser | null>>;
   setSettings: React.Dispatch<React.SetStateAction<any | null>>;
@@ -127,7 +127,7 @@ export default function CurrentUserProvider({ children }: Props) {
     () => ({
       user,
       settings,
-      isLoading,
+      isLoading:isUserLoading ||isSettingsLoading,
       setUser,
       setSettings,
       setIsLoading,

@@ -1,10 +1,4 @@
-import {
-  ArrowDownCircle,
-  ArrowUpCircle,
-  FileText,
-  PiggyBank,
-  Wallet,
-} from "lucide-react";
+import { ArrowDownCircle, ArrowUpCircle, FileText, PiggyBank, Wallet } from "lucide-react";
 
 import { TransactionType } from "../../types/transaction.type";
 import type { Transaction } from "../../types/transaction.type";
@@ -14,7 +8,6 @@ interface Props {
 }
 
 function UserTransactionCard({ transaction }: Props) {
-  
   // Icon for each transaction type
   const IconMap = {
     [TransactionType.INCOME]: ArrowUpCircle,
@@ -25,9 +18,9 @@ function UserTransactionCard({ transaction }: Props) {
 
   // Color for each type
   const ColorMap = {
-    [TransactionType.INCOME]: "text-success",        // green
-    [TransactionType.EXPENSE]: "text-error",         // red
-    [TransactionType.GOAL_DEPOSIT]: "text-primary",  // blue (saving)
+    [TransactionType.INCOME]: "text-success", // green
+    [TransactionType.EXPENSE]: "text-error", // red
+    [TransactionType.GOAL_DEPOSIT]: "text-primary", // blue (saving)
     [TransactionType.GOAL_WITHDRAW]: "text-warning", // yellow/orange
   };
 
@@ -38,7 +31,7 @@ function UserTransactionCard({ transaction }: Props) {
   const signMap = {
     [TransactionType.INCOME]: "+",
     [TransactionType.EXPENSE]: "-",
-    [TransactionType.GOAL_DEPOSIT]: "+",  // money going into goal
+    [TransactionType.GOAL_DEPOSIT]: "+", // money going into goal
     [TransactionType.GOAL_WITHDRAW]: "-", // money taken out of goal
   };
 
@@ -46,10 +39,8 @@ function UserTransactionCard({ transaction }: Props) {
 
   return (
     <div className="p-4 bg-base-100 rounded-xl hover:shadow-md transition-all duration-300 flex flex-col md:flex-row md:items-center justify-between">
-      
       {/* Left: Icon + Info */}
       <div className="flex flex-col lg:flex-row lg:items-center gap-4">
-        
         {/* Icon */}
         <div className={`p-3 rounded-lg size-fit ${colorClass}`}>
           <Icon size={24} />

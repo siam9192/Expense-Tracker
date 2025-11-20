@@ -11,7 +11,7 @@ function UserMonthlyBudgetMetaData() {
 
   const income = data.total_income;
   const budgetLimit = data.budget;
-  const spent = data.total_income;
+  const spent = data.total_expense;
   const spentPercent = data.budget_usage;
 
   return (

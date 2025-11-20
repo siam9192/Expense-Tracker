@@ -47,7 +47,6 @@ const metadataApi = baseApi.injectEndpoints({
       query: () => ({
         url: "/metadata/me/transactions",
         method: "GET",
-       
       }),
       transformResponse: (response: Response<UserTransactionsSummaryMetadata>) => {
         return response;
@@ -66,7 +65,6 @@ const metadataApi = baseApi.injectEndpoints({
       query: () => ({
         url: "/metadata/me/goals",
         method: "GET",
-       
       }),
       transformResponse: (response: Response<UserGoalsSummaryMetadata>) => {
         return response;

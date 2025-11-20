@@ -1,13 +1,54 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Settings, Bell, PiggyBank, DollarSign, Shield } from "lucide-react";
 import ArriveAnimationContainer from "../../../components/ui/ArriveAnimationContainer";
+import { useCurrentUserProviderContext } from "../../../Provider/CurrentUserProvider";
+import { useUpdateUserSettingsMutation } from "../../../redux/api/user.api";
+import { toast } from "sonner";
+import { DEFAULT_ERROR_MESSAGE } from "../../../utils/constant";
 
 function UserWalletSettings() {
-  const [currency, setCurrency] = useState("USD");
-  const [notifications, setNotifications] = useState(true);
-  const [autoSave, setAutoSave] = useState(false);
-  const [spendingLimit, setSpendingLimit] = useState(5000);
+  const {settings} = useCurrentUserProviderContext()
+  const [currency, setCurrency] = useState(settings?.currency.code);
+  const [notifications, setNotifications] = useState(settings?.balance_expense_income_alert);
+  const [autoSave, setAutoSave] = useState(settings?.auto_saving);
+  const [spendingLimit, setSpendingLimit] = useState(settings?.monthly_budget);
 
+  const [isChanged,setIsChanged] = useState(false)
+
+ const renderRef = useRef(false)
+
+useEffect(() => {
+  // Skip first render
+  if (!renderRef.current) {
+    renderRef.current = true;
+    return;
+  }
+
+  const hasChanged =
+    currency !== settings?.currency.code ||
+    notifications !== settings?.balance_expense_income_alert ||
+    autoSave !== settings?.auto_saving ||
+    spendingLimit !== settings?.monthly_budget;
+
+  setIsChanged(hasChanged);
+}, [currency, notifications, autoSave, spendingLimit, settings]);
+
+const [mutate] = useUpdateUserSettingsMutation()
+
+async function handelUpdate () {
+ try {
+   const {error} =  await mutate({
+    balance_expense_income_alert:notifications,
+    auto_saving:autoSave,
+    monthly_budget:spendingLimit
+  })
+  if(error) throw error
+   toast.success("Saved successfully!")
+ } catch (error:any) {
+   toast.error(error?.data.message||DEFAULT_ERROR_MESSAGE)  
+ }
+
+}
   return (
     <ArriveAnimationContainer delay={0.3}>
       <div className="p-6 md:p-8 bg-base-300 rounded-2xl shadow-lg space-y-8">
@@ -17,7 +58,7 @@ function UserWalletSettings() {
             <Settings className="text-primary" size={22} />
             <h2 className="text-xl font-semibold">Wallet Settings</h2>
           </div>
-          <button className="btn btn-sm btn-primary">Save Changes</button>
+          <button disabled={!isChanged} onClick={handelUpdate} className="btn btn-sm btn-primary">Save Changes</button>
         </div>
 
         {/* Settings List */}

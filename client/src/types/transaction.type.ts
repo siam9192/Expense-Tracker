@@ -31,15 +31,24 @@ export interface Transaction {
   currency_id: number;
   base_currency_id: number | null;
 }
-
-
+export interface CreateTransactionFormPayload {
+  title: string;
+  category_id: number;
+  currency_id: number;
+  amount: number;
+  date: {
+    day: number;
+    month: number;
+    year: number;
+  };
+  note?: string;
+}
 
 export interface CreateTransactionPayload {
-  title:string
+  title: string;
   category_id: number;
   currency_id: number;
   amount: number;
   date: Date;
   note?: string;
 }
-

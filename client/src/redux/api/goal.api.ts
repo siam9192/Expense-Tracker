@@ -27,9 +27,9 @@ const goalApi = baseApi.injectEndpoints({
       transformResponse: (response: Response<Goal>) => {
         return response;
       },
-      invalidatesTags:[]
+      invalidatesTags: [],
     }),
-     depositUserGoal: builder.mutation({
+    depositUserGoal: builder.mutation({
       query: (payload: DepositUserGoalPayload) => ({
         url: "goals/me/deposit",
         method: "PATCH",
@@ -39,21 +39,25 @@ const goalApi = baseApi.injectEndpoints({
       transformResponse: (response: Response<Goal>) => {
         return response;
       },
-      invalidatesTags:["userGoals"]
+      invalidatesTags: ["userGoals"],
     }),
-        withdrawUserGoal: builder.mutation({
-      query: (id:string) => ({
+    withdrawUserGoal: builder.mutation({
+      query: (id: string) => ({
         url: `goals/me/${id}/withdraw`,
         method: "PATCH",
-        
       }),
 
       transformResponse: (response: Response<Goal>) => {
         return response;
       },
-     invalidatesTags:["userGoals"]
+      invalidatesTags: ["userGoals"],
     }),
   }),
 });
 
-export const { useGetUserGoalsQuery,useCreateUserGoalMutation,useDepositUserGoalMutation,useWithdrawUserGoalMutation } = goalApi;
+export const {
+  useGetUserGoalsQuery,
+  useCreateUserGoalMutation,
+  useDepositUserGoalMutation,
+  useWithdrawUserGoalMutation,
+} = goalApi;

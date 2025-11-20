@@ -4,6 +4,7 @@ import UserSessions from "../../../components/sections/user-dashboard/UserSessio
 import ArriveAnimationContainer from "../../../components/ui/ArriveAnimationContainer";
 
 function SecuritySettings() {
+  
   return (
     <ArriveAnimationContainer delay={0.3}>
       <div>
@@ -30,7 +31,10 @@ function SecuritySettings() {
                 className="input input-bordered w-full"
               />
             </div>
-
+               
+               <div  className="flex  gap-2">
+                <input type="checkbox" defaultChecked className="checkbox checkbox-primary" />  <label className="text-sm text-neutral-content">Logout from others</label>
+               </div>
             <div className="text-right">
               <button className="btn btn-primary">Update Password</button>
             </div>

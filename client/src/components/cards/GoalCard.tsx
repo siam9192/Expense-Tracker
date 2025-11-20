@@ -1,13 +1,12 @@
-import {Goal as GoalIcon} from 'lucide-react'
+import { Goal as GoalIcon } from "lucide-react";
 import DepositGoalModal from "../ui/DepositGoalModal";
 import type { Goal } from "../../types/goal.type";
-import { getTimeLeft } from '../../utils/helper';
+import { getTimeLeft } from "../../utils/helper";
 
 interface Props {
-  goal:Goal
+  goal: Goal;
 }
-function GoalCard({goal}:Props) {
-
+function GoalCard({ goal }: Props) {
   return (
     <div className="p-5 bg-base-100 rounded-2xl shadow-md relative hover:shadow-lg transition-shadow duration-300">
       {/* Header: Icon + Title */}
@@ -17,7 +16,9 @@ function GoalCard({goal}:Props) {
         </div>
         <div>
           <p className="text-lg font-semibold text-neutral">{goal.title}</p>
-          <p className="text-sm text-gray-500 font-medium">{getTimeLeft(new Date(goal.deadline))} left</p>
+          <p className="text-sm text-gray-500 font-medium">
+            {getTimeLeft(new Date(goal.deadline))} left
+          </p>
         </div>
       </div>
 
@@ -29,8 +30,8 @@ function GoalCard({goal}:Props) {
           max="100"
         ></progress>
         <div className="flex justify-between text-sm text-gray-600 font-medium">
-          <span>${(goal.current_amount).toLocaleString()}</span>
-          <span>${(goal.target_amount).toLocaleString()}</span>
+          <span>${goal.current_amount.toLocaleString()}</span>
+          <span>${goal.target_amount.toLocaleString()}</span>
         </div>
       </div>
 

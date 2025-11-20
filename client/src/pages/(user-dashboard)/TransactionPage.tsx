@@ -6,9 +6,9 @@ function TransactionPage() {
   return (
     <TransactionPageProvider>
       <div>
-      <UserTransactionsMetadata />
-      <UserTransactions />
-    </div>
+        <UserTransactionsMetadata />
+        <UserTransactions />
+      </div>
     </TransactionPageProvider>
   );
 }

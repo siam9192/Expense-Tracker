@@ -15,11 +15,11 @@ const transactionApi = baseApi.injectEndpoints({
         return response;
       },
     }),
-       createUserTransaction: builder.query({
-      query: (payload:CreateTransactionPayload) => ({
+    createUserTransaction: builder.mutation({
+      query: (payload: CreateTransactionPayload) => ({
         url: "/transactions/me",
         method: "POST",
-        body:payload,
+        body: payload,
       }),
       transformResponse: (response: Response<Transaction>) => {
         return response;
@@ -28,4 +28,4 @@ const transactionApi = baseApi.injectEndpoints({
   }),
 });
 
-export const { useGetUserTransactionsQuery,useCreateUserTransactionQuery } = transactionApi;
+export const { useGetUserTransactionsQuery, useCreateUserTransactionMutation } = transactionApi;

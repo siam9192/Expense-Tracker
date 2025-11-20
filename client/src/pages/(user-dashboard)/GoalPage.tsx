@@ -4,12 +4,12 @@ import GoalPageProvider from "../../Provider/GoalPageProvider";
 
 function GoalPage() {
   return (
-  <GoalPageProvider>
+    <GoalPageProvider>
       <div>
-      <UserGoalsMetadata />
-      <UserGoals />
-    </div>
-  </GoalPageProvider>
+        <UserGoalsMetadata />
+        <UserGoals />
+      </div>
+    </GoalPageProvider>
   );
 }
 
