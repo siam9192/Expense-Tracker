@@ -56,9 +56,9 @@ const moduleRoutes: TModuleRoutes = [
     router: notificationRouter,
   },
   {
-    path:"/metadata",
-    router:metadataRouter
-  }
+    path: "/metadata",
+    router: metadataRouter,
+  },
 ];
 
 const routes = moduleRoutes.map((route) =>

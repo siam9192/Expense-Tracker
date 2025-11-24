@@ -10,19 +10,14 @@ app.use(express.json());
 
 app.use(routes);
 
-app.use((
-  err:any,
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  console.log(err)
+app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+  console.log(err);
   const statusCode = err.statusCode || 500;
   const status = err.status || "error";
 
   res.status(statusCode).json({
     status,
-    status_code:statusCode,
+    status_code: statusCode,
     message: err.message || "Something went wrong",
   });
 });

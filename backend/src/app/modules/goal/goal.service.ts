@@ -1,5 +1,6 @@
 import {
   CategoryType,
+  GoalStatus,
   NotificationType,
   Prisma,
   TransactionType,
@@ -12,7 +13,6 @@ import {
   CreateCurrentUserGoalPayload,
   DepositCurrentUserGoalPayload,
   FilterGoalsQuery,
-  WithdrawCurrentUserGoalPayload,
 } from "./goal.interface";
 import AppError from "../../errors/AppError";
 import httpStatus from "../../shared/http-status";
@@ -39,11 +39,12 @@ class GoalService {
     filterQuery: FilterGoalsQuery,
     paginationOptions: PaginationOptions,
   ) {
-    const { search_term } = filterQuery;
+    const { search_term, ...otherFilterQueries } = filterQuery;
     const { page, skip, limit, sortBy, sortOrder } =
       calculatePagination(paginationOptions);
     const whereConditions: Prisma.GoalWhereInput = {
       user_id: authUser.user_id,
+      ...otherFilterQueries,
     };
     if (search_term) {
       whereConditions.title = {
@@ -150,12 +151,30 @@ class GoalService {
         // Create transaction record
         prisma.transaction.create({
           data: {
+            title: `Deposit into goal "${goal.title}"`,
             user_id: authUser.user_id,
             category_id: category.id,
             type: TransactionType.GOAL_DEPOSIT,
             amount: payload.amount,
             currency_id: userSettings.currency.id,
             date: new Date(),
+          },
+        }),
+
+        prisma.goal.update({
+          where: {
+            id: payload.goal_id,
+          },
+          data: {
+            current_amount: {
+              increment: payload.amount,
+            },
+            ...(goal.current_amount + payload.amount >= goal.target_amount
+              ? { status: GoalStatus.COMPLETED }
+              : {}),
+            complete_percentage:
+              ((goal.current_amount + payload.amount) / goal.target_amount) *
+              100,
           },
         }),
 
@@ -208,7 +227,7 @@ class GoalService {
       where: {
         user_id_name_type: {
           user_id: authUser.user_id,
-          name: "Goal Withdraw",
+          name: "Goal Withdrawal",
           type: CategoryType.SAVING,
         },
         is_default: true,
@@ -240,6 +259,7 @@ class GoalService {
         // Record transaction
         prisma.transaction.create({
           data: {
+            title: `Withdraw from goal  "${goal.title}"`,
             user_id: authUser.user_id,
             category_id: category.id,
             type: TransactionType.GOAL_WITHDRAW,

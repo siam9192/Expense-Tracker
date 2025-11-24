@@ -7,14 +7,18 @@ import userValidation from "./user.validation";
 
 const router = Router();
 
-router.get("/me", auth([UserRole.USER],{
-  require_profile_complete:false
-}), userController.getCurrentUser);
+router.get(
+  "/me",
+  auth([UserRole.USER], {
+    require_profile_complete: false,
+  }),
+  userController.getCurrentUser,
+);
 
 router.post(
   "/me/setup-profile",
-  auth([UserRole.USER],{
-    require_profile_complete:false
+  auth([UserRole.USER], {
+    require_profile_complete: false,
   }),
   validateRequest(userValidation.setupUserProfilePayloadValidation),
   userController.setupUserProfile,
@@ -37,7 +41,7 @@ router.get(
 router.put(
   "/me/profile",
   auth([UserRole.USER]),
-  validateRequest(userValidation.setupUserProfilePayloadValidation),
+  validateRequest(userValidation.updateUserProfilePayloadValidation),
   userController.updateCurrentUserProfile,
 );
 router.put(
@@ -48,9 +52,14 @@ router.put(
 );
 
 router.patch(
+  "/me/sessions/all/revoke",
+  auth([UserRole.USER]),
+  userController.revokeCurrentUserAllSession,
+);
+
+router.patch(
   "/me/sessions/:sessionId/revoke",
   auth([UserRole.USER]),
-  validateRequest(userValidation.setupUserProfilePayloadValidation),
   userController.revokeCurrentUserSession,
 );
 

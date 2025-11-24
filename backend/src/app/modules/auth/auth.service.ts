@@ -350,11 +350,14 @@ class AuthService {
   }
 
   async changePassword(authUser: AuthUser, payload: ChangePasswordPayload) {
+    const auth = await prisma.authInfo.findUnique({
+      where: {
+        user_id: authUser.user_id,
+      },
+    });
+    if (!auth) throw new Error();
     // Compare old password
-    const isPasswordMatch = await compare(
-      payload.oldPassword,
-      payload.oldPassword,
-    );
+    const isPasswordMatch = await compare(payload.old_password, auth.password);
 
     if (!isPasswordMatch) {
       throw new AppError(
@@ -363,7 +366,7 @@ class AuthService {
       );
     }
     // Hash the new password
-    const newEncryptedPassword = encrypt(payload.newPassword);
+    const newEncryptedPassword = encrypt(payload.new_password);
 
     await prisma.authInfo.update({
       where: {
@@ -446,13 +449,18 @@ class AuthService {
         );
       }
 
-      // Step 2: Verify and decode the token
-      const decoded = verifyJwtToken(
-        refreshToken,
-        envConfig.jwt.refresh_token_secret as string,
-      ) as AuthUser;
+      let decoded;
+      try {
+        // Step 2: Verify and decode the token
+        decoded = verifyJwtToken(
+          refreshToken,
+          envConfig.jwt.refresh_token_secret as string,
+        ) as AuthUser;
 
-      if (!decoded || !decoded.userId) {
+        if (!decoded || !decoded.userId) {
+          throw new Error();
+        }
+      } catch (error) {
         throw new AppError(httpStatus.UNAUTHORIZED, "Invalid refresh token.");
       }
       // Step 3: Create a new access token
@@ -464,10 +472,31 @@ class AuthService {
         envConfig.jwt.access_token_secret as string,
         appConfig.access_token_expire_days + "d",
       );
+      const newRefreshToken = await generateJwtToken(
+        {
+          id: decoded.userId,
+          role: decoded.role,
+        },
+        envConfig.jwt.refresh_token_secret as string,
+        appConfig.refresh_token_expire_days + "d",
+      );
 
       // Step 4: Return both tokens
       return {
-        accessToken: newAccessToken,
+        token: {
+          access: newAccessToken,
+          refresh: newRefreshToken,
+        },
+        expires: {
+          access: new Date(
+            Date.now() +
+              appConfig.access_token_expire_days * 24 * 60 * 60 * 1000,
+          ),
+          refresh: new Date(
+            Date.now() +
+              appConfig.refresh_token_expire_days * 24 * 60 * 60 * 1000,
+          ),
+        },
       };
     } catch (error) {
       throw new AppError(

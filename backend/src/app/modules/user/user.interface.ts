@@ -7,7 +7,7 @@ export enum UserRole {
 
 export interface SetupUserProfilePayload {
   name: string;
-  gender:Gender
+  gender: Gender;
   avatar_id: number;
   profession_id: number;
   country_id: number;

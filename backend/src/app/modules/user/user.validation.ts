@@ -1,15 +1,19 @@
 import { Gender } from "@prisma/client";
 import z from "zod";
 
-const updateUserProfilePayloadValidation = 
-z.object({
+const updateUserProfilePayloadValidation = z.object({
   name: z
     .string()
     .trim()
     .min(1, "Name cannot be empty")
     .max(100, "Name must be at most 100 characters long")
     .optional(),
-
+  gender: z
+    .nativeEnum(Gender, {
+      message: "Invalid gender",
+      required_error: "Gender is required",
+    })
+    .optional(),
   profile_picture: z
     .string()
     .url("Profile picture must be a valid URL")
@@ -40,9 +44,7 @@ z.object({
     .optional(),
 });
 
-
-
- const setupUserProfilePayloadValidation = z.object({
+const setupUserProfilePayloadValidation = z.object({
   name: z
     .string({
       required_error: "Name is required",
@@ -51,7 +53,10 @@ z.object({
     .trim()
     .nonempty("Name cannot be empty")
     .max(100, "Name must be at most 100 characters long"),
-   gender:z.nativeEnum(Gender,{message:"Invalid gender",required_error:"Gender is required"}),
+  gender: z.nativeEnum(Gender, {
+    message: "Invalid gender",
+    required_error: "Gender is required",
+  }),
   avatar_id: z
     .number({
       required_error: "Avatar ID is required",
@@ -99,7 +104,7 @@ z.object({
     .nonnegative("Spendable balance cannot be negative"),
 });
 
- const updateCurrentUserSettingsPayloadValidation = z.object({
+const updateCurrentUserSettingsPayloadValidation = z.object({
   auto_saving: z
     .boolean({
       invalid_type_error: "Auto saving must be a boolean value",
@@ -108,7 +113,8 @@ z.object({
 
   balance_expense_income_alert: z
     .boolean({
-      invalid_type_error: "Balance expense/income alert must be a boolean value",
+      invalid_type_error:
+        "Balance expense/income alert must be a boolean value",
     })
     .optional(),
 
@@ -144,11 +150,10 @@ z.object({
     .optional(),
 });
 
-
 const userValidation = {
- updateUserProfilePayloadValidation,
- setupUserProfilePayloadValidation,
- updateCurrentUserSettingsPayloadValidation
-} 
+  updateUserProfilePayloadValidation,
+  setupUserProfilePayloadValidation,
+  updateCurrentUserSettingsPayloadValidation,
+};
 
-export default userValidation
+export default userValidation;

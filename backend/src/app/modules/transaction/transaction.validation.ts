@@ -1,6 +1,13 @@
 import z from "zod";
 
 const createTransactionPayloadValidation = z.object({
+  title: z
+    .string({
+      required_error: "Title is required",
+      invalid_type_error: "Title must be a string",
+    })
+    .nonempty("Title cannot be empty")
+    .max(100, "Title must not exceed 100 characters"),
   category_id: z
     .number({
       required_error: "Category ID is required",

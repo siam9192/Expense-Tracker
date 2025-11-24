@@ -28,17 +28,23 @@ export const calculatePagination = (
   options?: IDefaultOptions,
 ): IOptionsResult => {
   // Parse pagination values with fallbacks
-  let page: number = Number(paginationOptions.page) || options?.defaultPage || 1;
-  let limit: number = Number(paginationOptions.limit) || options?.limitOverride || options?.defaultLimit || 16;
+  let page: number =
+    Number(paginationOptions.page) || options?.defaultPage || 1;
+  let limit: number =
+    Number(paginationOptions.limit) ||
+    options?.limitOverride ||
+    options?.defaultLimit ||
+    16;
 
   const isValidSortOrder = Object.values(ESortOrder).includes(
-    paginationOptions.sortOrder as ESortOrder
+    paginationOptions.sortOrder as ESortOrder,
   );
   let sortOrder: ESortOrder = isValidSortOrder
     ? (paginationOptions.sortOrder as ESortOrder)
     : options?.defaultSortOrder || ESortOrder.DESC;
 
-  let sortBy: string = paginationOptions.sortBy || options?.defaultSortBy || "created_at";
+  let sortBy: string =
+    paginationOptions.sortBy || options?.defaultSortBy || "created_at";
 
   const skip = (page - 1) * limit;
 
@@ -52,5 +58,7 @@ export const calculatePagination = (
 };
 
 // Strongly typed pick for pagination
-export const paginationOptionPicker = (query: Record<string, any>): PaginationOptions =>
+export const paginationOptionPicker = (
+  query: Record<string, any>,
+): PaginationOptions =>
   pick(query, PAGINATION_OPTION_KEYS) as PaginationOptions;

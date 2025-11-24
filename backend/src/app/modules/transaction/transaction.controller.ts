@@ -7,11 +7,13 @@ import transactionService from "./transaction.service";
 
 class TransactionController {
   getCurrentUserTransactions = catchAsync(async (req, res) => {
+    console.log(req.query);
     const result = await transactionService.getCurrentUserTransactionsFromDB(
       req.user,
-      pick(req.query, ["id"]),
+      pick(req.query, ["id", "type"]),
       paginationOptionPicker(req.query),
     );
+
     sendSuccessResponse(res, {
       message: "Goals retrieved successfully",
       status_code: httpStatus.OK,

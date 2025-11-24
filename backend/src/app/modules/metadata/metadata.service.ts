@@ -127,6 +127,33 @@ class MetadataService {
       current_month_growth,
     };
   }
+  async getCurrentUserWalletSummary(authUser: AuthUser) {
+    // 1️⃣ Get Wallet
+    const wallet = await prisma.wallet.findUnique({
+      where: { user_id: authUser.user_id },
+    });
+    if (!wallet) throw new Error("Wallet not found");
+    const userSettings = await prisma.userSetting.findUnique({
+      where: {
+        user_id: authUser.user_id,
+      },
+    });
+    if (!userSettings) throw new Error();
+
+    const total_balance = wallet.total_balance;
+    const spendable_balance = wallet.spendable_balance;
+    const saving_balance = wallet.saving_balance;
+    const monthly_budget = userSettings.monthly_budget;
+    const last_month_spent = 0;
+
+    return {
+      total_balance,
+      spendable_balance,
+      saving_balance,
+      monthly_budget,
+      last_month_spent,
+    };
+  }
 
   async getCurrentUserMonthlyBudgetSummary(authUser: AuthUser) {
     // 1️⃣ Get Wallet
@@ -174,12 +201,14 @@ class MetadataService {
         base_currency_id: null,
         date: {
           gte: currentMonthStart,
-          lte: currentMonthStart,
+          lte: currentMonthEnd,
         },
       },
       by: ["type"],
       _sum: { amount: true },
     });
+
+    console.log(baseCurrencyTransactions, mainCurrencyTransactions);
 
     // 6️⃣ Total income & expense
     const { income: baseIncome, expense: baseExpense } = sumTransactions(
@@ -192,13 +221,13 @@ class MetadataService {
     const total_income = baseIncome + mainIncome;
     const total_expense = baseExpense + mainExpense;
 
-    const budget_usage = (total_income / monthly_budget) * 100;
+    const budget_usage = (total_expense / monthly_budget) * 100;
 
     return {
       total_income,
       total_expense,
       budget_usage,
-      budget:userSettings.monthly_budget
+      budget: userSettings.monthly_budget,
     };
   }
 
@@ -211,13 +240,13 @@ class MetadataService {
     const transactions = await prisma.transaction.findMany({
       where: {
         user_id: authUser.user_id,
-        date: { gte: last30DaysStart, lte: now },
       },
       select: {
         type: true,
         amount: true,
         conversion_amount: true,
         base_currency_id: true,
+        date: true,
       },
     });
 
@@ -231,24 +260,16 @@ class MetadataService {
       if (t.type === TransactionType.EXPENSE) totalExpense += value;
     });
 
-    // 3️⃣ Budget usage (optional: fetch user's monthly budget)
-    const userSettings = await prisma.userSetting.findUnique({
-      where: { user_id: authUser.user_id },
-    });
-    const monthlyBudget = userSettings?.monthly_budget ?? 0;
-    const budgetUsagePercent =
-      monthlyBudget > 0 ? (totalExpense / monthlyBudget) * 100 : 0;
-
-    // 4️⃣ Expense percentage relative to total income
-    const expensePercent =
-      totalIncome > 0 ? (totalExpense / totalIncome) * 100 : 0;
+    const period_total = transactions
+      .filter((tr) => new Date(tr.date).getTime() >= last30DaysStart.getTime())
+      .reduce((p, c) => p + (c.conversion_amount ?? c.amount ?? 0), 0);
 
     // 5️⃣ Return summary
     return {
-      totalIncome,
-      totalExpense,
-      budgetUsagePercent: Math.round(budgetUsagePercent),
-      expensePercent: Math.round(expensePercent),
+      total_income: totalIncome,
+      total_expense: totalExpense,
+      transactions_count: transactions.length,
+      period_total,
       period: "Last 30 days",
     };
   }
@@ -382,7 +403,7 @@ class MetadataService {
       totalPoints = 12;
       startDate = new Date(
         now.getFullYear(),
-        now.getMonth() - (totalPoints - 1),
+        now.getMonth() - (totalPoints - 1), 
         1,
       );
 
@@ -634,7 +655,7 @@ class MetadataService {
       by: ["category_id"],
       where: {
         user_id: authUser.user_id,
-        type:CategoryType.EXPENSE,
+        type: CategoryType.EXPENSE,
         date: { gte: startDate, lte: endDate },
       },
       _sum: { amount: true },
@@ -647,24 +668,28 @@ class MetadataService {
     );
 
     // 4️⃣ Map results to category names + total + percentage
-    const breakdown = categories.map((cat) => {
-      const catExpense = categoryExpenses.find((c) => c.category_id === cat.id);
-      const total = catExpense?._sum.amount || 0;
-      const percentage =
-        totalExpenses > 0
-          ? Number(((total / totalExpenses) * 100).toFixed(2))
-          : 0;
+    const breakdown = categories
+      .map((cat) => {
+        const catExpense = categoryExpenses.find(
+          (c) => c.category_id === cat.id,
+        );
+        const total = catExpense?._sum.amount || 0;
+        const percentage =
+          totalExpenses > 0
+            ? Number(((total / totalExpenses) * 100).toFixed(2))
+            : 0;
 
-      return {
-        category: cat.name,
-        total,
-        percentage,
-      };
-    });
+        return {
+          category: cat.name,
+          total,
+          percentage,
+        };
+      })
+      .filter((_) => _.total > 0);
 
     return {
       sequence,
-      breakdown
+      breakdown,
     };
   }
 

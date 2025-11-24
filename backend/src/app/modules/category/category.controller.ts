@@ -9,13 +9,13 @@ class CategoryController {
   getCurrentUserCategories = catchAsync(async (req, res) => {
     const result = await categoryService.getCurrentUserCategoriesFromDB(
       req.user,
-      pick(req.query, ["search_term"]),
+      pick(req.query, ["search_term", "type"]),
       paginationOptionPicker(req.query),
     );
     sendSuccessResponse(res, {
       message: "Current user categories retrieved  successfully",
       status_code: httpStatus.OK,
-      data: result,
+      ...result,
     });
   });
   createCurrentUserCategory = catchAsync(async (req, res) => {

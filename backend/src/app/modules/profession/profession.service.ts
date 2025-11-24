@@ -22,7 +22,7 @@ class ProfessionService {
       data: professionData,
       skipDuplicates: true,
     });
-    
+
     return {
       success: true,
       message: `Inserted ${professionData.length} professions successfully.`,

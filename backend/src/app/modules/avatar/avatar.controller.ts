@@ -14,7 +14,7 @@ class AvatarController {
     sendSuccessResponse(res, {
       message: "Avatars retrieved successfully",
       status_code: httpStatus.OK,
-    ... result,
+      ...result,
     });
   });
 }

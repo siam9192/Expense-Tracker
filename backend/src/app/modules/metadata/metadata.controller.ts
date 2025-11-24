@@ -12,6 +12,14 @@ class MetadataController {
       data: result,
     });
   });
+  getCurrentUserWalletSummary = catchAsync(async (req, res) => {
+    const result = await metadataService.getCurrentUserWalletSummary(req.user);
+    sendSuccessResponse(res, {
+      message: "Current user wallet summary retrieved successfully",
+      status_code: httpStatus.OK,
+      data: result,
+    });
+  });
   getCurrentUserMonthlyBudgetSummary = catchAsync(async (req, res) => {
     const result = await metadataService.getCurrentUserMonthlyBudgetSummary(
       req.user,

@@ -337,12 +337,14 @@ model Goal {
 }
 model Transaction {
   id   String @id @default(cuid())
-
+  title String @db.VarChar(100)
+   
   // 🔗 Relations
   user               UserProfile   @relation(fields: [user_id], references: [user_id])
   category           Category      @relation(fields: [category_id], references: [id])
   currency           Currency      @relation("MainCurrency", fields: [currency_id], references: [id])
   base_currency      Currency?     @relation("BaseCurrency", fields: [base_currency_id], references: [id])
+
 
   // 💰 Financial Fields
   amount             Float

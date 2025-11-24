@@ -15,7 +15,7 @@ class GoalController {
     sendSuccessResponse(res, {
       message: "Current user goals retrieved successfully",
       status_code: httpStatus.OK,
-      data: result,
+      ...result,
     });
   });
   createGoal = catchAsync(async (req, res) => {

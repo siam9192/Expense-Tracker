@@ -23,8 +23,8 @@ const userSigninPayloadValidation = z.object({
 });
 
 const changePasswordPayloadValidation = z.object({
-  oldPassword: z.string().nonempty("Old password is required"),
-  newPassword: z
+  old_password: z.string().nonempty("Old password is required"),
+  new_password: z
     .string()
     .min(6, { message: "Password must be at least 6 characters long" })
     .max(32, {

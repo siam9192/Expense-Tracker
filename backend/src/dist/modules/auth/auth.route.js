@@ -1,0 +1,21 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const auth_controller_1 = __importDefault(require("./auth.controller"));
+const validateRequest_1 = __importDefault(require("../../middlewares/validateRequest"));
+const auth_validation_1 = __importDefault(require("./auth.validation"));
+const auth_1 = __importDefault(require("../../middlewares/auth"));
+const user_interface_1 = require("../user/user.interface");
+const router = (0, express_1.Router)();
+router.post("/signup", (0, validateRequest_1.default)(auth_validation_1.default.initUserPayloadValidation), auth_controller_1.default.userSignup);
+router.post("/signup/resend-otp", (0, validateRequest_1.default)(auth_validation_1.default.resendVerificationOTPPayloadValidation), auth_controller_1.default.resendVerificationOTP);
+router.post("/signup/verify", (0, validateRequest_1.default)(auth_validation_1.default.verifyInitUserPayloadValidation), auth_controller_1.default.verifyUserSignup);
+router.post("/signin", (0, validateRequest_1.default)(auth_validation_1.default.userSigninPayloadValidation), auth_controller_1.default.userSignin);
+router.post("/signout", (0, auth_1.default)([user_interface_1.UserRole.USER]), auth_controller_1.default.userSignout);
+router.patch("/change-password", (0, auth_1.default)([user_interface_1.UserRole.USER]), (0, validateRequest_1.default)(auth_validation_1.default.changePasswordPayloadValidation), auth_controller_1.default.changePassword);
+router.post("/access-token", auth_controller_1.default.getNewAccessToken);
+const authRouter = router;
+exports.default = authRouter;

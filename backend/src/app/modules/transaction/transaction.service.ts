@@ -15,14 +15,15 @@ import prisma from "../../prisma-client";
 import AppError from "../../errors/AppError";
 import { getCurrencyConversionRate } from "../../helpers/global.helper";
 import httpStatus from "../../shared/http-status";
-
+import OpenAI from "openai";
+import envConfig from "../../config/env.config";
 class TransactionService {
   async getCurrentUserTransactionsFromDB(
     authUser: AuthUser,
     filterQuery: FilterTransactionsQuery,
     paginationOptions: PaginationOptions,
   ) {
-    const { id } = filterQuery;
+    const { id, type } = filterQuery;
     const { page, skip, limit, sortBy, sortOrder } =
       calculatePagination(paginationOptions);
     const whereConditions: Prisma.TransactionWhereInput = {
@@ -32,12 +33,25 @@ class TransactionService {
       whereConditions.id = id;
     }
 
+    if (type) {
+      if (type.toLocaleLowerCase() === "others") {
+        whereConditions.type = {
+          in: [TransactionType.GOAL_DEPOSIT, TransactionType.GOAL_WITHDRAW],
+        };
+      } else whereConditions.type = type as TransactionType;
+    }
+
     const transactions = await prisma.transaction.findMany({
       where: whereConditions,
       skip,
       take: limit,
       orderBy: {
         [sortBy]: sortOrder,
+      },
+      include: {
+        currency: true,
+        base_currency: true,
+        category: true,
       },
     });
 
@@ -123,7 +137,7 @@ class TransactionService {
     // 5️⃣ Handle currency conversion if needed
     let conversionRate: number | undefined = undefined;
     let conversionAmount: number | undefined = undefined;
-
+    let is_converted = false;
     if (payload.currency_id !== userSettings.currency.id) {
       // TODO: fetch conversion rate from currency service or table
       const conversion = await getCurrencyConversionRate(
@@ -136,6 +150,7 @@ class TransactionService {
         throw new Error();
       }
       conversionAmount = conversion.convertedAmount;
+      is_converted = true;
     }
 
     // 6️⃣ Update wallet balances accordingly (for income/expense only)
@@ -172,14 +187,19 @@ class TransactionService {
       // 7️⃣ Create the transaction record
       const createdTransaction = await tx.transaction.create({
         data: {
+          title: payload.title,
           user_id: authUser.user_id,
           category_id: category.id,
           type: transactionType,
           amount: payload.amount,
           currency_id: payload.currency_id,
-          base_currency_id: userSettings.currency.id,
-          conversion_rate: conversionRate,
-          conversion_amount: conversionAmount,
+          ...(is_converted
+            ? {
+                base_currency_id: userSettings.currency.id,
+                conversion_rate: conversionRate,
+                conversion_amount: conversionAmount,
+              }
+            : {}),
           date: payload.date,
           note: payload.note,
         },
@@ -193,6 +213,19 @@ class TransactionService {
       });
       return createdTransaction;
     });
+  }
+  async generateTransactionDataByAi(text: string) {
+    const openai = new OpenAI({
+      apiKey: envConfig.open_ai.api_key,
+    });
+
+    const response = await openai.responses.create({
+      model: "gpt-5.1",
+      input: "write a haiku about ai",
+      store: false,
+    });
+
+    console.log(response.output_text);
   }
 }
 

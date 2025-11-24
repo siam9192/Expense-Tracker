@@ -7,7 +7,7 @@ import envConfig from "../config/env.config";
 import { UserRole } from "../modules/user/user.interface";
 import { AuthUser } from "../modules/auth/auth.interface";
 import prisma from "../prisma-client";
-import { UserStatus } from "@prisma/client";
+import { SessionStatus, UserStatus } from "@prisma/client";
 
 function auth(
   requiredRoles: UserRole[],
@@ -71,7 +71,7 @@ function auth(
     }
 
     const session = await prisma.session.findUnique({
-      where: { id: decoded.session_id },
+      where: { id: decoded.session_id, status: SessionStatus.ACTIVE },
     });
 
     if (!session) {

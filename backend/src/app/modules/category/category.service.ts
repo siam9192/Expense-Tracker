@@ -79,6 +79,29 @@ class CategoryService {
       },
     });
 
+    const transactions = await prisma.transaction.findMany({
+      where: {
+        user_id: authUser.id,
+        category_id: {
+          in: categories.map((_) => _.id),
+        },
+      },
+    });
+
+    const data = categories.map((cat) => {
+      const catTrans = transactions.filter((t) => t.category_id === cat.id);
+
+      const transactionAmount = catTrans.reduce((sum, t) => {
+        // If conversion_amount exists, use it; otherwise use amount
+        return sum + (t.conversion_amount ?? t.amount);
+      }, 0);
+
+      return {
+        ...cat,
+        transaction_amount: transactionAmount,
+      };
+    });
+
     const total_results = await prisma.category.count({
       where: whereConditions,
     });
@@ -90,7 +113,7 @@ class CategoryService {
     };
 
     return {
-      data: categories,
+      data,
       meta,
     };
   }

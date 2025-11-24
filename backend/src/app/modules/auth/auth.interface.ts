@@ -27,8 +27,8 @@ export interface LoginPayload {
 }
 
 export interface ChangePasswordPayload {
-  oldPassword: string;
-  newPassword: string;
+  old_password: string;
+  new_password: string;
   signout_others: boolean;
 }
 

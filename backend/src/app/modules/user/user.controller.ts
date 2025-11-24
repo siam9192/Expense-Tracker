@@ -75,6 +75,14 @@ class UserController {
     });
   });
 
+  revokeCurrentUserAllSession = catchAsync(async (req, res) => {
+    const result = await userService.revokeUserAllSessionIntoDB(req.user);
+    sendSuccessResponse(res, {
+      message: "All session revoked successfully",
+      status_code: httpStatus.OK,
+      data: result,
+    });
+  });
   updateCurrentUserSettings = catchAsync(async (req, res) => {
     const result = await userService.updateCurrentUserSettingsIntoDB(
       req.user,

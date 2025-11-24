@@ -40,7 +40,7 @@ router.patch(
   authController.changePassword,
 );
 
-router.get("/access-token", authController.getNewAccessToken);
+router.post("/access-token", authController.getNewAccessToken);
 
 const authRouter = router;
 
