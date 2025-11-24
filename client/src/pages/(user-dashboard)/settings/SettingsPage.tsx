@@ -1,9 +1,3 @@
-import { Settings2, LogOut } from "lucide-react";
-import ArriveAnimationContainer from "../../../components/ui/ArriveAnimationContainer";
-import UserWalletSettings from "./UserWalletSettings";
-import SecuritySettings from "./SecuritySettings";
-import ProfileSettings from "./ProfileSettings";
-import NotificationSettings from "./NotificationSettings";
 import UserSettingsSidebar from "../../../components/shared/UserSettingsSidebar";
 import { Outlet } from "react-router-dom";
 

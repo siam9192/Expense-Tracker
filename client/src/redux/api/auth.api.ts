@@ -1,6 +1,7 @@
 import { baseApi } from "./base.api";
 import type { Response } from "../../types/response.type";
 import type {
+  ChangePasswordPayload,
   ResendOTPPayload,
   SigninPayload,
   SigninResponseData,
@@ -52,8 +53,8 @@ const authApi = baseApi.injectEndpoints({
         return response;
       },
     }),
-      changePassword: builder.mutation({
-      query: (payload: SigninPayload) => ({
+    changePassword: builder.mutation({
+      query: (payload: ChangePasswordPayload) => ({
         url: "auth/change-password",
         method: "PATCH",
         body: payload,
@@ -61,6 +62,16 @@ const authApi = baseApi.injectEndpoints({
       transformResponse: (response: Response<SigninResponseData>) => {
         return response;
       },
+    }),
+    signout: builder.mutation({
+      query: () => ({
+        url: "auth/signout",
+        method: "POST",
+      }),
+      transformResponse: (response: Response<null>) => {
+        return response;
+      },
+      invalidatesTags: ["getCurrentUser"],
     }),
   }),
 });
@@ -70,5 +81,6 @@ export const {
   useResendOTPMutation,
   useSignupVerifyMutation,
   useSigninMutation,
-  useChangePasswordMutation
+  useChangePasswordMutation,
+  useSignoutMutation,
 } = authApi;

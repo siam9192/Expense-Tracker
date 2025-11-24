@@ -1,14 +1,14 @@
 import { X, ShieldX, LogOut } from "lucide-react";
-import  { Fragment } from "react";
+import { Fragment } from "react";
 import { useRevokeUserSessionMutation } from "../../redux/api/user.api";
 import { toast } from "sonner";
 import { DEFAULT_ERROR_MESSAGE } from "../../utils/constant";
 
 interface Props {
-    sessionId:number
+  sessionId: number;
 }
 
-function RevokeSingleSessionModal({sessionId}:Props) {
+function RevokeSingleSessionModal({ sessionId }: Props) {
   const modalId = "revoke-session-modal";
 
   function openModal() {
@@ -19,30 +19,28 @@ function RevokeSingleSessionModal({sessionId}:Props) {
     (document?.getElementById(modalId) as any)?.close();
   }
 
-  const [mutate] =  useRevokeUserSessionMutation()
+  const [mutate] = useRevokeUserSessionMutation();
 
-  async function handleConfirmRevoke () {
+  async function handleConfirmRevoke() {
     try {
-         const {error} =  await mutate(sessionId)
-         if(error) throw error
-          toast.success("Session revoked successfully")
-    } catch (error:any) {
-        toast.error(error.data.message||DEFAULT_ERROR_MESSAGE)
+      const { error } = await mutate(sessionId);
+      if (error) throw error;
+      toast.success("Session revoked successfully");
+    } catch (error: any) {
+      toast.error(error.data.message || DEFAULT_ERROR_MESSAGE);
+    } finally {
+      closeModal();
     }
-   finally {
-     closeModal();
-   }
   }
 
   return (
     <Fragment>
       <button onClick={openModal} className="btn btn-sm btn-outline btn-error gap-1">
-                  <LogOut size={14} /> Revoke
-                </button>
+        <LogOut size={14} /> Revoke
+      </button>
 
       <dialog id={modalId} className="modal">
         <div className="modal-box w-[90%] md:w-lg max-w-xl text-start relative">
-
           {/* Close */}
           <button
             onClick={closeModal}
@@ -59,8 +57,8 @@ function RevokeSingleSessionModal({sessionId}:Props) {
 
           {/* Message */}
           <p className="text-base text-gray-600 mb-4">
-            This will log out the selected device session. You will remain logged in on
-            your current device.
+            This will log out the selected device session. You will remain logged in on your current
+            device.
           </p>
 
           {/* Buttons */}
@@ -69,10 +67,7 @@ function RevokeSingleSessionModal({sessionId}:Props) {
               Cancel
             </button>
 
-            <button
-              className="btn btn-warning  gap-2"
-              onClick={handleConfirmRevoke}
-            >
+            <button className="btn btn-warning  gap-2" onClick={handleConfirmRevoke}>
               <ShieldX size={18} /> Revoke Session
             </button>
           </div>

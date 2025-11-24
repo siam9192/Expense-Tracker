@@ -1,23 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Sun, Moon } from "lucide-react";
+import { useLocalSettingsProviderContext } from "../../Provider/LocalSettingsProvider";
+import type { AppTheme } from "../../types/settings.type";
 
 const ThemeSwitchButton: React.FC = () => {
-  const [theme, setTheme] = useState<string>(localStorage.getItem("theme") || "dark");
-
-  useEffect(() => {
-    const root = window.document.documentElement;
-
-    if (theme === "dark") {
-      root.setAttribute("data-theme", "night");
-    } else {
-      root.setAttribute("data-theme", "light");
-    }
-
-    localStorage.setItem("theme", theme);
-  }, [theme]);
+  const { settings, setSettings } = useLocalSettingsProviderContext();
+  const theme = settings.theme;
 
   const toggleTheme = () => {
-    setTheme(theme === "light" ? "dark" : "light");
+    setSettings((p) => ({ ...p, theme: (theme === "light" ? "dark" : "light") as AppTheme }));
   };
 
   return (
@@ -31,7 +22,7 @@ const ThemeSwitchButton: React.FC = () => {
       aria-label="Toggle Theme"
     >
       {theme === "light" ? (
-        <Moon size={20} className="text-blue-600 sm:text-gray-200" />
+        <Moon size={20} className="text-blue-600 sm:text-gray-600" />
       ) : (
         <Sun size={20} className="text-yellow-500 sm:text-yellow-400" />
       )}

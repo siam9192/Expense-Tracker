@@ -5,6 +5,7 @@ import DashboardSectionHeading from "../../ui/DashboardSectionHeading";
 import { useEffect, useState } from "react";
 import { useTransactionPageProviderContext } from "../../../Provider/TransactionPageProvider";
 import { TransactionType, type Transaction } from "../../../types/transaction.type";
+import { useTranslation } from "react-i18next";
 
 const tabs = [
   {
@@ -25,6 +26,7 @@ const tabs = [
   },
 ];
 function UserTransactions() {
+  const { t } = useTranslation();
   const [allTransactions, setAllTransactions] = useState<Transaction[]>([]);
   const { transactionsQuery, setTransactionsQueryParams } = useTransactionPageProviderContext();
 
@@ -91,13 +93,13 @@ function UserTransactions() {
         <div className="text-center mb-5">
           <Link to="create">
             <button className="text-primary hover:text-secondary font-semibold bg-base-100 btn md:btn-lg ">
-              Create Transaction
+              {t("createTransaction")}
             </button>
           </Link>
         </div>
 
         <div className="flex flex-col md:flex-row justify-between items-center gap-4 md:gap-0 ">
-          <DashboardSectionHeading heading="Your Transactions" />
+          <DashboardSectionHeading heading={t("yourTransactions")} />
           <div role="tablist" className="tabs tabs-box">
             {tabs.map((tab) => (
               <a
@@ -119,7 +121,7 @@ function UserTransactions() {
             </div>
           ) : (
             <div className="min-h-72 flex justify-center items-center text-center ">
-              <p className="text-lg font-semibold text-base-content">No transactions found </p>
+              <p className="text-lg font-semibold text-base-content">{t("noResults")}</p>
             </div>
           )}
         </div>
@@ -130,7 +132,7 @@ function UserTransactions() {
               disabled={isFetching}
               onClick={handelLoadMore}
             >
-              {isFetching ? "Loading more.." : "Load more"}
+              {isFetching ? `${t("loadingMore")}...` : t("loadMore")}
             </button>
           </div>
         ) : null}

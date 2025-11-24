@@ -12,11 +12,16 @@ import { Line } from "react-chartjs-2";
 import DashboardSectionHeading from "../../ui/DashboardSectionHeading";
 import { useHomePageProviderContext } from "../../../Provider/HomePageProvider";
 import { DEFAULT_ERROR_MESSAGE } from "../../../utils/constant";
+import { useTranslation } from "react-i18next";
+import { formatChartDateLabel } from "../../../utils/helper";
+import { useUserCurrency } from "../../../Provider/CurrentUserProvider";
 
 // Register components
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Filler, Tooltip, Legend);
 
 const ExpenseStatistics = () => {
+  const { t } = useTranslation();
+  const currency = useUserCurrency();
   const { expenseStatsQuery, setExpenseStatsQueryParams } = useHomePageProviderContext();
   const { data: resData, isError } = expenseStatsQuery;
   const stats = resData?.data!.stats;
@@ -24,7 +29,7 @@ const ExpenseStatistics = () => {
   if (isError) return <p>{DEFAULT_ERROR_MESSAGE}</p>;
 
   const data = {
-    labels: stats?.map((_) => _.label),
+    labels: formatChartDateLabel(stats?.map((_) => _.label) || []),
     datasets: [
       {
         label: "Expenses",
@@ -67,6 +72,8 @@ const ExpenseStatistics = () => {
         grid: { display: false, drawBorder: false },
         ticks: {
           color: "#6b7280",
+
+          callback: (value: any) => `${currency?.symbol}${value.toLocaleString()}`,
         },
       },
     },
@@ -90,7 +97,7 @@ const ExpenseStatistics = () => {
   return (
     <div className="w-full  p-4">
       <div className="flex  flex-col md:flex-row justify-between items-center">
-        <DashboardSectionHeading heading="Expense Statistics" />
+        <DashboardSectionHeading heading={t("expenseStatistics")} />
         <select
           defaultValue="Pick a font"
           className="select select-ghost min-w-32 max-w-40"

@@ -42,7 +42,7 @@ const goalApi = baseApi.injectEndpoints({
       invalidatesTags: ["userGoals"],
     }),
     withdrawUserGoal: builder.mutation({
-      query: (id: string) => ({
+      query: (id: number) => ({
         url: `goals/me/${id}/withdraw`,
         method: "PATCH",
       }),

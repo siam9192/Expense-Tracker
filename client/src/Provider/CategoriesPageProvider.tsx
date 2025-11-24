@@ -23,9 +23,7 @@ interface Props {
 }
 
 function CategoriesPageProvider({ children }: Props) {
-  const [categoriesQueryParams, setCategoriesQueryParams] = useState<Params>({
-    limit: 4,
-  });
+  const [categoriesQueryParams, setCategoriesQueryParams] = useState<Params>({});
 
   const categoriesSummaryQuery = useGetUserCategoriesSummaryQuery(undefined);
   const categoriesQuery = useGetUserCategoriesQuery(categoriesQueryParams);
@@ -45,7 +43,7 @@ function CategoriesPageProvider({ children }: Props) {
   );
 
   return (
-    <CategoriesPageProviderContext.Provider value={contextValue}>
+    <CategoriesPageProviderContext.Provider value={contextValue as CategoriesPageContextType}>
       {isLoading ? <DashboardPageLoading /> : children}
     </CategoriesPageProviderContext.Provider>
   );

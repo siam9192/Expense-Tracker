@@ -1,32 +1,22 @@
 import React, { createContext, useContext, useEffect, useState, useCallback, useMemo } from "react";
-import type { CurrentUser, UserSettings } from "../types/user.type";
+import type { CurrentUser } from "../types/user.type";
 import { useGetCurrentUserQuery, useGetCurrentUserSettingsQuery } from "../redux/api/user.api";
 import { useProfileSetupProviderContext } from "./ProfileSetupProvider";
 import type { Currency } from "../types/currency.type";
 
-export type CurrentUserProviderContextType = {
-  user: CurrentUser | null;
-  settings: UserSettings | null;
-  currency: Currency | null;
-  isLoading: boolean;
-  setUser: React.Dispatch<React.SetStateAction<CurrentUser | null>>;
-  setSettings: React.Dispatch<React.SetStateAction<any | null>>;
-  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
-  userRefetch: () => void;
-  userSettingsRefetch: () => void;
-};
+export type UserCurrencyProviderContextType = null;
 
-export const CurrentUserProviderContext = createContext<CurrentUserProviderContextType | undefined>(
-  undefined,
-);
+export const UserCurrencyProviderContext = createContext<
+  UserCurrencyProviderContextType | undefined
+>(undefined);
 
 interface Props {
   children: React.ReactNode;
 }
 
-export default function CurrentUserProvider({ children }: Props) {
+export default function UserCurrencyProvider({ children }: Props) {
   const [user, setUser] = useState<CurrentUser | null>(null);
-  const [settings, setSettings] = useState<UserSettings | null>(null);
+  const [settings, setSettings] = useState<any | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   const { setIsOpen } = useProfileSetupProviderContext();
@@ -129,7 +119,6 @@ export default function CurrentUserProvider({ children }: Props) {
     () => ({
       user,
       settings,
-      currency: settings?.currency || null,
       isLoading,
       setUser,
       setSettings,
@@ -142,24 +131,16 @@ export default function CurrentUserProvider({ children }: Props) {
   if (isLoading) return null;
 
   return (
-    <CurrentUserProviderContext.Provider value={contextValue}>
+    <UserCurrencyProviderContext.Provider value={null}>
       {children}
-    </CurrentUserProviderContext.Provider>
+    </UserCurrencyProviderContext.Provider>
   );
 }
 
-export function useCurrentUserProviderContext() {
-  const context = useContext(CurrentUserProviderContext);
+export function useUserCurrencyProviderContext() {
+  const context = useContext(UserCurrencyProviderContext);
   if (!context) {
-    throw new Error("useCurrentUserProviderContext must be used within a CurrentUserProvider");
+    throw new Error("useUserCurrencyProviderContext must be used within a UserCurrencyProvider");
   }
   return context;
-}
-
-export function useUserCurrency() {
-  const context = useContext(CurrentUserProviderContext);
-  if (!context) {
-    throw new Error("useUseCurrency must be used within a CurrentUserProvider");
-  }
-  return context.currency as Currency;
 }

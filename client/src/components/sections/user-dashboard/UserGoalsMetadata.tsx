@@ -3,34 +3,36 @@ import ArriveAnimationContainer from "../../ui/ArriveAnimationContainer";
 import DashboardSectionHeading from "../../ui/DashboardSectionHeading";
 import MetaCard from "../../cards/MetaCard";
 import { useGoalPageProviderContext } from "../../../Provider/GoalPageProvider";
+import { useTranslation } from "react-i18next";
 
 function UserGoalsMetadata() {
+  const { t } = useTranslation();
   const { goalsSummaryQuery } = useGoalPageProviderContext();
 
   const { data: resData } = goalsSummaryQuery;
   const summary = resData?.data!;
   const userGoalsMetadata = [
     {
-      label: "Available Savings",
+      label: t("availableSavings"),
       icon: Award,
       value: summary.current_savings,
       isCurrency: true,
       isPercentage: false,
     },
     {
-      label: "Achieved",
+      label: t("achieved"),
       icon: Activity,
       value: summary.total_completed_goals,
       isPercentage: true,
     },
     {
-      label: "Avg Progress",
+      label: t("avgProgress"),
       icon: BarChart2,
       value: summary.avg_progress,
       isPercentage: true,
     },
     {
-      label: "Ongoing",
+      label: t("ongoing"),
       icon: Clock,
       value: summary.total_active_goals,
       isPercentage: false,

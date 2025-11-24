@@ -2,8 +2,10 @@ import { MoreHorizontal } from "lucide-react";
 import DashboardSectionHeading from "../../ui/DashboardSectionHeading";
 import { useHomePageProviderContext } from "../../../Provider/HomePageProvider";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 function UserRecentPayments() {
+  const { t } = useTranslation();
   const { latestTransactionsQuery } = useHomePageProviderContext();
   const { data: resData, isError } = latestTransactionsQuery;
 
@@ -14,7 +16,7 @@ function UserRecentPayments() {
     <div className="p-4 md:p-8 bg-base-300 rounded-2xl shadow-lg space-y-6">
       {/* Header */}
       <div className="flex justify-between items-center">
-        <DashboardSectionHeading heading="Recent Payments" />
+        <DashboardSectionHeading heading={t("recentPayments")} />
         <Link to="/transactions">
           <button className="btn btn-sm btn-outline btn-neutral gap-1">
             <MoreHorizontal size={16} /> View All
@@ -42,7 +44,7 @@ function UserRecentPayments() {
               {/* Right */}
               <div className="text-right">
                 <p className="font-semibold text-error">
-                  -{item.currency.code}
+                  {item.currency?.symbol}
                   {item.amount.toFixed(2)}
                 </p>
                 <p className="text-xs text-neutral-content">{new Date(item.date).toDateString()}</p>

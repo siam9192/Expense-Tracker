@@ -1,7 +1,6 @@
 import {
   User,
   Mail,
-  Smartphone,
   Settings,
   Shield,
   Bell,
@@ -11,8 +10,14 @@ import {
   Globe,
 } from "lucide-react";
 import { useCurrentUserProviderContext } from "../../../Provider/CurrentUserProvider";
+import { useTranslation } from "react-i18next";
+import { useState } from "react";
+import LogoutDialog from "../../ui/LogoutDialog";
+import { Link } from "react-router-dom";
 
 function UserProfileAndSettings() {
+  const [isLogoutDialog, setIsLogoutDialog] = useState(false);
+  const { t } = useTranslation();
   let { user: userData } = useCurrentUserProviderContext();
   userData = userData!;
   const user = {
@@ -29,36 +34,42 @@ function UserProfileAndSettings() {
   const settingsOptions = [
     {
       id: 1,
-      title: "Privacy & Security",
-      description: "Manage passwords, sessions, and 2FA authentication.",
+      title: t("privacySecurity"),
+      description: t("privacySecurityDesc"),
       icon: <Shield size={18} className="text-warning" />,
-      buttonLabel: "Manage",
+      buttonLabel: t("manage"),
       buttonClass: "btn-outline btn-warning group-hover:btn-warning",
+      path: "/settings/security",
     },
     {
       id: 2,
-      title: "Notifications",
-      description: "Configure push and email alerts for account activity.",
+      title: t("notifications"),
+      description: t("notificationsDesc"),
       icon: <Bell size={18} className="text-info" />,
-      buttonLabel: "Configure",
+      buttonLabel: t("configure"),
       buttonClass: "btn-outline btn-info group-hover:btn-info",
+      path: "/settings/notifications",
     },
     {
       id: 3,
-      title: "Account Preferences",
-      description: "Change theme, language, and time zone preferences.",
+      title: t("accountPreferences"),
+      description: t("accountPreferencesDesc"),
       icon: <User size={18} className="text-primary" />,
-      buttonLabel: "Update",
+      buttonLabel: t("update"),
       buttonClass: "btn-outline btn-primary group-hover:btn-primary",
+      path: "/settings",
     },
     {
       id: 4,
-      title: "Logout",
-      description: "Sign out from this account securely.",
+      title: t("logout"),
+      description: t("logoutDesc"),
       icon: <LogOut size={18} className="text-error" />,
-      buttonLabel: "Logout",
+      buttonLabel: t("logout"),
       buttonClass: "btn-error group-hover:brightness-110",
       titleClass: "text-error",
+      onClick() {
+        setIsLogoutDialog(true);
+      },
     },
   ];
 
@@ -87,9 +98,7 @@ function UserProfileAndSettings() {
             <span className="flex items-center gap-2">
               <Mail size={16} /> {user.email}
             </span>
-            <span className="flex items-center gap-2">
-              <Smartphone size={16} /> {user.phone}
-            </span>
+
             <span className="flex items-center gap-2">
               <Globe size={16} /> {user.county}
             </span>
@@ -98,13 +107,13 @@ function UserProfileAndSettings() {
               {user.currency}
             </span>
             <span className="flex items-center gap-2">
-              <Calendar size={16} /> Joined {user.joined}
+              <Calendar size={16} /> {t("joined")} {user.joined}
             </span>
           </div>
 
           <div className="pt-4">
             <button className="btn btn-primary btn-sm gap-2">
-              <User size={16} /> Edit Profile
+              <User size={16} /> {t("editProfile")}
             </button>
           </div>
         </div>
@@ -114,11 +123,11 @@ function UserProfileAndSettings() {
       <div className="bg-base-100 rounded-2xl  border border-base-300 p-6 md:p-8">
         <div className="flex items-center gap-2 mb-6">
           <Settings size={22} className="text-primary" />
-          <h3 className="text-2xl font-semibold">Account Settings</h3>
+          <h3 className="text-2xl font-semibold">{t("accountSettings")}</h3>
         </div>
 
         {/* Grid Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           {settingsOptions.map((option) => (
             <div
               key={option.id}
@@ -134,13 +143,29 @@ function UserProfileAndSettings() {
                 </p>
                 <p className="text-sm text-neutral-content mt-2">{option.description}</p>
               </div>
-              <button className={`btn btn-sm mt-3 w-full ${option.buttonClass}`}>
-                {option.buttonLabel}
-              </button>
+              {option.path ? (
+                <Link to={option.path}>
+                  <button className={`btn btn-sm mt-3 w-full ${option.buttonClass}`}>
+                    {option.buttonLabel}
+                  </button>
+                </Link>
+              ) : option.onClick ? (
+                <button
+                  onClick={option.onClick}
+                  className={`btn btn-sm mt-3 w-full ${option.buttonClass}`}
+                >
+                  {option.buttonLabel}
+                </button>
+              ) : (
+                <button className={`btn btn-sm mt-3 w-full ${option.buttonClass}`}>
+                  {option.buttonLabel}
+                </button>
+              )}
             </div>
           ))}
         </div>
       </div>
+      {isLogoutDialog ? <LogoutDialog onCancel={() => setIsLogoutDialog(false)} /> : null}
     </div>
   );
 }

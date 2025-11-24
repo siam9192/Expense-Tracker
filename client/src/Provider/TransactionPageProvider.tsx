@@ -21,9 +21,7 @@ interface Props {
 }
 
 function TransactionPageProvider({ children }: Props) {
-  const [transactionsQueryParams, setTransactionsQueryParams] = useState<Params>({
-    limit: 4,
-  });
+  const [transactionsQueryParams, setTransactionsQueryParams] = useState<Params>({});
 
   const transactionsSummaryQuery = useGetUserTransactionsSummaryQuery(undefined);
   const transactionsQuery = useGetUserTransactionsQuery(transactionsQueryParams);
@@ -43,7 +41,7 @@ function TransactionPageProvider({ children }: Props) {
   );
 
   return (
-    <GoalsPageProviderContext.Provider value={contextValue}>
+    <GoalsPageProviderContext.Provider value={contextValue as TransactionPageContextType}>
       {isLoading ? <DashboardPageLoading /> : children}
     </GoalsPageProviderContext.Provider>
   );

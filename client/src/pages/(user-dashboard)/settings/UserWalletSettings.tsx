@@ -5,50 +5,51 @@ import { useCurrentUserProviderContext } from "../../../Provider/CurrentUserProv
 import { useUpdateUserSettingsMutation } from "../../../redux/api/user.api";
 import { toast } from "sonner";
 import { DEFAULT_ERROR_MESSAGE } from "../../../utils/constant";
+import { useTranslation } from "react-i18next";
 
 function UserWalletSettings() {
-  const {settings} = useCurrentUserProviderContext()
+  const { t } = useTranslation();
+  const { settings } = useCurrentUserProviderContext();
   const [currency, setCurrency] = useState(settings?.currency.code);
   const [notifications, setNotifications] = useState(settings?.balance_expense_income_alert);
   const [autoSave, setAutoSave] = useState(settings?.auto_saving);
   const [spendingLimit, setSpendingLimit] = useState(settings?.monthly_budget);
 
-  const [isChanged,setIsChanged] = useState(false)
+  const [isChanged, setIsChanged] = useState(false);
 
- const renderRef = useRef(false)
+  const renderRef = useRef(false);
 
-useEffect(() => {
-  // Skip first render
-  if (!renderRef.current) {
-    renderRef.current = true;
-    return;
+  useEffect(() => {
+    // Skip first render
+    if (!renderRef.current) {
+      renderRef.current = true;
+      return;
+    }
+
+    const hasChanged =
+      currency !== settings?.currency.code ||
+      notifications !== settings?.balance_expense_income_alert ||
+      autoSave !== settings?.auto_saving ||
+      spendingLimit !== settings?.monthly_budget;
+
+    setIsChanged(hasChanged);
+  }, [currency, notifications, autoSave, spendingLimit, settings]);
+
+  const [mutate] = useUpdateUserSettingsMutation();
+
+  async function handelUpdate() {
+    try {
+      const { error } = await mutate({
+        balance_expense_income_alert: notifications,
+        auto_saving: autoSave,
+        monthly_budget: spendingLimit,
+      });
+      if (error) throw error;
+      toast.success("Saved successfully!");
+    } catch (error: any) {
+      toast.error(error?.data.message || DEFAULT_ERROR_MESSAGE);
+    }
   }
-
-  const hasChanged =
-    currency !== settings?.currency.code ||
-    notifications !== settings?.balance_expense_income_alert ||
-    autoSave !== settings?.auto_saving ||
-    spendingLimit !== settings?.monthly_budget;
-
-  setIsChanged(hasChanged);
-}, [currency, notifications, autoSave, spendingLimit, settings]);
-
-const [mutate] = useUpdateUserSettingsMutation()
-
-async function handelUpdate () {
- try {
-   const {error} =  await mutate({
-    balance_expense_income_alert:notifications,
-    auto_saving:autoSave,
-    monthly_budget:spendingLimit
-  })
-  if(error) throw error
-   toast.success("Saved successfully!")
- } catch (error:any) {
-   toast.error(error?.data.message||DEFAULT_ERROR_MESSAGE)  
- }
-
-}
   return (
     <ArriveAnimationContainer delay={0.3}>
       <div className="p-6 md:p-8 bg-base-300 rounded-2xl shadow-lg space-y-8">
@@ -56,9 +57,11 @@ async function handelUpdate () {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Settings className="text-primary" size={22} />
-            <h2 className="text-xl font-semibold">Wallet Settings</h2>
+            <h2 className="text-xl font-semibold">{t("walletSettings")}</h2>
           </div>
-          <button disabled={!isChanged} onClick={handelUpdate} className="btn btn-sm btn-primary">Save Changes</button>
+          <button disabled={!isChanged} onClick={handelUpdate} className="btn btn-sm btn-primary">
+            Save Changes
+          </button>
         </div>
 
         {/* Settings List */}
@@ -98,8 +101,8 @@ async function handelUpdate () {
             </div>
             <input
               type="range"
-              min={1000}
-              max={20000}
+              min={500}
+              max={200000}
               step={500}
               value={spendingLimit}
               onChange={(e) => setSpendingLimit(Number(e.target.value))}

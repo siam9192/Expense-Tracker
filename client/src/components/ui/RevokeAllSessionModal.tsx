@@ -15,21 +15,19 @@ function RevokeAllSessionModal() {
     (document?.getElementById(modalId) as any)?.close();
   }
 
-  const [mutate] =  useRevokeUserAllSessionMutation()
+  const [mutate] = useRevokeUserAllSessionMutation();
 
-  async function handleConfirmRevoke () {
+  async function handleConfirmRevoke() {
     try {
-         const {error} =  await mutate(undefined)
-         if(error) throw error
-          toast.success("Session revoked successfully")
-    } catch (error:any) {
-        toast.error(error.data.message||DEFAULT_ERROR_MESSAGE)
+      const { error } = await mutate(undefined);
+      if (error) throw error;
+      toast.success("Session revoked successfully");
+    } catch (error: any) {
+      toast.error(error.data.message || DEFAULT_ERROR_MESSAGE);
+    } finally {
+      closeModal();
     }
-   finally {
-     closeModal();
-   }
   }
-
 
   return (
     <Fragment>
@@ -39,7 +37,6 @@ function RevokeAllSessionModal() {
 
       <dialog id={modalId} className="modal">
         <div className="modal-box w-[90%] md:w-lg max-w-5xl text-start relative">
-
           {/* Close Button */}
           <button
             onClick={closeModal}
@@ -56,8 +53,8 @@ function RevokeAllSessionModal() {
 
           {/* Message */}
           <p className="text-base text-gray-600 mb-4">
-            This action will instantly log you out from all active sessions across all
-            devices. You will need to log in again everywhere.
+            This action will instantly log you out from all active sessions across all devices. You
+            will need to log in again everywhere.
           </p>
 
           {/* Action Buttons */}

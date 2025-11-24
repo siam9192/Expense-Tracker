@@ -3,11 +3,13 @@ import { Pie } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, Title } from "chart.js";
 import { useWalletPageProviderContext } from "../../../Provider/WalletPageProvider";
 import { DEFAULT_ERROR_MESSAGE } from "../../../utils/constant";
+import { useTranslation } from "react-i18next";
 
 // Register chart components
 ChartJS.register(ArcElement, Tooltip, Legend, Title);
 
 const UserFinancePieChart = () => {
+  const { t } = useTranslation();
   const { financeStatsQuery, setFinanceStatsQueryParams } = useWalletPageProviderContext();
   const { data: resData, isError } = financeStatsQuery;
   const summary = resData?.data!;
@@ -116,9 +118,9 @@ const UserFinancePieChart = () => {
     },
   ];
   return (
-    <div className="p-4 md:p-8 bg-base-300 rounded-2xl  space-y-6 min-w-[500px]">
+    <div className="p-4 md:p-8 bg-base-300 rounded-2xl  space-y-6 ">
       <div className="flex  flex-col md:flex-row justify-between items-center">
-        <h2 className="text-2xl text-primary font-semibold mb-4">User Finance Statistics</h2>
+        <h2 className="text-2xl text-primary font-semibold mb-4">{t("financeStatistics")}</h2>
         <select
           defaultValue="Pick a sequence"
           onChange={(e) => setFinanceStatsQueryParams({ sequence: e.target.value })}
@@ -129,7 +131,7 @@ const UserFinancePieChart = () => {
           ))}
         </select>
       </div>
-      <div className="h-72 ">
+      <div className=" h-60 lg:h-72 ">
         <Pie data={data} options={options as any} className="mx-auto" />
       </div>
     </div>

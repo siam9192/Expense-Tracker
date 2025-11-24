@@ -19,7 +19,6 @@ interface Props {
  */
 export default function ProtectRouteProvider({ access, children, redirectTo }: Props) {
   const { user, isLoading } = useCurrentUserProviderContext();
-
   if (isLoading) {
     // Optional: Replace with your actual loading UI/spinner
     return (
@@ -32,7 +31,7 @@ export default function ProtectRouteProvider({ access, children, redirectTo }: P
   // Authenticated routes (requires login)
   if (access === "authenticated") {
     if (!user) {
-      return <Navigate to={redirectTo || "/login"} replace />;
+      return <Navigate to={redirectTo || "/intro"} replace />;
     }
     return <>{children}</>;
   }

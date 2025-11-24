@@ -18,8 +18,8 @@ export interface Category {
   is_hidden: boolean;
   created_at: Date | string;
   updated_at: Date | string;
-
   user: null;
+  transaction_amount: number;
 }
 
 export interface CreateUserCategoryPayload {

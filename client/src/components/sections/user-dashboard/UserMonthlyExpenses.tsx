@@ -1,7 +1,11 @@
+import { useTranslation } from "react-i18next";
 import { useHomePageProviderContext } from "../../../Provider/HomePageProvider";
 import ArriveAnimationContainer from "../../ui/ArriveAnimationContainer";
+import { useUserCurrency } from "../../../Provider/CurrentUserProvider";
 
 function MonthlyExpenses() {
+  const { t } = useTranslation();
+  const currency = useUserCurrency();
   const { expenseCategoriesBreakdownQuery } = useHomePageProviderContext();
   const { data: resData, isError } = expenseCategoriesBreakdownQuery;
   const data = resData?.data!;
@@ -14,7 +18,7 @@ function MonthlyExpenses() {
     <ArriveAnimationContainer>
       <div className="w-full p-8  rounded-2xl ">
         <div className="flex flex-col md:flex-row  justify-between items-center mb-6">
-          <h2 className="text-2xl font-semibold text-primary">Monthly Expenses</h2>
+          <h2 className="text-2xl font-semibold text-primary">{t("monthlyExpenses")}</h2>
           <p className="text-sm text-gray-500">
             {sequence === "month"
               ? "This month’s performance"
@@ -34,7 +38,8 @@ function MonthlyExpenses() {
             >
               <p className="text-gray-600 text-center font-medium">{expense.category}</p>
               <p className="text-indigo-600 text-xl font-semibold font-secondary text-center mt-2">
-                ${expense.total}
+                {currency?.symbol}
+                {expense.total}
               </p>
             </div>
           ))}

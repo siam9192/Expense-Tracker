@@ -32,10 +32,9 @@ const sessions = [
 ];
 
 function UserSessions() {
-  const {data} = useGetUserSessionsQuery(undefined)
-  const sessions =  data?.data||[]
-  
- 
+  const { data } = useGetUserSessionsQuery(undefined);
+  const sessions = data?.data || [];
+
   return (
     <div className=" mt-10 p-6 md:p-10 bg-base-300 rounded-2xl shadow-xl min-h-[50vh]">
       {/* Header */}
@@ -46,7 +45,7 @@ function UserSessions() {
             Manage your logged-in devices and revoke access to inactive sessions.
           </p>
         </div>
-      <RevokeAllSessionModal/>
+        <RevokeAllSessionModal />
       </div>
 
       {/* Sessions List */}
@@ -84,12 +83,13 @@ function UserSessions() {
             {/* Right */}
             <div className="flex items-center gap-4 mt-3 md:mt-0">
               <div className="flex items-center gap-1 text-sm text-neutral-content">
-                <Clock size={14} /> {new Date(session.created_at).toDateString()},{new Date(session.created_at).toLocaleTimeString()}
+                <Clock size={14} /> {new Date(session.created_at).toDateString()},
+                {new Date(session.created_at).toLocaleTimeString()}
               </div>
               {session.current ? (
                 <span className="badge badge-primary badge-outline">Current</span>
               ) : (
-               <RevokeSingleSessionModal sessionId={session.id}/>
+                <RevokeSingleSessionModal sessionId={session.id} />
               )}
             </div>
           </div>

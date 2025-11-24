@@ -2,6 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { LogIn, UserPlus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import ThemeSwitchButton from "../../../components/ui/ThemeSwitchButton";
 
 function WelcomePage() {
   const router = useNavigate();
@@ -70,6 +71,10 @@ function WelcomePage() {
       >
         © {new Date().getFullYear()} ExpenseTrackr. All rights reserved.
       </motion.p>
+
+      <div className="size-fit absolute top-2 left-2">
+        <ThemeSwitchButton />
+      </div>
     </div>
   );
 }

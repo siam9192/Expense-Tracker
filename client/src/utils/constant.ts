@@ -13,3 +13,5 @@ export const MONTH_NAMES = [
   "November",
   "December",
 ];
+
+export const SHORT_MONTH_NAMES = MONTH_NAMES.map((_) => _.slice(0, 3));

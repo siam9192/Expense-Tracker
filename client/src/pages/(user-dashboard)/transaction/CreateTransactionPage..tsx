@@ -17,14 +17,16 @@ import ChooseTransactionCategoryModal, {
 
 import pdfjsWorker from "pdfjs-dist/build/pdf.worker?url";
 import { toast } from "sonner";
-  import { GlobalWorkerOptions, getDocument } from "pdfjs-dist";
+import { GlobalWorkerOptions, getDocument } from "pdfjs-dist";
+import { useTranslation } from "react-i18next";
 
 GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.mjs",
-  import.meta.url
+  import.meta.url,
 ).toString();
 
 function CreateTransactionPage() {
+  const { t } = useTranslation();
   const {
     register,
     formState: { errors },
@@ -65,11 +67,11 @@ function CreateTransactionPage() {
         date,
         ...(formData.note ? { note: formData.note } : {}),
       };
-      const {error } = await mutate(payload);
+      const { error } = await mutate(payload);
       if (error) throw error;
       reset();
       setCurrencySearch("");
-      toast.success("Transaction listed successfully!")
+      toast.success("Transaction listed successfully!");
     } catch (err: any) {
       const message = err.data.message || DEFAULT_ERROR_MESSAGE;
 
@@ -82,43 +84,37 @@ function CreateTransactionPage() {
     setValue("type", category.type as any);
   };
 
-
   const handleFileInputChange = async (e: ChangeEvent<HTMLInputElement>) => {
-      GlobalWorkerOptions.workerSrc = pdfjsWorker;
-  const files = e.target.files;
-  if (!files?.length) return;
+    GlobalWorkerOptions.workerSrc = pdfjsWorker;
+    const files = e.target.files;
+    if (!files?.length) return;
 
-  const file = files[0];
+    const file = files[0];
 
-  
-  const pdfUrl = URL.createObjectURL(file);
+    const pdfUrl = URL.createObjectURL(file);
 
-  try {
-    
+    try {
+      const pdf = await getDocument(pdfUrl).promise;
+      let fullText = "";
 
-    const pdf = await getDocument(pdfUrl).promise;
-    let fullText = "";
-
-    for (let i = 1; i <= pdf.numPages; i++) {
-      const page = await pdf.getPage(i);
-      const content = await page.getTextContent();
-      const strings = content.items.map((item: any) => item.str);
-      fullText += strings.join(" ") + "\n\n";
+      for (let i = 1; i <= pdf.numPages; i++) {
+        const page = await pdf.getPage(i);
+        const content = await page.getTextContent();
+        const strings = content.items.map((item: any) => item.str);
+        fullText += strings.join(" ") + "\n\n";
+      }
+    } catch (error) {
+      console.error("PDF Parse Error:", error);
+    } finally {
+      // Always clean up the blob URL
+      URL.revokeObjectURL(pdfUrl);
     }
-   
-
-  } catch (error) {
-    console.error("PDF Parse Error:", error);
-  } finally {
-    // Always clean up the blob URL
-    URL.revokeObjectURL(pdfUrl);
-  }
-};
+  };
 
   return (
     <ArriveAnimationContainer>
       <div className="mx-auto max-w-7xl bg-base-300 p-5 md:p-10 rounded-xl">
-        <DashboardPageHeading heading="Add New Transaction" />
+        <DashboardPageHeading heading={t("addNewTransaction")} />
 
         <form
           id="transaction-form"
@@ -298,24 +294,32 @@ function CreateTransactionPage() {
 
           {/* Right Side Upload */}
           <div className="flex flex-col justify-center items-center">
-            <input accept="pdf/*" type="file" onChange={handleFileInputChange} id="hidden-file-input"  className="hidden"/>
-            <div  className="bg-base-100 rounded-xl  cursor-pointer border border-dashed border-base-content/40 px-10 py-16 text-center flex flex-col items-center gap-4 hover:bg-base-200 transition-all">
+            <input
+              accept="pdf/*"
+              type="file"
+              onChange={handleFileInputChange}
+              id="hidden-file-input"
+              className="hidden"
+            />
+            <div className="bg-base-100 rounded-xl  cursor-pointer border border-dashed border-base-content/40 px-10 py-16 text-center flex flex-col items-center gap-4 hover:bg-base-200 transition-all">
               <Plus size={48} className="text-primary" />
               <p className="font-medium text-lg">Upload an Invoice</p>
               <p className="text-sm text-base-content/70">(Optional)</p>
-              <button type="button" onClick={()=>{
-                const ele  =  document.getElementById("hidden-file-input")
-                if(!ele) return
-                ele.click()
-              }} className="btn btn-outline btn-sm mt-4">
+              <button
+                type="button"
+                onClick={() => {
+                  const ele = document.getElementById("hidden-file-input");
+                  if (!ele) return;
+                  ele.click();
+                }}
+                className="btn btn-outline btn-sm mt-4"
+              >
                 Choose File
               </button>
             </div>
           </div>
 
-          {
-            errorMessage ? <p className="mt-2 text-sm text-error">{errorMessage}</p>:null
-          }
+          {errorMessage ? <p className="mt-2 text-sm text-error">{errorMessage}</p> : null}
         </form>
 
         {/* ACTION BUTTONS */}

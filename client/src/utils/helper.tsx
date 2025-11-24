@@ -1,7 +1,8 @@
 import axios from "axios";
-import { DEFAULT_ERROR_MESSAGE } from "./constant";
+import { DEFAULT_ERROR_MESSAGE, SHORT_MONTH_NAMES } from "./constant";
 import type { SigninResponseData } from "../types/auth.type";
 import Cookies from "js-cookie";
+import { no } from "zod/v4/locales";
 export async function getIpAddress(): Promise<string> {
   try {
     const res = await axios.get("https://api.ipify.org/?format=json");
@@ -40,6 +41,12 @@ export function storeAuthToken(authData: SigninResponseData) {
     path: "/",
   });
 }
+
+export function clearAuthToken() {
+  Cookies.remove("accessToken");
+  Cookies.remove("refreshToken");
+}
+
 export function getTimeLeft(date: Date) {
   const now = new Date();
   const diff = date.getTime() - now.getTime(); // FIX: time left, not passed
@@ -59,4 +66,46 @@ export function getTimeLeft(date: Date) {
   if (hours > 0) return `${hours} Hour${hours > 1 ? "s" : ""}`;
   if (minutes > 0) return `${minutes} Minute${minutes > 1 ? "s" : ""}`;
   return `${seconds} Second${seconds > 1 ? "s" : ""}`;
+}
+export function formatChartDateLabel(labels: string[]) {
+  const now = new Date();
+  const currentYear = now.getFullYear();
+  const currentMonth = now.getMonth() + 1; // human-friendly month
+
+  return labels.map((label) => {
+    const parts = label.split("-").map(Number);
+
+    // DAY FORMAT: YYYY-MM-DD
+    if (parts.length === 3) {
+      const [year, month, day] = parts;
+
+      if (year === currentYear && month === currentMonth) {
+        return `${day}`;
+      }
+
+      if (year === currentYear) {
+        return `${day} ${SHORT_MONTH_NAMES[month - 1]}`;
+      }
+
+      return `${day} ${SHORT_MONTH_NAMES[month - 1]} ${year}`;
+    }
+
+    // MONTH FORMAT: YYYY-MM
+    if (parts.length === 2) {
+      const [year, month] = parts;
+
+      if (year === currentYear) {
+        return SHORT_MONTH_NAMES[month - 1];
+      }
+
+      return `${SHORT_MONTH_NAMES[month - 1]} ${year}`;
+    }
+
+    // YEAR FORMAT: YYYY
+    if (parts.length === 1) {
+      return label; // year only
+    }
+
+    return label;
+  });
 }

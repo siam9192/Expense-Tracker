@@ -45,7 +45,6 @@ function CreateGoalForm({ onSuccess }: Props) {
     d.setDate(d.getDate() + deadlineDays);
 
     const formatted = d.toISOString(); // YYYY-MM-DD
-    console.log(formatted);
     setValue("deadline", formatted); // register to form
   }, [deadlineDays, setValue]);
 

@@ -74,7 +74,7 @@ function WalletPageProvider({ children }: Props) {
   );
 
   return (
-    <WalletPageProviderContext.Provider value={contextValue}>
+    <WalletPageProviderContext.Provider value={contextValue as WalletPageContextType}>
       {isLoading ? <DashboardPageLoading /> : children}
     </WalletPageProviderContext.Provider>
   );

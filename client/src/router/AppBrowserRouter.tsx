@@ -25,8 +25,13 @@ function AppBrowserRouter() {
         {/* Parent layout route */}
         <Route path="/" element={<App />}>
           {/* Nested route (index) */}
-          <Route element={  <UserDashboardLayout />
-        }>
+          <Route
+            element={
+              <ProtectRouteProvider access="authenticated">
+                <UserDashboardLayout />
+              </ProtectRouteProvider>
+            }
+          >
             <Route index element={<HomePage />} />
             <Route path="transactions" element={<Outlet />}>
               <Route index element={<TransactionPage />} />

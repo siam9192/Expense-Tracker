@@ -11,4 +11,5 @@ export enum AppTheme {
 export enum AppLanguage {
   English = "en",
   Bangla = "bn",
+  Spanish = "es",
 }

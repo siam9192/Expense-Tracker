@@ -85,22 +85,28 @@ export interface UpdateUserSettingsPayload
     monthly_budget: number;
   }> {}
 
-  
-
 export enum SessionStatus {
   ACTIVE = "ACTIVE",
   EXPIRED = "EXPIRED",
-  REVOKED = "REVOKED"
+  REVOKED = "REVOKED",
 }
 
+export interface UserSession {
+  id: number;
+  user_id: number;
+  device_name: string;
+  address: string;
+  ip: string;
+  status: SessionStatus;
+  created_at: Date | string;
+  current: boolean;
+}
 
-  export interface UserSession {
-     id:number
-  user_id:number
-  device_name:string
-  address:string
-  ip:string
-  status:SessionStatus
-  created_at:Date|string,
-  current:boolean
-  }
+export interface UpdateUserProfilePayload
+  extends Partial<{
+    name: string;
+    profile_picture: string;
+    avatar_id: number;
+    profession_id: number;
+    country_id: number;
+  }> {}

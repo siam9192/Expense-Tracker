@@ -7,14 +7,16 @@ import UserProfileAndSettings from "../../components/sections/user-dashboard/Use
 import ArriveAnimationContainer from "../../components/ui/ArriveAnimationContainer";
 import { useCurrentUserProviderContext } from "../../Provider/CurrentUserProvider";
 import HomePageProvider from "../../Provider/HomePageProvider";
-
+import { useTranslation } from "react-i18next";
 function HomePage() {
   const { user } = useCurrentUserProviderContext();
-
+  const { t } = useTranslation();
   return (
     <HomePageProvider>
       <div>
-        <h1 className="text-2xl font-bold text-primary">Welcome back,{user!.name}!!</h1>
+        <h1 className=" text-xl md:text-2xl font-bold text-primary">
+          {t("welcomeMessage", { name: user?.name })}
+        </h1>
         <div className="mt-10 grid grid-cols-1 lg:grid-cols-2 gap-10 xl:gap-20 space-y-5">
           {/* Col-1 */}
           <div className="space-y-10">

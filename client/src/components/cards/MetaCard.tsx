@@ -2,6 +2,7 @@ import React from "react";
 import CountUp from "react-countup";
 import type { LucideIcon } from "lucide-react";
 import { ArrowUp, ArrowDown } from "lucide-react";
+import { useUserCurrency } from "../../Provider/CurrentUserProvider";
 
 export interface MetaData {
   label: string;
@@ -18,6 +19,7 @@ interface MetaCardProps {
 }
 
 const MetaCard: React.FC<MetaCardProps> = ({ data }) => {
+  const currency = useUserCurrency();
   const { label, icon: Icon, value, isCurrency, isPercentage, isGrowth, duration = 1.8 } = data;
 
   const isNumeric = typeof value === "number";
@@ -55,7 +57,7 @@ const MetaCard: React.FC<MetaCardProps> = ({ data }) => {
             <CountUp
               end={Math.abs(numValue)} // Show absolute value for growth percentages
               duration={duration}
-              prefix={isCurrency ? "$" : ""}
+              prefix={isCurrency ? currency?.symbol : ""}
               suffix={isPercentage ? "%" : ""}
               separator=","
               decimals={isPercentage && numValue % 1 !== 0 ? 1 : 0}

@@ -92,7 +92,7 @@ function HomePageProvider({ children }: Props) {
   );
 
   return (
-    <HomePageProviderContext.Provider value={contextValue}>
+    <HomePageProviderContext.Provider value={contextValue as HomePageContextType}>
       {isLoading ? <DashboardPageLoading /> : children}
     </HomePageProviderContext.Provider>
   );

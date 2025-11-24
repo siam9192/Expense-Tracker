@@ -5,6 +5,7 @@ import CreateGoalModal from "../../ui/CreateGoalModal";
 import DashboardSectionHeading from "../../ui/DashboardSectionHeading";
 import { GoalStatus, type Goal } from "../../../types/goal.type";
 import { useGoalPageProviderContext } from "../../../Provider/GoalPageProvider";
+import { useTranslation } from "react-i18next";
 
 const tabs = [
   {
@@ -25,6 +26,7 @@ const tabs = [
   },
 ];
 function UserGoals() {
+  const { t } = useTranslation();
   const [allGoals, setAllGoals] = useState<Goal[]>([]);
   const { goalsQuery, setGoalsQueryParams } = useGoalPageProviderContext();
   const { data, isFetching } = goalsQuery;
@@ -83,7 +85,7 @@ function UserGoals() {
           <CreateGoalModal onSuccess={reset} />
         </div>
         <div className="flex flex-col md:flex-row justify-between items-center gap-4 md:gap-0 ">
-          <DashboardSectionHeading heading="Your Goals" />
+          <DashboardSectionHeading heading={t("yourGoals")} />
           <div role="tablist" className="tabs tabs-box">
             {tabs.map((tab) => (
               <a
@@ -106,7 +108,7 @@ function UserGoals() {
             </div>
           ) : (
             <div className="min-h-72 flex justify-center items-center text-center ">
-              <p className="text-lg font-semibold text-base-content">No goals found </p>
+              <p className="text-lg font-semibold text-base-content">{t("noResults")}</p>
             </div>
           )}
         </div>

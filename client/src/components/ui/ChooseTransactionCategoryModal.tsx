@@ -5,17 +5,12 @@ import { TransactionType } from "../../types/transaction.type";
 interface Props {
   defaultId: number;
   defaultType: TransactionType;
-  onChange: (category:ChooseCategoryType ) => void;
+  onChange: (category: ChooseCategoryType) => void;
   onTypeChange?: (type: TransactionType) => void;
 }
 
-export type ChooseCategoryType = { id: number; name: string,type:TransactionType }
-function ChooseTransactionCategoryModal({
-  defaultId,
-  defaultType,
-  onChange,
-  onTypeChange,
-}: Props) {
+export type ChooseCategoryType = { id: number; name: string; type: TransactionType };
+function ChooseTransactionCategoryModal({ defaultId, defaultType, onChange, onTypeChange }: Props) {
   const [type, setType] = useState(defaultType || TransactionType.EXPENSE);
   const [categoryId, setCategoryId] = useState<number | null>(defaultId || null);
 
@@ -39,15 +34,19 @@ function ChooseTransactionCategoryModal({
 
   useEffect(() => {
     if (selectedCategory) {
-      onChange({id:selectedCategory.id,name:selectedCategory.name,type:selectedCategory.type as any});
+      onChange({
+        id: selectedCategory.id,
+        name: selectedCategory.name,
+        type: selectedCategory.type as any,
+      });
     }
   }, [categoryId]);
 
-  useEffect(()=>{
-    setType(defaultType)
-    setCategoryId(defaultId)
-  },[defaultId,type])
-  
+  useEffect(() => {
+    setType(defaultType);
+    setCategoryId(defaultId);
+  }, [defaultId, type]);
+
   return (
     <Fragment>
       <div>
@@ -67,19 +66,18 @@ function ChooseTransactionCategoryModal({
       {/* MODAL */}
       <dialog id={id} className="modal">
         <div className="modal-box w-[90%] md:w-2xl max-w-4xl text-start relative">
-
           <h1 className="text-xl font-semibold mb-5">Choose Transaction Category</h1>
 
           {/* TYPE SWITCHER */}
           <div className="flex gap-3 mb-5">
             <button
-             type="button"
+              type="button"
               className={`btn btn-sm ${
                 type === TransactionType.EXPENSE ? "btn-primary" : "btn-outline"
               }`}
               onClick={() => {
                 setType(TransactionType.EXPENSE);
-               onTypeChange &&  onTypeChange(TransactionType.EXPENSE);
+                onTypeChange && onTypeChange(TransactionType.EXPENSE);
                 setCategoryId(null);
               }}
             >
@@ -87,13 +85,13 @@ function ChooseTransactionCategoryModal({
             </button>
 
             <button
-             type="button"
+              type="button"
               className={`btn btn-sm ${
                 type === TransactionType.INCOME ? "btn-primary" : "btn-outline"
               }`}
               onClick={() => {
                 setType(TransactionType.INCOME);
-             onTypeChange &&   onTypeChange(TransactionType.INCOME);
+                onTypeChange && onTypeChange(TransactionType.INCOME);
                 setCategoryId(null);
               }}
             >
@@ -131,7 +129,7 @@ function ChooseTransactionCategoryModal({
               Close
             </button>
             <button
-             type="button"
+              type="button"
               className="btn btn-primary"
               disabled={!categoryId}
               onClick={close}

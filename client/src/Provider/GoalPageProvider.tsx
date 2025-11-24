@@ -22,9 +22,7 @@ interface Props {
 }
 
 function GoalPageProvider({ children }: Props) {
-  const [goalsQueryParams, setGoalsQueryParams] = useState<Params>({
-    limit: 4,
-  });
+  const [goalsQueryParams, setGoalsQueryParams] = useState<Params>({});
 
   const goalsSummaryQuery = useGetUserGoalsSummaryQuery(undefined);
   const goalsQuery = useGetUserGoalsQuery(goalsQueryParams);
@@ -44,7 +42,7 @@ function GoalPageProvider({ children }: Props) {
   );
 
   return (
-    <GoalsPageProviderContext.Provider value={contextValue}>
+    <GoalsPageProviderContext.Provider value={contextValue as GoalsPageContextType}>
       {isLoading ? <DashboardPageLoading /> : children}
     </GoalsPageProviderContext.Provider>
   );

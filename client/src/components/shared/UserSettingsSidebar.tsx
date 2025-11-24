@@ -1,13 +1,18 @@
 import { Bell, LogOut, Settings2, ShieldCheck, User, Wallet } from "lucide-react";
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Link, useLocation } from "react-router-dom";
+import LogoutDialog from "../ui/LogoutDialog";
 
-const tabs = [
-  { key: "profile", label: "Profile", icon: User },
-  { key: "wallet", label: "Wallet", path: "wallet", icon: Wallet },
-  { key: "notifications", label: "Notifications", path: "notifications", icon: Bell },
-  { key: "security", label: "Security", path: "security", icon: ShieldCheck },
-];
 function UserSettingsSidebar() {
+  const { t } = useTranslation();
+  const [isLogoutDialog, setIsLogoutDialog] = useState(false);
+  const tabs = [
+    { key: "profile", label: t("profile"), icon: User },
+    { key: "wallet", label: t("wallet"), path: "wallet", icon: Wallet },
+    { key: "notifications", label: t("notifications"), path: "notifications", icon: Bell },
+    { key: "security", label: t("security"), path: "security", icon: ShieldCheck },
+  ];
   const { pathname } = useLocation();
   const activeTab = (tabs.find((_) => pathname.replace("/settings/", "") === _.path) || tabs[0])
     .key;
@@ -16,7 +21,7 @@ function UserSettingsSidebar() {
     <div className="md:w-1/4 w-full bg-base-100 rounded-2xl  p-4 space-y-4 max-h-[600px]">
       <div className="flex items-center gap-2 mb-6">
         <Settings2 className="text-primary" size={22} />
-        <h2 className="text-lg font-semibold">Settings</h2>
+        <h2 className="text-lg font-semibold">{t("settings")}</h2>
       </div>
 
       {tabs.map((tab) => {
@@ -41,10 +46,14 @@ function UserSettingsSidebar() {
 
       <hr className="my-4 border-base-300" />
 
-      <button className="flex items-center gap-3 w-full p-3 rounded-xl hover:bg-error/10 text-error transition-all">
+      <button
+        onClick={() => setIsLogoutDialog(true)}
+        className="flex items-center gap-3 w-full p-3 rounded-xl hover:bg-error/10 text-error transition-all"
+      >
         <LogOut size={20} />
         <span className="font-medium">Logout</span>
       </button>
+      {isLogoutDialog ? <LogoutDialog onCancel={() => setIsLogoutDialog(false)} /> : null}
     </div>
   );
 }

@@ -42,7 +42,7 @@ function SigninPage() {
 
       const { data: resData, error } = response;
       if (error) throw error;
-      storeAuthToken(resData.data);
+      storeAuthToken(resData!.data);
       userRefetch();
       userSettingsRefetch();
       navigate("/");
@@ -52,6 +52,29 @@ function SigninPage() {
       reset();
     }
   });
+  const handelDemoSignin = async () => {
+    try {
+      setErrorMessage("");
+      const payload: SigninPayload = {
+        email: "demo@gmail.com",
+        password: "demo123",
+        session_info: deviceInfo,
+      };
+
+      const response = await signupMutate(payload);
+
+      const { data: resData, error } = response;
+      if (error) throw error;
+      storeAuthToken(resData!.data);
+      userRefetch();
+      userSettingsRefetch();
+      navigate("/");
+    } catch (error: any) {
+      setErrorMessage((error as any)?.data?.message || DEFAULT_ERROR_MESSAGE);
+    } finally {
+      reset();
+    }
+  };
   return (
     <Container>
       <div className=" h-screen flex flex-col items-center justify-center py-10">
@@ -107,6 +130,13 @@ function SigninPage() {
             className="btn btn-primary w-full mt-4 text-white font-medium"
           >
             Signin
+          </button>
+          <button
+            onClick={handelDemoSignin}
+            type="button"
+            className="btn  btn-ghost w-full mt-2 text-white font-medium"
+          >
+            Demo Login
           </button>
           {errorMessage && <p className=" text-error mt-2">{errorMessage}</p>}
           {/* Footer Text */}

@@ -5,8 +5,10 @@ import { useUpdateUserSettingsMutation } from "../../../redux/api/user.api";
 import { useCurrentUserProviderContext } from "../../../Provider/CurrentUserProvider";
 import { toast } from "sonner";
 import { DEFAULT_ERROR_MESSAGE } from "../../../utils/constant";
+import { useTranslation } from "react-i18next";
 
 function NotificationSettings() {
+  const { t } = useTranslation();
   const { settings } = useCurrentUserProviderContext();
 
   const [email_alerts, setEmail_alerts] = useState(settings?.email_alerts);
@@ -53,20 +55,15 @@ function NotificationSettings() {
       <div className="p-6 bg-base-300 rounded-2xl space-y-6">
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-semibold flex items-center gap-2">
-            <Bell className="text-primary" /> Notification Settings
+            <Bell className="text-primary" /> {t("notificationSettings")}
           </h2>
 
-          <button
-            className="btn btn-sm btn-primary"
-            disabled={!isChanged}
-            onClick={handleUpdate}
-          >
+          <button className="btn btn-sm btn-primary" disabled={!isChanged} onClick={handleUpdate}>
             Save Changes
           </button>
         </div>
 
         <div className="space-y-4">
-
           {/* Email Alerts */}
           <div className="flex justify-between items-center bg-base-100 p-4 rounded-xl">
             <p>Email Notifications</p>

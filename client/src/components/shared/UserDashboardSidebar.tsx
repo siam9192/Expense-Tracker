@@ -1,26 +1,23 @@
-import {
-  ArrowLeftRight,
-  Goal,
-  Grid2x2Plus,
-  Home,
-  Languages,
-  LogOut,
-  Settings,
-  Wallet,
-} from "lucide-react";
+import { ArrowLeftRight, Goal, Grid2x2Plus, Home, LogOut, Settings, Wallet } from "lucide-react";
 import type { Route } from "../../types/utils.type";
 import ThemeSwitchButton from "../ui/ThemeSwitchButton";
 import { Link, useLocation } from "react-router-dom";
+import { useCurrentUserProviderContext } from "../../Provider/CurrentUserProvider";
+import LanguageSwitcher from "../ui/LanguageSwitcher";
+import { useTranslation } from "react-i18next";
+import LogoutModal from "../ui/LogoutModal";
 
 function UserDashboardSidebar() {
+  const { t } = useTranslation();
+  const { user } = useCurrentUserProviderContext();
   const { pathname } = useLocation();
 
   const routes: Route[] = [
-    { label: "Dashboard", path: "/", icon: Home },
-    { label: "Transactions", path: "/transactions", icon: ArrowLeftRight },
-    { label: "Wallet", path: "/wallet", icon: Wallet },
-    { label: "Goals", path: "/goals", icon: Goal },
-    { label: "Categories", path: "/categories", icon: Grid2x2Plus },
+    { label: t("dashboard"), path: "/", icon: Home },
+    { label: t("transactions"), path: "/transactions", icon: ArrowLeftRight },
+    { label: t("wallet"), path: "/wallet", icon: Wallet },
+    { label: t("goals"), path: "/goals", icon: Goal },
+    { label: t("categories"), path: "/categories", icon: Grid2x2Plus },
   ];
 
   return (
@@ -35,13 +32,10 @@ function UserDashboardSidebar() {
         <div className="flex flex-col items-center text-center mb-12">
           <div className="avatar mb-3">
             <div className="w-28 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
-              <img
-                src="https://img.daisyui.com/images/profile/demo/spiderperson@192.webp"
-                alt="User Avatar"
-              />
+              <img src={user?.avatar.src} alt="User Avatar" />
             </div>
           </div>
-          <p className="font-semibold text-primary font-secondary">Arafat Hasan Siam</p>
+          <p className="font-semibold text-primary font-secondary">{user?.name}</p>
         </div>
 
         {/* --- Navigation --- */}
@@ -80,24 +74,19 @@ function UserDashboardSidebar() {
                 }`}
           >
             <Settings size={20} />
-            <span>Settings</span>
+            <span>{t("settings")}</span>
           </button>
         </Link>
-        <button
-          className={`flex items-center gap-3 px-3 py-2 rounded-lg text-neutral dark:text-neutral-content font-medium hover:text-error transition-all duration-150`}
-        >
-          <LogOut size={20} />
-          <span>Sign Out</span>
-        </button>
+        <LogoutModal>
+          <button
+            className={`flex items-center gap-3 px-3 py-2 rounded-lg text-neutral dark:text-neutral-content font-medium hover:text-error transition-all duration-150`}
+          >
+            <LogOut size={20} />
+            <span>{t("signOut")}</span>
+          </button>
+        </LogoutModal>
 
-        <div className="flex items-center gap-3">
-          <Languages className="text-primary" size={24} />
-          <select className="select select-sm select-bordered border-primary font-secondary">
-            <option disabled>Choose Language</option>
-            <option>English</option>
-            <option>Bangla</option>
-          </select>
-        </div>
+        <LanguageSwitcher />
       </div>
 
       {/* Theme toggle */}

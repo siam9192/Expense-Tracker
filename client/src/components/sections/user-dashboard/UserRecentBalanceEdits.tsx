@@ -1,6 +1,7 @@
+import { useTranslation } from "react-i18next";
 import { useWalletPageProviderContext } from "../../../Provider/WalletPageProvider";
 import { DEFAULT_ERROR_MESSAGE } from "../../../utils/constant";
-import ArriveAnimationContainer from "../../ui/ArriveAnimationContainer";
+import { useUserCurrency } from "../../../Provider/CurrentUserProvider";
 
 const recentEdits = [
   {
@@ -34,6 +35,9 @@ const recentEdits = [
 ];
 
 function UserRecentBalanceEdits() {
+  const { t } = useTranslation();
+  const currency = useUserCurrency();
+
   const { latestBalanceUpdatesQuery } = useWalletPageProviderContext();
   const { data: resData, isError } = latestBalanceUpdatesQuery;
   const updates = resData?.data!;
@@ -42,7 +46,7 @@ function UserRecentBalanceEdits() {
     <div className="p-4 md:p-8 bg-base-300 rounded-2xl shadow-lg space-y-6">
       {/* Header */}
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-semibold text-primary">Recent Balance Edits</h2>
+        <h2 className="text-2xl font-semibold text-primary">{t("recentBalanceEdits")}</h2>
       </div>
 
       {updates.length ? (
@@ -60,7 +64,10 @@ function UserRecentBalanceEdits() {
 
               {/* Right */}
               <div className="text-right">
-                <p className="font-semibold text-lg text-primary">${item.new_balance}</p>
+                <p className="font-semibold text-lg text-primary">
+                  {currency?.symbol}
+                  {item.new_balance}
+                </p>
 
                 <p className="text-xs text-neutral-content">
                   {new Date(item.created_at).toDateString()}
@@ -71,7 +78,7 @@ function UserRecentBalanceEdits() {
         </div>
       ) : (
         <div className="min-h-80 flex justify-center items-center text-center">
-          <p className="text-base-content ">No recent Edits</p>
+          <p className="text-base-content ">{t("noResults")}</p>
         </div>
       )}
     </div>
