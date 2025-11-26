@@ -1,35 +1,7 @@
-import { MonitorSmartphone, MapPin, Clock, LogOut } from "lucide-react";
+import { MonitorSmartphone, MapPin, Clock } from "lucide-react";
 import { useGetUserSessionsQuery } from "../../../redux/api/user.api";
 import RevokeSingleSessionModal from "../../ui/RevokeSingleSessionModal";
 import RevokeAllSessionModal from "../../ui/RevokeAllSessionModal";
-
-// Example session data (you’d fetch from your backend in real use)
-const sessions = [
-  {
-    id: 1,
-    device: "Windows 10 • Chrome",
-    location: "Dhaka, Bangladesh",
-    ip: "103.55.33.17",
-    lastActive: "2 minutes ago",
-    current: true,
-  },
-  {
-    id: 2,
-    device: "iPhone 14 • Safari",
-    location: "Chittagong, Bangladesh",
-    ip: "103.102.19.66",
-    lastActive: "3 hours ago",
-    current: false,
-  },
-  {
-    id: 3,
-    device: "Macbook Pro • Firefox",
-    location: "New York, USA",
-    ip: "192.168.1.55",
-    lastActive: "Yesterday, 10:45 PM",
-    current: false,
-  },
-];
 
 function UserSessions() {
   const { data } = useGetUserSessionsQuery(undefined);

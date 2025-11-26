@@ -44,7 +44,7 @@ function CreateTransactionPage() {
   const [errorMessage, setErrorMessage] = useState("");
   const [currencySearch, setCurrencySearch] = useState("");
   const [isCurrencyDropdownOpen, setIsCurrencyDropdownOpen] = useState(false);
-  const [mutate, { isLoading }] = useCreateUserTransactionMutation();
+  const [mutate] = useCreateUserTransactionMutation();
 
   const { data: currencyResData } = useGetPublicCurrenciesQuery({
     limit: 300,

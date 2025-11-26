@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Check, Globe } from "lucide-react";
+import { Check } from "lucide-react";
 import type { Avatar } from "../../types/avatar.type";
 import { useGetPublicAvatarsQuery } from "../../redux/api/avatar.type";
 interface Props {

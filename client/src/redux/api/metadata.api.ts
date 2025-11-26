@@ -13,6 +13,7 @@ import type {
   UserTransactionsSummaryMetadata,
   UserWalletSummaryMetadata,
 } from "../../types/metadata.type";
+import type { UserNotificationsSummaryMetadata } from "../../types/notification.type";
 
 const metadataApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -110,6 +111,15 @@ const metadataApi = baseApi.injectEndpoints({
         return response;
       },
     }),
+    getUserNotificationsSummary: builder.query({
+      query: () => ({
+        url: "/metadata/me/notifications",
+        method: "GET",
+      }),
+      transformResponse: (response: Response<UserNotificationsSummaryMetadata>) => {
+        return response;
+      },
+    }),
   }),
 });
 
@@ -124,4 +134,5 @@ export const {
   useGetUserIncomeStatsQuery,
   useGetUserFinanceStatsQuery,
   useGetUserExpenseCategoryBreakdownQuery,
+  useGetUserNotificationsSummaryQuery,
 } = metadataApi;

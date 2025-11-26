@@ -12,8 +12,10 @@ import { useSigninMutation } from "../../redux/api/auth.api";
 import { storeAuthToken } from "../../utils/helper";
 import useDeviceInfo from "../../hooks/useDeviceInfo";
 import { useCurrentUserProviderContext } from "../../Provider/CurrentUserProvider";
+import PendingDialog from "../../components/ui/PendingDialog";
 
 function SigninPage() {
+  const [isPending, setIsPending] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
@@ -30,6 +32,7 @@ function SigninPage() {
   const [signupMutate, { isLoading }] = useSigninMutation();
   const { userRefetch, userSettingsRefetch } = useCurrentUserProviderContext();
   const handelSignin = handleSubmit(async (data) => {
+    setIsPending(true);
     try {
       setErrorMessage("");
       const payload: SigninPayload = {
@@ -43,16 +46,22 @@ function SigninPage() {
       const { data: resData, error } = response;
       if (error) throw error;
       storeAuthToken(resData!.data);
-      userRefetch();
-      userSettingsRefetch();
-      navigate("/");
+      setTimeout(() => {
+           setIsPending(false);
+        userRefetch();
+        userSettingsRefetch();
+        navigate("/");
+     
+      }, 2000);
     } catch (error: any) {
+      setIsPending(false)
       setErrorMessage((error as any)?.data?.message || DEFAULT_ERROR_MESSAGE);
     } finally {
       reset();
     }
   });
   const handelDemoSignin = async () => {
+    setIsPending(true);
     try {
       setErrorMessage("");
       const payload: SigninPayload = {
@@ -66,10 +75,15 @@ function SigninPage() {
       const { data: resData, error } = response;
       if (error) throw error;
       storeAuthToken(resData!.data);
-      userRefetch();
-      userSettingsRefetch();
-      navigate("/");
+      setTimeout(() => {
+           setIsPending(false);
+        userRefetch();
+        userSettingsRefetch();
+        navigate("/");
+     
+      }, 2000);
     } catch (error: any) {
+      setIsPending(false);
       setErrorMessage((error as any)?.data?.message || DEFAULT_ERROR_MESSAGE);
     } finally {
       reset();
@@ -147,6 +161,7 @@ function SigninPage() {
             </a>
           </p>
         </form>
+        {isPending ? <PendingDialog /> : null}
       </div>
     </Container>
   );

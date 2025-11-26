@@ -2,7 +2,8 @@ import { ArrowDownCircle, ArrowUpCircle, FileText, PiggyBank, Wallet } from "luc
 
 import { TransactionType } from "../../types/transaction.type";
 import type { Transaction } from "../../types/transaction.type";
-import { useUserCurrency } from "../../Provider/CurrentUserProvider";
+import { useState } from "react";
+import TransactionDetailsDialog from "../ui/TransactionDetailsDialog";
 
 interface Props {
   transaction: Transaction;
@@ -25,7 +26,7 @@ const ColorMap = {
 };
 
 function UserTransactionCard({ transaction }: Props) {
-  const currency = useUserCurrency();
+  const [showDetails, setShowDetails] = useState(false);
 
   const Icon = IconMap[transaction.type];
   const colorClass = ColorMap[transaction.type];
@@ -86,8 +87,14 @@ function UserTransactionCard({ transaction }: Props) {
         </div>
       </div>
       <div className=" mt-4 text-center">
-        <button className="btn  min-w-full md:min-w-48">View Details</button>
+        <button onClick={() => setShowDetails(true)} className="btn  min-w-full md:min-w-48">
+          View Details
+        </button>
       </div>
+
+      {showDetails ? (
+        <TransactionDetailsDialog id={transaction.id} onClose={() => setShowDetails(false)} />
+      ) : null}
     </div>
   );
 }

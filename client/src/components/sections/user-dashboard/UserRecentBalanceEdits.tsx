@@ -3,37 +3,6 @@ import { useWalletPageProviderContext } from "../../../Provider/WalletPageProvid
 import { DEFAULT_ERROR_MESSAGE } from "../../../utils/constant";
 import { useUserCurrency } from "../../../Provider/CurrentUserProvider";
 
-const recentEdits = [
-  {
-    id: 1,
-    reason: "Grocery Shopping",
-    prevAmount: 1500,
-    newAmount: 1200,
-    date: "2025-11-01",
-  },
-  {
-    id: 2,
-    reason: "Monthly Internet Bill",
-    prevAmount: 120,
-    newAmount: 100,
-    date: "2025-10-30",
-  },
-  {
-    id: 3,
-    reason: "Dining Out",
-    prevAmount: 80,
-    newAmount: 60,
-    date: "2025-10-28",
-  },
-  {
-    id: 4,
-    reason: "Credit Card Payment",
-    prevAmount: 500,
-    newAmount: 0,
-    date: "2025-10-25",
-  },
-];
-
 function UserRecentBalanceEdits() {
   const { t } = useTranslation();
   const currency = useUserCurrency();

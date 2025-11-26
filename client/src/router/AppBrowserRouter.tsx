@@ -1,4 +1,3 @@
-import React from "react";
 import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
 import App from "../App";
 import HomePage from "../pages/(user-dashboard)/HomePage";
@@ -17,6 +16,7 @@ import SignupPage from "../pages/(user-dashboard)/SignupPage";
 import WelcomePage from "../pages/(user-dashboard)/welcome/WelcomePage";
 import UserDashboardLayout from "../components/layout/UserDashboardLayout";
 import ProtectRouteProvider from "../Provider/ProtectRouteProvider";
+import NotificationsPage from "../pages/(user-dashboard)/NotificationsPage";
 
 function AppBrowserRouter() {
   return (
@@ -41,7 +41,7 @@ function AppBrowserRouter() {
             <Route path="wallet" element={<WalletPage />} />
             <Route path="goals" element={<GoalPage />} />
             <Route path="categories" element={<CategoryPage />} />
-
+            <Route path="notifications" element={<NotificationsPage />} />
             {/* Settings */}
             <Route path="settings" element={<SettingsPage />}>
               <Route index element={<ProfileSettings />} />

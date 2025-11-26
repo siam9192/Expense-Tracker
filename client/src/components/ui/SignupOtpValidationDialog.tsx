@@ -2,7 +2,6 @@ import { useRef, useState } from "react";
 import { X, MailCheck } from "lucide-react";
 import type { SignupResponseData } from "../../types/auth.type";
 import { useResendOTPMutation, useSignupVerifyMutation } from "../../redux/api/auth.api";
-import Cookies from "js-cookie";
 import { storeAuthToken } from "../../utils/helper";
 interface Props {
   onClose: () => void;
@@ -52,7 +51,7 @@ function SignupOtpValidationDialog({ onClose, onVerify, response }: Props) {
       setOtp(["", "", "", ""]); // clear old OTP
       setOtpInfo((p) => ({
         ...p,
-        otp: data.data.otp,
+        otp: data!.data.otp,
       }));
     } catch (error: any) {
       setErrorMessage(error.data.message);
@@ -77,7 +76,7 @@ function SignupOtpValidationDialog({ onClose, onVerify, response }: Props) {
 
       if (error) throw error;
 
-      const authData = data.data;
+      const authData = data!.data;
 
       storeAuthToken(authData);
 

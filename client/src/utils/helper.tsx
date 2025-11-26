@@ -2,7 +2,6 @@ import axios from "axios";
 import { DEFAULT_ERROR_MESSAGE, SHORT_MONTH_NAMES } from "./constant";
 import type { SigninResponseData } from "../types/auth.type";
 import Cookies from "js-cookie";
-import { no } from "zod/v4/locales";
 export async function getIpAddress(): Promise<string> {
   try {
     const res = await axios.get("https://api.ipify.org/?format=json");

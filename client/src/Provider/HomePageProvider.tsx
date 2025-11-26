@@ -14,7 +14,6 @@ import type {
 import DashboardPageLoading from "../components/ui/DashboardPageLoading";
 import type { Params, UseQueryResult } from "../types/utils.type";
 import type { Response } from "../types/response.type";
-import type { BalanceUpdate } from "../types/balance-update.type";
 import { TransactionType, type Transaction } from "../types/transaction.type";
 import { useGetUserTransactionsQuery } from "../redux/api/transaction.api";
 

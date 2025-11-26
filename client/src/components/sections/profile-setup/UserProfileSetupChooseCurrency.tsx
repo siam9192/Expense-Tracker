@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { X, DollarSign } from "lucide-react";
+import { DollarSign } from "lucide-react";
 import { useGetPublicCurrenciesQuery } from "../../../redux/api/currency.api";
 import { useUserProfileSetupFormContext } from "./UserProfileSetupDialog";
 

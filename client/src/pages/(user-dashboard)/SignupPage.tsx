@@ -45,7 +45,7 @@ function SignupPage() {
     if (error) {
       setErrorMessage((error as any).data.message);
     } else {
-      setResponse(resData.data);
+      setResponse(resData!.data);
     }
   });
 

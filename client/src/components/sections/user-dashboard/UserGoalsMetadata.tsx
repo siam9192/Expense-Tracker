@@ -1,4 +1,4 @@
-import { Award, Activity, BarChart2, Clock, type LucideIcon } from "lucide-react";
+import { Award, Activity, BarChart2, Clock } from "lucide-react";
 import ArriveAnimationContainer from "../../ui/ArriveAnimationContainer";
 import DashboardSectionHeading from "../../ui/DashboardSectionHeading";
 import MetaCard from "../../cards/MetaCard";

@@ -1,4 +1,13 @@
-import { ArrowLeftRight, Goal, Grid2x2Plus, Home, LogOut, Settings, Wallet } from "lucide-react";
+import {
+  ArrowLeftRight,
+  Bell,
+  Goal,
+  Grid2x2Plus,
+  Home,
+  LogOut,
+  Settings,
+  Wallet,
+} from "lucide-react";
 import type { Route } from "../../types/utils.type";
 import ThemeSwitchButton from "../ui/ThemeSwitchButton";
 import { Link, useLocation } from "react-router-dom";
@@ -6,6 +15,7 @@ import { useCurrentUserProviderContext } from "../../Provider/CurrentUserProvide
 import LanguageSwitcher from "../ui/LanguageSwitcher";
 import { useTranslation } from "react-i18next";
 import LogoutModal from "../ui/LogoutModal";
+import { useGetUserNotificationsSummaryQuery } from "../../redux/api/metadata.api";
 
 function UserDashboardSidebar() {
   const { t } = useTranslation();
@@ -20,6 +30,10 @@ function UserDashboardSidebar() {
     { label: t("categories"), path: "/categories", icon: Grid2x2Plus },
   ];
 
+  const { data } = useGetUserNotificationsSummaryQuery(undefined);
+
+  const notificationSummary = data?.data;
+  console.log(notificationSummary);
   return (
     <aside className="h-full  w-full  shadow-xl rounded-r-2xl p-8 flex flex-col justify-between relative bg-white dark:bg-black ">
       {/* --- Header --- */}
@@ -59,6 +73,25 @@ function UserDashboardSidebar() {
               </Link>
             );
           })}
+          <Link to={"/notifications"} className="w-full">
+            <button
+              key={"Notifications"}
+              className={`flex items-center gap-3 px-3 py-2 rounded-lg font-medium transition-all duration-150 w-full
+                ${
+                  pathname === "/notifications"
+                    ? "bg-primary text-white shadow-md"
+                    : "text-neutral dark:text-neutral-content hover:text-secondary hover:bg-base-200"
+                }`}
+            >
+              <Bell className={pathname === "/notifications" ? "text-white" : "text-primary"} />
+              <span>{t("notifications")}</span>{" "}
+              {notificationSummary?.unread ? (
+                <div className="size-6 flex justify-center items-center text-sm rounded-full text-black bg-pink-600 ">
+                  {notificationSummary.unread}
+                </div>
+              ) : null}
+            </button>
+          </Link>
         </nav>
       </div>
 
