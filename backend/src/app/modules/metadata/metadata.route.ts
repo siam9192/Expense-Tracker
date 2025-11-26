@@ -58,6 +58,12 @@ router.get(
   metadataController.getCurrentUserExpenseCategoryBreakdown,
 );
 
+
+router.get(
+  "/me/notifications",
+  auth([UserRole.USER]),
+  metadataController.getCurrentUserNotificationsSummary,
+);
 const metadataRouter = router;
 
 export default metadataRouter;

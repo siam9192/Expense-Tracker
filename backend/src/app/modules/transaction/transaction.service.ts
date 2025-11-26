@@ -80,6 +80,7 @@ class TransactionService {
       include: {
         currency: true,
         base_currency: true,
+        category:true
       },
     });
 

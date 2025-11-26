@@ -13,7 +13,7 @@ class NotificationService {
     paginationOptions: PaginationOptions,
   ) {
     const { page, skip, limit, sortBy, sortOrder } =
-      calculatePagination(paginationOptions);
+    calculatePagination(paginationOptions);
     const { type, is_read, search_term } = filterQuery;
 
     // 🧠 Convert "true"/"false" string to boolean if provided
@@ -58,6 +58,7 @@ class NotificationService {
       meta,
     };
   }
+
   async setCurrentUserUnreadNotificationsAsRead(authUser: AuthUser) {
     // 🧠 Mark all unread notifications as read for the current user
     await prisma.notification.updateMany({
@@ -71,6 +72,7 @@ class NotificationService {
     });
     return null;
   }
+
   async setCurrentUserNotificationAsRead(
     authUser: AuthUser,
     notificationId: string,
@@ -124,6 +126,7 @@ class NotificationService {
     });
     return null;
   }
+  
 }
 
 export default new NotificationService();

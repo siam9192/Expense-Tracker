@@ -700,8 +700,8 @@ class MetadataService {
       },
     });
 
-    const read = notifications.filter((_) => _.is_read);
-    const unread = notifications.filter((_) => _.is_read === false);
+    const read = notifications.filter((_) => _.is_read).length;
+    const unread = notifications.filter((_) => _.is_read === false).length;
     const total = notifications.length;
 
     return {
