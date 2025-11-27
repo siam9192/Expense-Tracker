@@ -44,7 +44,7 @@ function CreateTransactionPage() {
   const [errorMessage, setErrorMessage] = useState("");
   const [currencySearch, setCurrencySearch] = useState("");
   const [isCurrencyDropdownOpen, setIsCurrencyDropdownOpen] = useState(false);
-  const [mutate] = useCreateUserTransactionMutation();
+  const [mutate,{isLoading:isPending}] = useCreateUserTransactionMutation();
 
   const { data: currencyResData } = useGetPublicCurrenciesQuery({
     limit: 300,
@@ -328,7 +328,7 @@ function CreateTransactionPage() {
             Save as Draft
           </button>
 
-          <button type="submit" form="transaction-form" className="btn btn-primary">
+          <button disabled={isPending} type="submit" form="transaction-form" className="btn btn-primary">
             Save Transaction
           </button>
         </div>

@@ -47,10 +47,10 @@ function SigninPage() {
       if (error) throw error;
       storeAuthToken(resData!.data);
       setTimeout(() => {
-           setIsPending(false);
+          
         userRefetch();
         userSettingsRefetch();
-        navigate("/");
+     
      
       }, 2000);
     } catch (error: any) {
@@ -76,10 +76,10 @@ function SigninPage() {
       if (error) throw error;
       storeAuthToken(resData!.data);
       setTimeout(() => {
-           setIsPending(false);
+        
         userRefetch();
         userSettingsRefetch();
-        navigate("/");
+       
      
       }, 2000);
     } catch (error: any) {

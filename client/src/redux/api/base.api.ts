@@ -5,6 +5,7 @@ import {
   type BaseQueryFn,
   type FetchArgs,
 } from "@reduxjs/toolkit/query/react";
+
 import envConfig from "../../config/env.config";
 import type { SigninResponseData } from "../../types/auth.type";
 import { clearAuthToken, storeAuthToken } from "../../utils/helper";

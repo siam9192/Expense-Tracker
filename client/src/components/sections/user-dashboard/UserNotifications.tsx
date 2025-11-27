@@ -59,8 +59,14 @@ function UserNotifications() {
     if (currentPageNotifications.length) {
       setAllNotifications((prev) => {
         const existingIds = new Set(prev.map((n) => n.id));
-        const newItems = currentPageNotifications.filter((n) => !existingIds.has(n.id));
+        if(currentPageNotifications.some(n=>existingIds.has(n.id))){
+          return currentPageNotifications
+        }
+
+      else {
+          const newItems = currentPageNotifications.filter((n) => !existingIds.has(n.id));
         return [...prev, ...newItems];
+      }
       });
     }
   }, [currentPageNotifications, isFetching]);

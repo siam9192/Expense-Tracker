@@ -9,6 +9,8 @@ export type CurrentUserProviderContextType = {
   settings: UserSettings | null;
   currency: Currency | null;
   isLoading: boolean;
+  isUserLoading:boolean;
+  isSettingsLoading:boolean;
   setUser: React.Dispatch<React.SetStateAction<CurrentUser | null>>;
   setSettings: React.Dispatch<React.SetStateAction<any | null>>;
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
@@ -76,6 +78,7 @@ export default function CurrentUserProvider({ children }: Props) {
         if (apiData) {
           if ("isSetupComplete" in apiData && !apiData.isSetupComplete) {
             setIsOpen(true);
+            localStorage.removeItem("current-user")
           } else {
             saveToLocalStorage("current-user", apiData);
             setUser(apiData as CurrentUser);
@@ -131,6 +134,8 @@ export default function CurrentUserProvider({ children }: Props) {
       settings,
       currency: settings?.currency || null,
       isLoading,
+      isUserLoading,
+      isSettingsLoading,
       setUser,
       setSettings,
       setIsLoading,

@@ -1,20 +1,20 @@
 import { CheckCircle2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { useProfileSetupProviderContext } from "../../../Provider/ProfileSetupProvider";
-import { useNavigate } from "react-router-dom";
+
 
 interface Props {
   onFinish?: () => void;
 }
 function UserProfileSetupSuccessMessage({ onFinish }: Props) {
   const { setIsOpen, setIsComplete } = useProfileSetupProviderContext();
-  const navigate = useNavigate();
+  
 
   const handelFinish = () => {
     onFinish && onFinish();
     setIsOpen(false);
     setIsComplete(true);
-    navigate("/");
+   
   };
 
   return (

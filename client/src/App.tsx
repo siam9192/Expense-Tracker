@@ -6,6 +6,7 @@ import WrapperProvider from "./Provider/WrapperProvider";
 import "./utils/i18n";
 import { Toaster } from "sonner";
 import { useEffect } from "react";
+
 function App() {
   const { pathname } = useLocation();
 
@@ -17,7 +18,8 @@ function App() {
     });
   }, [pathname]);
   return (
-    <WrapperProvider>
+ 
+      <WrapperProvider>
       <LocalSettingsProvider>
         <ProfileSetupProvider>
           <CurrentUserProvider>
@@ -27,6 +29,7 @@ function App() {
         </ProfileSetupProvider>
       </LocalSettingsProvider>
     </WrapperProvider>
+  
   );
 }
 

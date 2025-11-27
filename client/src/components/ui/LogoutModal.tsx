@@ -1,5 +1,5 @@
 import { LogOut, X } from "lucide-react";
-import { Fragment, type ReactNode } from "react";
+import { Fragment, useState, type ReactNode } from "react";
 import { useSignoutMutation } from "../../redux/api/auth.api";
 import { toast } from "sonner";
 import { DEFAULT_ERROR_MESSAGE } from "../../utils/constant";
@@ -11,8 +11,9 @@ interface Props {
   children: ReactNode;
 }
 
-function LogoutModal({ onConfirm, children }: Props) {
+function LogoutModal({  children }: Props) {
   const { setUser, setSettings } = useCurrentUserProviderContext();
+  const [isPending,setIsPending] = useState(false)
   const modal_id = "logout_confirm_modal";
 
   const open = () => {
@@ -25,10 +26,10 @@ function LogoutModal({ onConfirm, children }: Props) {
 
   const [mutate] = useSignoutMutation();
   const handleConfirm = async () => {
-    try {
+    setIsPending(true)
+     try {
       const { error } = await mutate(undefined);
       if (error) throw error;
-      onConfirm && onConfirm();
       close();
       localStorage.removeItem("current-user");
       localStorage.removeItem("current-user-settings");
@@ -36,6 +37,7 @@ function LogoutModal({ onConfirm, children }: Props) {
       setSettings(null);
       clearAuthToken();
     } catch (error) {
+      setIsPending(false)
       toast.error(DEFAULT_ERROR_MESSAGE);
     }
   };
@@ -71,12 +73,12 @@ function LogoutModal({ onConfirm, children }: Props) {
 
           {/* Buttons */}
           <div className="flex justify-center gap-3">
-            <button onClick={close} className="btn btn-ghost">
+            <button disabled={isPending} onClick={close} className="btn btn-ghost">
               Cancel
             </button>
 
-            <button onClick={handleConfirm} className="btn btn-error ">
-              Yes, Logout
+            <button disabled={isPending} onClick={handleConfirm} className="btn btn-error ">
+              {isPending ?"Just a moment...":"Yes, Logout"}
             </button>
           </div>
         </div>

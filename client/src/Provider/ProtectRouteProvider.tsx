@@ -23,7 +23,7 @@ export default function ProtectRouteProvider({ access, children, redirectTo }: P
     // Optional: Replace with your actual loading UI/spinner
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <p className="text-gray-500">Loading...</p>
+        <p className="text-base-content">Loading...</p>
       </div>
     );
   }

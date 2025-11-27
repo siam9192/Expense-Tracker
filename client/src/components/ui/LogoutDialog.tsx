@@ -11,7 +11,7 @@ interface Props {
   onCancel?(): void;
 }
 
-function LogoutDialog({ onConfirm, onCancel }: Props) {
+function LogoutDialog({ onCancel }: Props) {
   const { setUser, setSettings } = useCurrentUserProviderContext();
   const modal_id = "logout_confirm_dialog";
 
@@ -29,7 +29,7 @@ function LogoutDialog({ onConfirm, onCancel }: Props) {
     try {
       const { error } = await mutate(undefined);
       if (error) throw error;
-      onConfirm && onConfirm();
+     
       close();
       localStorage.removeItem("current-user");
       localStorage.removeItem("current-user-settings");

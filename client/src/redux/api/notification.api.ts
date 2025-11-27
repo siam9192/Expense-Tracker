@@ -2,7 +2,7 @@ import { baseApi } from "./base.api";
 import type { Response } from "../../types/response.type";
 import type {} from "../../types/auth.type";
 import type { Params } from "../../types/utils.type";
-import type { CreateUserGoalPayload, DepositUserGoalPayload, Goal } from "../../types/goal.type";
+
 
 const notificationApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -24,7 +24,7 @@ const notificationApi = baseApi.injectEndpoints({
         method: "PATCH",
       }),
 
-      transformResponse: (response: Response<Goal>) => {
+      transformResponse: (response: Response<null>) => {
         return response;
       },
       invalidatesTags: ["userNotifications"],
